@@ -7,6 +7,8 @@ const subCategorySchema = new mongoose.Schema(
             type: Number, // Sequential ID
             unique: true
         },
+    status: { type: Boolean, default: true },
+
         name: {
             type: String,
             required: true,
@@ -43,6 +45,7 @@ const subCategorySchema = new mongoose.Schema(
             }
         }
     },
+    
     { timestamps: true }
 );
 

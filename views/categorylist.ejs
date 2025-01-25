@@ -48,11 +48,12 @@
                         <th>Name</th>
                         <th>Position</th>
                         <th>Status</th>
+                        <th>Product Count</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <!-- Categories will be loaded dynamically by DataTables -->
+                    <!-- Categories will be dynamically loaded -->
                 </tbody>
             </table>
         </div>
@@ -65,66 +66,66 @@
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 
-    <script>
-        $(document).ready(function () {
-            // Initialize DataTable with AJAX for dynamic data loading
-            const table = $('#category-table').DataTable({
-                processing: true,
-                serverSide: true,
-                ajax: {
-                    url: '/admin/categories',
-                    type: 'GET',
-                    data: function (d) {
-                        // Add custom data for filters, pagination, etc.
-                        d.page = d.start / d.length + 1;  // Convert to 1-based page number
-                        d.limit = d.length;
-                        d.name = $('#category-name').val();  // Pass the filter value
-                    },
-                    dataSrc: function (json) {
-                        return json.categories;
-                    }
+ 
+<script>
+    $(document).ready(function () {
+        const table = $('#category-table').DataTable({
+            processing: true,
+            serverSide: true,
+            ajax: {
+                url: '/admin/categories',
+                type: 'GET',
+                data: function (d) {
+                    d.page = d.start / d.length + 1; // Convert to 1-based page number
+                    d.limit = d.length;
+                    d.name = $('#category-name').val(); // Apply name filter
                 },
-                columns: [
-                    { data: '_id' },
-                    { data: 'name' },
-                    { data: 'position' },
-                    {
-                        data: 'status',
-                        render: function (data) {
-                            return data ? 'Active' : 'Inactive';
-                        }
+                dataSrc: function (json) {
+                    return json.categories.map((category, index) => ({
+                        ...category,
+                        index: index + 1 + (json.currentPage - 1) * json.categories.length,
+                    }));
+                },
+            },
+            columns: [
+                { data: 'index' },
+                { data: 'name' },
+                { data: 'position' },
+                {
+                    data: 'status',
+                    render: function (data) {
+                        return data ? 'Active' : 'Inactive';
                     },
-                    {
-                        data: '_id',
-                        render: function (data) {
-                            return `
-                                <button class="btn btn-info btn-sm me-2" onclick="editCategory('${data}')">Edit</button>
-                                <button class="btn btn-danger btn-sm" onclick="deleteCategory('${data}')">Delete</button>
-                            `;
-                        }
-                    }
-                ],
-                pageLength: 10,
-                lengthMenu: [10, 25, 50, 100],
-            });
-
-            // Apply filter event listener
-            $('#apply-filter').click(function () {
-                table.ajax.reload();  // Reload the table with the filter applied
-            });
+                },
+                { data: 'productCount' },
+                {
+                    data: '_id',
+                    render: function (data) {
+                        return `
+                            <button class="btn btn-info btn-sm me-2" onclick="editCategory('${data}')">Edit</button>
+                            <button class="btn btn-danger btn-sm" onclick="deleteCategory('${data}')">Delete</button>
+                        `;
+                    },
+                },
+            ],
+            pageLength: 10,
+            lengthMenu: [10, 25, 50, 100],
         });
 
-        // Edit category function
-        function editCategory(id) {
-            alert('Edit category with ID: ' + id);
-        }
+        $('#apply-filter').click(function () {
+            table.ajax.reload(); // Reload table with filters applied
+        });
+    });
 
-        // Delete category function
-        function deleteCategory(id) {
-            if (confirm('Are you sure you want to delete this category?')) {
-                alert('Delete category with ID: ' + id);
-            }
+    function editCategory(id) {
+        alert('Edit category with ID: ' + id);
+    }
+
+    function deleteCategory(id) {
+        if (confirm('Are you sure you want to delete this category?')) {
+            alert('Delete category with ID: ' + id);
         }
-    </script>
+    }
+</script>
 </body>
 </html>

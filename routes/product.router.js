@@ -33,7 +33,6 @@ const upload = multer({
 // Initialize Router
 const router = express.Router();
 
-// Fetch categories and subcategories
 router.get('/categoriesselect', async (req, res) => {
     try {
         const categories = await Category.find();

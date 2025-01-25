@@ -224,7 +224,6 @@ const cimagesInput = document.getElementById('images');
   // Initialize Select2 for related products
   $('#categories, #subCategories, #relatedProducts').select2();
 
-  // Fetch categories, subcategories, and products
   fetch('/admin/categoriesselect')
     .then(response => response.json())
     .then(data => {
@@ -234,7 +233,6 @@ const cimagesInput = document.getElementById('images');
           $('#categories').append(new Option(category.name, category._id));
         });
 
-        // Populate subcategories
         data.subCategories.forEach(subCategory => {
           $('#subCategories').append(new Option(subCategory.name, subCategory._id));
         });

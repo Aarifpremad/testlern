@@ -1,7 +1,7 @@
 const express = require('express');
 const multer = require('multer');
 const path = require('path');
-const { createSubCategory } = require('../controller/subcategory.controller');
+const { createSubCategory  ,getSubCategories } = require('../controller/subcategory.controller');
 const Category = require('../models/category.model');
 const SubCategory = require("../models/subcategory.model")
 
@@ -33,5 +33,7 @@ router.get('/categoriesselect', async (req, res) => {
         res.status(500).json({ success: false, message: 'Error fetching categories.' });
     }
 });
+
+router.get('/subcategories', getSubCategories);  // Get categories with pagination, filtering, and sorting
 
 module.exports = router;

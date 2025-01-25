@@ -68,36 +68,57 @@ exports.createCategory = async (req, res) => {
         res.status(500).json({ message: 'An error occurred while creating the category.', error: error.message });
     }
 };
+
+
+
+
 exports.getCategories = async (req, res) => {
     try {
-        // Extract query parameters
         const { page = 1, limit = 10, name = '', status } = req.query;
 
         // Build filter object
         const filter = {};
         if (name) {
-            filter.name = { $regex: name, $options: 'i' }; // Case insensitive search
+            filter.name = { $regex: name, $options: 'i' };
         }
         if (status !== undefined) {
             filter.status = status === 'true';
         }
 
         // Pagination and sorting logic
-        const categories = await Category.find(filter)
+        const categories = await Category.aggregate([
+            { $match: filter },
+            {
+                $lookup: {
+                    from: 'products', // Collection name of products
+                    localField: '_id',
+                    foreignField: 'categories',
+                    as: 'products',
+                },
+            },
+            {
+                $addFields: {
+                    productCount: { $size: '$products' }, // Count the number of products
+                },
+            },
+            {
+                $project: {
+                    products: 0, // Exclude product details from response
+                },
+            },
+        ])
+            .sort({ createdAt: -1 })
             .skip((page - 1) * limit)
-            .limit(parseInt(limit))
-            .sort({ createdAt: -1 });  // Sorting by createdAt, descending
+            .limit(parseInt(limit));
 
         const totalCount = await Category.countDocuments(filter);
 
-        // Send response with data and pagination info
         res.status(200).json({
             categories,
             totalCount,
             totalPages: Math.ceil(totalCount / limit),
             currentPage: parseInt(page),
         });
-
     } catch (error) {
         console.error('Error fetching categories:', error);
         res.status(500).json({ message: 'An error occurred while fetching categories.' });

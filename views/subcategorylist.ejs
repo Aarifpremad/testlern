@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SubCategory List</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/dashboard.css">
+
+    <style>
+        /* Optional: Add custom styling for DataTable */
+        table.dataTable thead th {
+            white-space: nowrap;
+        }
+        @media (max-width: 768px) {
+            .dataTables_wrapper {
+                overflow-x: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <%- include('partials/header') %> <!-- Header Include -->
+
+    <div class="main-container">
+        <%- include('partials/sidebar', { page: 'subcategory' }) %> <!-- Sidebar Include -->
+
+        <div class="container mt-4">
+            <h1>SubCategory List</h1>
+
+            <!-- Filter Form -->
+            <div class="mb-3">
+                <label for="subcategory-name" class="form-label">Filter by Name</label>
+                <input type="text" id="subcategory-name" class="form-control" placeholder="Search by subcategory name">
+                <button id="apply-filter" class="btn btn-primary mt-2">Apply Filter</button>
+            </div>
+
+            <!-- DataTable -->
+            <table id="subcategory-table" class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>Position</th>
+                        <th>Category</th>
+                        <th>Status</th>
+                        <th>Product Count</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Subcategories will be dynamically loaded -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- DataTables JS -->
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+    const table = $('#subcategory-table').DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: {
+            url: '/admin/subcategories',
+            type: 'GET',
+            data: function (d) {
+                d.page = d.start / d.length + 1; // Convert to 1-based page number
+                d.limit = d.length;
+                d.name = $('#subcategory-name').val(); // Apply name filter
+            },
+            dataSrc: function (json) {
+                return json.subCategories.map((subcategory, index) => ({
+                    ...subcategory,
+                    index: index + 1 + (json.currentPage - 1) * json.subCategories.length, // Proper count
+                }));
+            },
+        },
+        columns: [
+            { data: 'index' }, // Row number
+            { data: 'name' },
+            { data: 'position' },
+            {
+                data: 'category',
+                render: function (data) {
+                    return data ? data.name : 'N/A';
+                }
+            },
+            {
+                data: 'status',
+                render: function (data) {
+                    const status = data ? 'Active' : 'Inactive';
+                    const badgeClass = data ? 'success' : 'danger';
+                    return `<span class="badge bg-${badgeClass}">${status}</span>`;
+                },
+            },
+            { data: 'productCount' }, // Product count from API
+            {
+                data: '_id',
+                render: function (data) {
+                    return `
+                        <button class="btn btn-info btn-sm me-2" onclick="editSubCategory('${data}')">Edit</button>
+                        <button class="btn btn-danger btn-sm" onclick="deleteSubCategory('${data}')">Delete</button>
+                    `;
+                }
+            },
+        ],
+        pageLength: 10,
+        lengthMenu: [10, 25, 50, 100],
+    });
+
+    // Reload table with filter applied
+    $('#apply-filter').click(function () {
+        table.ajax.reload();
+    });
+});
+
+// Edit subcategory function
+function editSubCategory(id) {
+    alert('Edit subcategory with ID: ' + id);
+}
+
+// Delete subcategory function
+function deleteSubCategory(id) {
+    if (confirm('Are you sure you want to delete this subcategory?')) {
+        alert('Delete subcategory with ID: ' + id);
+    }
+}
+
+        // Edit subcategory function
+        function editSubCategory(id) {
+            alert('Edit subcategory with ID: ' + id);
+        }
+
+        // Delete subcategory function
+        function deleteSubCategory(id) {
+            if (confirm('Are you sure you want to delete this subcategory?')) {
+                alert('Delete subcategory with ID: ' + id);
+            }
+        }
+    </script>
+</body>
+</html>

@@ -34,6 +34,10 @@ router.route("/subcategory").get((req, res) => {
     res.render("subcategory", { title: "category Management", page: "category" });
 });
 
+router.route("/subcategorylist").get((req, res) => {
+    res.render("subcategorylist", { title: "subcategorylist Management", page: "subcategorylist" });
+});
+
 router.route("/categorylist").get((req, res) => {
     res.render("categorylist", { title: "categorylist Management", page: "categorylist" });
 });
@@ -41,4 +45,5 @@ router.route("/categorylist").get((req, res) => {
 router.route("/product").get((req, res) => {
     res.render("product", { title: "categorylist Management", page: "categorylist" });
 });
+
 module.exports = router;
