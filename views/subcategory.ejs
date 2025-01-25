@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create SubCategory</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/dashboard.css">
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+</head>
+<body>
+  <%- include('partials/header') %> <!-- Header Include -->
+  <div class="main-container">
+    <%- include('partials/sidebar', { page: 'subcategory' }) %> <!-- Sidebar Include -->
+
+    <div class="container mt-4">
+      <h1>Create SubCategory</h1>
+
+      <!-- SubCategory Creation Form -->
+      <form id="create-subcategory-form" action="/admin/create-subcategory" method="POST" enctype="multipart/form-data">
+        <!-- SubCategory Name -->
+        <div class="mb-3">
+          <label for="name" class="form-label">SubCategory Name</label>
+          <input type="text" class="form-control" id="name" name="name" required>
+        </div>
+
+        <!-- Select Category -->
+        <div class="mb-3">
+          <label for="category" class="form-label">Select Category</label>
+          <select id="category" name="category" class="form-control" required>
+            <!-- Categories will be dynamically populated -->
+          </select>
+        </div>
+
+        <!-- Description -->
+        <div class="mb-3">
+          <label for="description" class="form-label">Description</label>
+          <textarea class="form-control" id="description" name="description" rows="3" required></textarea>
+        </div>
+
+        <!-- SEO Meta Title -->
+        <div class="mb-3">
+          <label for="seo_meta_title" class="form-label">SEO Meta Title</label>
+          <input type="text" class="form-control" id="seo_meta_title" name="meta_title" required>
+        </div>
+
+        <!-- SEO Meta Description -->
+        <div class="mb-3">
+          <label for="seo_meta_description" class="form-label">SEO Meta Description</label>
+          <textarea class="form-control" id="seo_meta_description" name="meta_description" rows="3" required></textarea>
+        </div>
+
+        <!-- SEO Meta Keywords -->
+        <div class="mb-3">
+          <label for="seo_meta_keywords" class="form-label">SEO Meta Keywords</label>
+          <input type="text" class="form-control" id="seo_meta_keywords" name="meta_keywords" required>
+        </div>
+
+        <!-- Position -->
+        <div class="mb-3">
+          <label for="position" class="form-label">Position</label>
+          <input type="number" class="form-control" id="position" name="position" required>
+        </div>
+
+        <!-- Image Upload -->
+        <div class="mb-3">
+          <label for="image" class="form-label">Upload Image</label>
+          <input type="file" class="form-control" id="image" name="image" accept="image/*" required>
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" class="btn btn-primary">Create SubCategory</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
+
+  <script>
+    $(document).ready(function () {
+      // Initialize Select2 for the category dropdown
+      $('#category').select2({
+        placeholder: "Select a category",
+        allowClear: true
+      });
+
+      // Fetch categories and populate dropdown
+      fetch('/admin/categoriesselect')
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            const categorySelect = document.getElementById('category');
+            data.categories.forEach(category => {
+              const option = document.createElement('option');
+              option.value = category._id;
+              option.text = category.name;
+              categorySelect.appendChild(option);
+            });
+          } else {
+            Swal.fire({
+              title: 'Error!',
+              text: 'Error fetching categories.',
+              icon: 'error',
+              confirmButtonText: 'OK'
+            });
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          Swal.fire({
+            title: 'Error!',
+            text: 'Failed to fetch categories.',
+            icon: 'error',
+            confirmButtonText: 'OK'
+          });
+        });
+
+      // Handle form submission
+      document.getElementById('create-subcategory-form').addEventListener('submit', function (event) {
+        event.preventDefault(); // Prevent default form submission
+
+        const formData = new FormData(this);
+
+        fetch(this.action, {
+          method: 'POST',
+          body: formData // Send FormData directly for multipart data
+        })
+          .then(response => response.json())
+          .then(data => {
+            if (data.success) {
+              Swal.fire({
+                title: 'Success!',
+                text: data.message || 'SubCategory created successfully.',
+                icon: 'success',
+                confirmButtonText: 'OK'
+              }).then(() => {
+                window.location.href = '/admin/subcategories';
+              });
+            } else {
+              Swal.fire({
+                title: 'Error!',
+                text: data.message || 'Something went wrong.',
+                icon: 'error',
+                confirmButtonText: 'OK'
+              });
+            }
+          })
+          .catch(error => {
+            console.error('Error:', error);
+            Swal.fire({
+              title: 'Error!',
+              text: 'Submission failed.',
+              icon: 'error',
+              confirmButtonText: 'OK'
+            });
+          });
+      });
+    });
+  </script>
+</body>
+</html>
