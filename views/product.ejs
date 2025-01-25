@@ -99,6 +99,11 @@
           <input type="text" class="form-control" id="productLabel" name="productLabel">
         </div>
 
+        <div class="mb-3">
+          <label for="producttype" class="form-label">Product Type</label>
+          <input type="text" class="form-control" id="producttype" name="producttype">
+        </div>
+
         <!-- Categories -->
         <div class="mb-3">
           <label for="categories" class="form-label">Categories</label>
@@ -110,6 +115,33 @@
           <label for="subCategories" class="form-label">SubCategories</label>
           <select id="subCategories" name="subCategories[]" class="form-control" multiple required></select>
         </div>
+
+        <div class="mb-3">
+          <label for="relatedProducts" class="form-label">Related Products</label>
+          <select id="relatedProducts" name="linkedProducts[relatedProducts][]" class="form-control" multiple></select>
+        </div>
+
+        <div class="mb-3">
+          <label for="size" class="form-label">size</label>
+          <input type="text" class="form-control" id="size" name="size" required>
+        </div>
+
+        <div class="mb-3">
+          <label for="group" class="form-label">Group</label>
+          <input type="text" class="form-control" id="group" name="group" required>
+        </div>
+
+        <div class="mb-3">
+          <label for="unit" class="form-label">Unit</label>
+          <input type="text" class="form-control" id="unit" name="unit" required>
+        </div>
+
+        <div class="mb-3">
+          <label for="serialNo" class="form-label">Serial No</label>
+          <input type="text" class="form-control" id="serialNo" name="serialNo" required>
+        </div>
+
+        description
 
         <!-- Prices -->
         <div class="mb-3">
@@ -130,12 +162,17 @@
           </div>
         </div>
 
+        <div class="mb-3">
+          <label for="description" class="form-label">Description</label>
+          <input type="text" class="form-control" id="description" name="description" required>
+        </div>
+
         <!-- Images -->
         <div class="mb-3">
-          <label for="images" class="form-label">Upload Images</label>
-          <input type="file" class="form-control" id="images" name="images[]" multiple accept="image/*" required>
-          <div id="preview-images" class="mt-2"></div>
-        </div>
+          <label for="images" class="form-label">Category Images</label>
+          <input type="file" id="images" name="images" multiple accept="image/*" required>
+          <div class="preview" id="preview"></div>
+      </div>
 
         <!-- SEO Metadata -->
         <div class="mb-3">
@@ -165,37 +202,101 @@
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
 
   <script>
-    $(document).ready(function () {
-      $('#categories, #subCategories').select2();
 
-      $('#images').on('change', function () {
-        const preview = $('#preview-images');
-        preview.empty();
-        const files = this.files;
 
-        Array.from(files).forEach(file => {
-          const reader = new FileReader();
-          reader.onload = e => {
-            const img = $('<img>').attr('src', e.target.result);
-            preview.append(img);
-          };
-          reader.readAsDataURL(file);
+const cimagesInput = document.getElementById('images');
+        const cpreviewContainer = document.getElementById('preview');
+        cimagesInput.addEventListener('change', (event) => {
+            const files = event.target.files;
+            // Append new images to the preview container without clearing previous ones
+            Array.from(files).forEach(file => {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    cpreviewContainer.appendChild(img);
+                };
+                reader.readAsDataURL(file);
+            });
+        });
+  
+        $(document).ready(function () {
+  // Initialize Select2 for related products
+  $('#categories, #subCategories, #relatedProducts').select2();
+
+  // Fetch categories, subcategories, and products
+  fetch('/admin/categoriesselect')
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        // Populate categories
+        data.categories.forEach(category => {
+          $('#categories').append(new Option(category.name, category._id));
+        });
+
+        // Populate subcategories
+        data.subCategories.forEach(subCategory => {
+          $('#subCategories').append(new Option(subCategory.name, subCategory._id));
+        });
+      }
+    })
+    .catch(err => {
+      console.error('Error fetching categories:', err);
+    });
+
+  // Fetch products for related products dropdown
+  fetch('/admin/productsselect')
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        data.products.forEach(product => {
+          $('#relatedProducts').append(new Option(product.name, product._id));
+        });
+      }
+    })
+    .catch(err => {
+      console.error('Error fetching products:', err);
+    });
+
+  // Form submission
+  $('#create-product-form').on('submit', function (e) {
+    e.preventDefault(); // Prevent default form submission
+    const formData = new FormData(this);
+
+    fetch('/admin/create-product', {
+      method: 'POST',
+      body: formData,
+    })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          Swal.fire({
+            icon: 'success',
+            title: 'Product Created',
+            text: data.message,
+          });
+          this.reset();
+          $('#preview-images').empty();
+        } else {
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: data.message,
+          });
+        }
+      })
+      .catch(err => {
+        console.error('Error submitting form:', err);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Something went wrong. Please try again.',
         });
       });
+  });
+});
 
-      fetch('/admin/categoriesselect')
-        .then(response => response.json())
-        .then(data => {
-          if (data.success) {
-            data.categories.forEach(category => {
-              $('#categories').append(new Option(category.name, category._id));
-            });
-            data.subCategories.forEach(subCategory => {
-              $('#subCategories').append(new Option(subCategory.name, subCategory._id));
-            });
-          }
-        });
-    });
   </script>
+  
 </body>
 </html>

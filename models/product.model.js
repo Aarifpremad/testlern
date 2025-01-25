@@ -5,26 +5,30 @@ const Schema = mongoose.Schema;
 
 // Define the Product Schema
 const ProductSchema = new Schema({
+  id: {
+    type: String, // Sequential ID
+    unique: true
+},
   name: {
     type: String,
-    required: true,
+    // required: true,
     trim: true
   },
   brand: {
     type: String,
-    required: true,
+    // required: true,
     trim: true
   },
   skuCode: {
     type: String,
-    required: true,
-    unique: true,
+    // required: true,
+    // unique: true,
     trim: true
   },
   urlKey: {
     type: String,
-    required: true,
-    unique: true,
+    // required: true,
+    // unique: true,
     trim: true
   },
   visibility: {
@@ -37,11 +41,11 @@ const ProductSchema = new Schema({
   },
   size: {
     type: String,
-    required: true
+    // required: true
   },
   productType: {
     type: String,
-    required: true
+    // required: true
   },
   group: {
     type: String,
@@ -49,16 +53,16 @@ const ProductSchema = new Schema({
   },
   unit: {
     type: String,
-    required: true
+    // required: true
   },
   serialNo: {
     type: String,
-    required: true,
-    unique: true
+    // required: true,
+    // unique: true
   },
   description: {
     type: String,
-    required: true
+    // required: true
   },
   metaDescription: {
     metaTitle: {
@@ -77,37 +81,37 @@ const ProductSchema = new Schema({
   price: {
     price: {
       type: Number,
-      required: true
+      // required: true
     },
     ourPrice: {
       type: Number,
-      required: true
+      // required: true
     },
     ourCutPrice: {
       type: Number,
-      required: true
+      // required: true
     },
     ourFullCutPrice: {
       type: Number,
-      required: true
+      // required: true
     }
   },
   images: {
     type: [String], // Array of image URLs
-    required: true
+    // required: true
   },
   categories: [
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Category',
-      required: true
+      // required: true
     }
   ],
   subCategories: [
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'SubCategory',
-      required: true
+      // required: true
     }
   ],
   linkedProducts: {
@@ -117,12 +121,6 @@ const ProductSchema = new Schema({
         ref: 'Product'
       }
     ],
-    productRequired: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Product'
-      }
-    ]
   }
 }, { timestamps: true });
 
@@ -150,6 +148,21 @@ ProductSchema.methods.toProductJSON = function () {
     linkedProducts: this.linkedProducts
   };
 };
+
+
+ProductSchema.pre('save', async function (next) {
+  if (!this.id) {
+      const maxId = await mongoose
+          .model('Product')
+          .findOne({})
+          .sort({ id: -1 })
+          .select('id')
+          .lean();
+      this.id = maxId ? maxId.id + 1 : 1; // Set the ID sequentially
+  }
+  next();
+});
+
 
 // Create the Product model
 const Product = mongoose.model('Product', ProductSchema);
