@@ -43,6 +43,21 @@ router.post('/specsusage', specifications.createSpecsUsage);
 router.get('/specsusage', specifications.getSpecsUsages);
 router.delete('/specsusage/:id', specifications.deleteSpecsUsage);
 
+
+
+router.post('/productgroup', specifications.createProductGroup);
+router.get('/productgroup', specifications.getProductGroups);
+router.delete('/productgroup/:id', specifications.deleteProductGroup);
+router.put('/productgroup/:id', specifications.updateProductGroup);
+
+
+
+
+router.get('/brand', specifications.getAllBrands);
+router.post('/brand', specifications.addBrand);
+router.put('/brand/:id', specifications.updateBrand);
+router.delete('/brand/:id', specifications.deleteBrand);
+
 module.exports = router;
 
 

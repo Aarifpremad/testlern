@@ -74,4 +74,11 @@ router.route("/specifications/print").get((req, res) => {
 router.route("/specifications/usage").get((req, res) => {
     res.render("specsusage", { title: "categorylist Management", page: "categorylist" });
 });
+
+router.route("/productgroup").get((req, res) => {
+    res.render("productgroup", { title: "categorylist Management", page: "categorylist" });
+});
+router.route("/brand").get((req, res) => {
+    res.render("brand", { title: "categorylist Management", page: "categorylist" });
+});
 module.exports = router;

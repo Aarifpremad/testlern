@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Group Management</title>
+    <link rel="stylesheet" href="/dashboard.css">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+    <style>
+        .main-container {
+            display: flex;
+        }
+    
+        .content-container {
+            flex: 1;
+            padding: 20px;
+        }
+    
+        .table-container {
+            margin-top: 20px;
+        }
+    
+        /* Force table borders */
+        table.dataTable,
+        table.dataTable th,
+        table.dataTable td {
+            border: 1px solid #dee2e6 !important;
+        }
+    
+        /* Optional: Adjust table styles for readability */
+        table.dataTable th {
+            background-color: #f8f9fa;
+        }
+    
+        table.dataTable tbody tr:hover {
+            background-color: #f1f3f5;
+        }
+    </style>
+</head>
+<body>
+    <!-- Include header and sidebar -->
+    <%- include('partials/header') %>
+    <div class="main-container">
+        <%- include('partials/sidebar', { page: 'productgroup' }) %>
+        <div class="content-container">
+            <h1>Product Group Management</h1>
+
+            <!-- Add Product Group Button -->
+            <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addProductGroupModal">Add Product Group</button>
+
+            <!-- Product Group Table -->
+            <div class="table-container">
+                <table id="productGroupTable" class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Group Name</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Product Group Modal -->
+    <div class="modal fade" id="addProductGroupModal" tabindex="-1" aria-labelledby="addProductGroupModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addProductGroupModalLabel">Add Product Group</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addProductGroupForm">
+                        <div class="mb-3">
+                            <label for="groupName" class="form-label">Group Name</label>
+                            <input type="text" class="form-control" id="groupName" name="name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="groupStatus" class="form-label">Status</label>
+                            <select class="form-control" id="groupStatus" name="status" required>
+                                <option value="active">Active</option>
+                                <option value="inactive">Inactive</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Add Product Group</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Product Group Modal -->
+    <div class="modal fade" id="editProductGroupModal" tabindex="-1" aria-labelledby="editProductGroupModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editProductGroupModalLabel">Edit Product Group</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editProductGroupForm">
+                        <input type="hidden" id="editGroupId">
+                        <div class="mb-3">
+                            <label for="editGroupName" class="form-label">Group Name</label>
+                            <input type="text" class="form-control" id="editGroupName" name="name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editGroupStatus" class="form-label">Status</label>
+                            <select class="form-control" id="editGroupStatus" name="status" required>
+                                <option value="active">Active</option>
+                                <option value="inactive">Inactive</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Update Product Group</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            // Initialize DataTable
+            const table = $('#productGroupTable').DataTable({
+                ajax: '/admin/productgroup',
+                columns: [
+                    { data: null, render: (data, type, row, meta) => meta.row + 1 },
+                    { data: 'name' },
+                    { data: 'status' },
+                    {
+                        data: '_id',
+                        render: function (data, type, row) {
+                            return `
+                                <button class="btn btn-warning btn-sm edit-productgroup" data-id="${data}" data-name="${row.name}" data-status="${row.status}">Edit</button>
+                                <button class="btn btn-danger btn-sm delete-productgroup" data-id="${data}">Delete</button>
+                            `;
+                        }
+                    }
+                ]
+            });
+
+            // Add Product Group
+            $('#addProductGroupForm').submit(function (e) {
+                e.preventDefault();
+                const groupName = $('#groupName').val();
+                const groupStatus = $('#groupStatus').val();
+
+                $.post('/admin/productgroup', { name: groupName, status: groupStatus }, function () {
+                    $('#addProductGroupModal').modal('hide');
+                    table.ajax.reload();
+                });
+            });
+
+            // Edit Product Group
+            $('#productGroupTable').on('click', '.edit-productgroup', function () {
+                const id = $(this).data('id');
+                const name = $(this).data('name');
+                const status = $(this).data('status');
+
+                $('#editGroupId').val(id);
+                $('#editGroupName').val(name);
+                $('#editGroupStatus').val(status);
+
+                $('#editProductGroupModal').modal('show');
+            });
+
+            // Update Product Group
+            $('#editProductGroupForm').submit(function (e) {
+                e.preventDefault();
+                const id = $('#editGroupId').val();
+                const name = $('#editGroupName').val();
+                const status = $('#editGroupStatus').val();
+
+                $.ajax({
+                    url: `/admin/productgroup/${id}`,
+                    type: 'PUT',
+                    data: { name, status },
+                    success: function () {
+                        $('#editProductGroupModal').modal('hide');
+                        table.ajax.reload();
+                    },
+                    error: function () {
+                        alert('Failed to update Product Group');
+                    }
+                });
+            });
+
+            // Delete Product Group
+            $('#productGroupTable').on('click', '.delete-productgroup', function () {
+                const groupId = $(this).data('id');
+                if (confirm('Are you sure you want to delete this Product Group?')) {
+                    $.ajax({
+                        url: `/admin/productgroup/${groupId}`,
+                        type: 'DELETE',
+                        success: function () {
+                            table.ajax.reload();
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

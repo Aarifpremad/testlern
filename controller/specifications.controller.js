@@ -7,6 +7,8 @@ const SpecsPrint = require('../models/specsprint.model');
 const SpecsMaterial = require('../models/specsMaterial.model');
 const SpecsSize = require('../models/specssize.model');
 const SpecsUsage = require('../models/specesusage.model');
+const ProductGroup = require('../models/productgroup.model');
+const Brand = require('../models/brand.model');
 
 
 exports.getColors = async (req, res) => {
@@ -442,4 +444,128 @@ exports.deleteSpecsUsage = async (req, res) => {
         console.error('Error deleting Specs Usage:', error);
         res.status(500).json({ success: false, message: 'Failed to delete Specs Usage' });
     }
+};
+
+
+
+exports.createProductGroup = async (req, res) => {
+    try {
+        const { name, status } = req.body;
+        const newGroup = await ProductGroup.create({ name, status });
+        res.status(201).json({ success: true, message: 'Product Group created successfully', data: newGroup });
+    } catch (error) {
+        console.error('Error creating Product Group:', error);
+        res.status(500).json({ success: false, message: 'Failed to create Product Group' });
+    }
+};
+
+
+exports.getProductGroups = async (req, res) => {
+    try {
+        const groups = await ProductGroup.find();
+        res.status(200).json({ success: true, data: groups });
+    } catch (error) {
+        console.error('Error fetching Product Groups:', error);
+        res.status(500).json({ success: false, message: 'Failed to fetch Product Groups' });
+    }
+};
+
+
+exports.deleteProductGroup = async (req, res) => {
+    try {
+        const { id } = req.params;
+        await ProductGroup.findByIdAndDelete(id);
+        res.status(200).json({ success: true, message: 'Product Group deleted successfully' });
+    } catch (error) {
+        console.error('Error deleting Product Group:', error);
+        res.status(500).json({ success: false, message: 'Failed to delete Product Group' });
+    }
+};
+
+
+exports.updateProductGroup = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { name, status } = req.body;
+
+        const updatedGroup = await ProductGroup.findByIdAndUpdate(
+            id,
+            { name, status },
+            { new: true, runValidators: true }
+        );
+
+        if (!updatedGroup) {
+            return res.status(404).json({ success: false, message: 'Product Group not found' });
+        }
+
+        res.status(200).json({ success: true, message: 'Product Group updated successfully', data: updatedGroup });
+    } catch (error) {
+        console.error('Error updating Product Group:', error);
+        res.status(500).json({ success: false, message: 'Failed to update Product Group' });
+    }
+};
+
+
+
+// Get all brands
+exports.getAllBrands = async (req, res) => {
+    try {
+      const brands = await Brand.find();
+      res.json({ data: brands }); // Wrap the array in a "data" key
+    } catch (err) {
+      res.status(500).json({ error: 'Failed to fetch brands' });
+    }
+  };
+  
+
+// Add a new brand
+exports.addBrand = async (req, res) => {
+  const { name, status } = req.body;
+
+  try {
+    const newBrand = new Brand({ name, status });
+    await newBrand.save();
+    res.status(201).json({ message: 'Brand added successfully', brand: newBrand });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to add brand' });
+  }
+};
+
+// Update an existing brand
+exports.updateBrand = async (req, res) => {
+  const { id } = req.params;
+  const { name, status } = req.body;
+
+  try {
+    const updatedBrand = await Brand.findByIdAndUpdate(
+      id,
+      { name, status },
+      { new: true, runValidators: true }
+    );
+
+    if (!updatedBrand) {
+      return res.status(404).json({ error: 'Brand not found' });
+    }
+
+    res.json({ message: 'Brand updated successfully', brand: updatedBrand });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to update brand' });
+  }
+};
+
+// Delete a brand
+exports.deleteBrand = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const deletedBrand = await Brand.findByIdAndDelete(id);
+
+    if (!deletedBrand) {
+      return res.status(404).json({ error: 'Brand not found' });
+    }
+
+    res.json({ message: 'Brand deleted successfully' });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to delete brand' });
+  }
 };
