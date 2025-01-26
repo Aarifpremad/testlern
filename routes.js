@@ -24,4 +24,8 @@ router.use("/admin",product)
 
 // You can add more adminroutes here if needed
 
+let specifications = require("./routes/specifications.router")
+
+router.use("/admin",specifications)
+
 module.exports = router;

@@ -46,4 +46,32 @@ router.route("/product").get((req, res) => {
     res.render("product", { title: "categorylist Management", page: "categorylist" });
 });
 
+
+router.route("/specifications/color").get((req, res) => {
+    res.render("specscolor", { title: "categorylist Management", page: "categorylist" });
+});
+router.route("/specifications/size").get((req, res) => {
+    res.render("specssize", { title: "categorylist Management", page: "categorylist" });
+});
+router.route("/specifications/finish").get((req, res) => {
+    res.render("specsfinish", { title: "categorylist Management", page: "categorylist" });
+});
+router.route("/specifications/material").get((req, res) => {
+    res.render("specsmaterial", { title: "categorylist Management", page: "categorylist" });
+});
+router.route("/specifications/thickness").get((req, res) => {
+    res.render("specsthickness", { title: "categorylist Management", page: "categorylist" });
+});
+router.route("/specifications/room").get((req, res) => {
+    res.render("specsroom", { title: "categorylist Management", page: "categorylist" });
+});
+router.route("/specifications/type").get((req, res) => {
+    res.render("specstype", { title: "categorylist Management", page: "categorylist" });
+});
+router.route("/specifications/print").get((req, res) => {
+    res.render("specsprint", { title: "categorylist Management", page: "categorylist" });
+});
+router.route("/specifications/usage").get((req, res) => {
+    res.render("specsusage", { title: "categorylist Management", page: "categorylist" });
+});
 module.exports = router;

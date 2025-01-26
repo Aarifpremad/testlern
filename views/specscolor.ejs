@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Color Management</title>
+    <link rel="stylesheet" href="/dashboard.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+    <style>
+        .main-container {
+            display: flex;
+        }
+
+        .content-container {
+            flex: 1;
+            padding: 20px;
+        }
+
+        .table-container {
+            margin-top: 20px;
+        }
+    </style>
+    <style>
+        .main-container {
+            display: flex;
+        }
+    
+        .content-container {
+            flex: 1;
+            padding: 20px;
+        }
+    
+        .table-container {
+            margin-top: 20px;
+        }
+    
+        /* Force table borders */
+        table.dataTable,
+        table.dataTable th,
+        table.dataTable td {
+            border: 1px solid #dee2e6 !important;
+        }
+    
+        /* Optional: Adjust table styles for readability */
+        table.dataTable th {
+            background-color: #f8f9fa;
+        }
+    
+        table.dataTable tbody tr:hover {
+            background-color: #f1f3f5;
+        }
+    </style>
+    
+</head>
+<body>
+    <!-- Include header and sidebar -->
+    <%- include('partials/header') %>
+    <div class="main-container">
+        <%- include('partials/sidebar', { page: 'color' }) %>
+        <div class="content-container">
+            <h1>Color Management</h1>
+
+            <!-- Add Color Button -->
+            <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addColorModal">Add Color</button>
+
+            <!-- Color Table -->
+            <div class="table-container">
+                <table id="colorTable" class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Color Name</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Color Modal -->
+    <div class="modal fade" id="addColorModal" tabindex="-1" aria-labelledby="addColorModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addColorModalLabel">Add New Color</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addColorForm">
+                        <div class="mb-3">
+                            <label for="colorName" class="form-label">Color Name</label>
+                            <input type="text" class="form-control" id="colorName" name="name" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Add Color</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            // Initialize DataTable
+            const table = $('#colorTable').DataTable({
+                ajax: '/admin/colors', // Backend API to fetch color list
+                columns: [
+                    { data: null, render: (data, type, row, meta) => meta.row + 1 }, // Row index
+                    { data: 'name' }, // Color Name
+                    {
+                        data: '_id',
+                        render: function (data) {
+                            return `
+                                <button class="btn btn-danger btn-sm delete-color" data-id="${data}">Delete</button>
+                            `;
+                        }
+                    }
+                ]
+            });
+
+            // Add New Color
+            $('#addColorForm').submit(function (e) {
+                e.preventDefault();
+                const colorName = $('#colorName').val();
+
+                $.post('/admin/colors', { name: colorName }, function () {
+                    $('#addColorModal').modal('hide');
+                    table.ajax.reload(); // Refresh the table
+                    $('#colorName').val(''); // Clear the input field
+                });
+            });
+
+            // Delete Color
+            $('#colorTable').on('click', '.delete-color', function () {
+                const colorId = $(this).data('id');
+                if (confirm('Are you sure you want to delete this color?')) {
+                    $.ajax({
+                        url: `/admin/colors/${colorId}`,
+                        type: 'DELETE',
+                        success: function () {
+                            table.ajax.reload(); // Refresh the table
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

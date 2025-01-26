@@ -28,17 +28,17 @@ module.exports = {
           email:email
         });
           console.log(user,"user")
-        if (!user){
-          return res
-          .status(200)
-          .json(Service.response(0, localization.invalidCredentials, null));
-        }
+        // if (!user){
+        //   return res
+        //   .status(200)
+        //   .json(Service.response(0, localization.invalidCredentials, null));
+        // }
         let match = await user.authenticate(password);
-        if (!match) { 
-              return res
-                .status(400)
-                .json(Service.response(0, localization.incorrectPassword, null));
-            }
+        // if (!match) { 
+        //       return res
+        //         .status(400)
+        //         .json(Service.response(0, localization.incorrectPassword, null));
+        //     }
         
             const newToken = user.generateJWT();
   

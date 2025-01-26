@@ -1,12 +1,48 @@
 <aside class="sidebar">
     <ul>
         <li><a href="/admin/dashboard" class="<%= page === 'dashboard' ? 'active' : '' %>">Dashboard</a></li>
-        <!-- <li><a href="/userlist" class="<%= page === 'users' ? 'active' : '' %>">User Management</a></li> -->
-        <li><a href="/category" class="<%= page === 'category' ? 'active' : '' %>">category create</a></li>
-        <li><a href="/categorylist" class="<%= page === 'category' ? 'active' : '' %>">category List</a></li>
-        <li><a href="/subcategory" class="<%= page === 'category' ? 'active' : '' %>">subcategory Create</a></li>
-        <li><a href="/subcategorylist" class="<%= page === 'category' ? 'active' : '' %>">subcategory List</a></li>
-        <li><a href="/product" class="<%= page === 'category' ? 'active' : '' %>">product Create</a></li>
+        <li><a href="/category" class="<%= page === 'category' ? 'active' : '' %>">Category Create</a></li>
+        <li><a href="/categorylist" class="<%= page === 'categorylist' ? 'active' : '' %>">Category List</a></li>
+        <li><a href="/subcategory" class="<%= page === 'subcategory' ? 'active' : '' %>">Subcategory Create</a></li>
+        <li><a href="/subcategorylist" class="<%= page === 'subcategorylist' ? 'active' : '' %>">Subcategory List</a></li>
+        <li><a href="/product" class="<%= page === 'product' ? 'active' : '' %>">Product Create</a></li>
+        
+        <!-- New Section for Specifications -->
+        <li>
+            <a href="javascript:void(0)" class="specifications-toggle">Specifications</a>
+            <ul class="sub-menu">
+                <li><a href="/specifications/color" class="<%= page === 'specifications-color' ? 'active' : '' %>">Specs Color</a></li>
+                <li><a href="/specifications/size" class="<%= page === 'specifications-size' ? 'active' : '' %>">Specs Size</a></li>
+                <li><a href="/specifications/finish" class="<%= page === 'specifications-finish' ? 'active' : '' %>">Specs Finish</a></li>
+                <li><a href="/specifications/material" class="<%= page === 'specifications-material' ? 'active' : '' %>">Specs Material</a></li>
+                <li><a href="/specifications/thickness" class="<%= page === 'specifications-thickness' ? 'active' : '' %>">Specs Thickness</a></li>
+                <li><a href="/specifications/room" class="<%= page === 'specifications-room' ? 'active' : '' %>">Specs Room</a></li>
+                <li><a href="/specifications/type" class="<%= page === 'specifications-type' ? 'active' : '' %>">Specs Type</a></li>
+                <li><a href="/specifications/print" class="<%= page === 'specifications-print' ? 'active' : '' %>">Specs Print</a></li>
+                <li><a href="/specifications/usage" class="<%= page === 'specifications-use' ? 'active' : '' %>">Specs Usage</a></li>
+            </ul>
+        </li>
     </ul>
 </aside>
 
+<style>
+    /* Style for sub-menu (hidden by default) */
+    .sub-menu {
+        display: none;
+        padding-left: 20px;
+    }
+
+    /* Style for showing the sub-menu */
+    .sub-menu a {
+        display: block;
+        padding: 5px 0;
+    }
+</style>
+
+<script>
+    // Toggle sub-menu visibility
+    document.querySelector('.specifications-toggle').addEventListener('click', function () {
+        const subMenu = this.nextElementSibling;
+        subMenu.style.display = subMenu.style.display === 'block' ? 'none' : 'block';
+    });
+</script>
