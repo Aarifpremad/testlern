@@ -12,4 +12,5 @@ const specsMaterialSchema = new mongoose.Schema(
     { timestamps: true }
 );
 
-module.exports = mongoose.model('SpecsMaterial', specsMaterialSchema);
+const SpecsMaterial= mongoose.model('SpecsMaterial', specsMaterialSchema);
+module.exports = SpecsMaterial;

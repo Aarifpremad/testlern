@@ -4,6 +4,18 @@ const path = require('path');
 const { createSubCategory  ,getSubCategories } = require('../controller/subcategory.controller');
 const Category = require('../models/category.model');
 const SubCategory = require("../models/subcategory.model")
+const Unit = require("../models/unit.model");
+const Brand = require("../models/brand.model");
+const ProductGroup = require("../models/productgroup.model");
+const SpecsFinish = require("../models/specsfinish.model");
+const SpecsMaterial = require("../models/specsmaterial.model");
+const Color = require("../models/color.model");
+const SpecsThickness = require("../models/model").specsthickness;
+const SpecsRoom = require("../models/room.model");
+const SpecsType = require("../models/specstype.model");
+const SpecsPrint = require("../models/specsprint.model");
+const SpecsUsage = require("../models/specesusage.model");
+const SpecsSize = require("../models/specssize.model");
 
 const router = express.Router();
 
@@ -27,7 +39,20 @@ router.get('/categoriesselect', async (req, res) => {
     try {
         const categories = await Category.find();
         const subCategories = await SubCategory.find();
-        res.json({ success: true, categories, subCategories });
+        const unit = await Unit.find();
+        const brand = await Brand.find();
+        const productGroup = await ProductGroup.find();
+        const specsFinish = await SpecsFinish.find();
+        const specsMaterial = await SpecsMaterial.find();
+        const color = await Color.find();
+        const specsThickness = await SpecsThickness.find();
+        const specsRoom = await SpecsRoom.find();
+        const specsType = await SpecsType.find();
+        const specsPrint = await SpecsPrint.find();
+        const specsUsage = await SpecsUsage.find();
+        const specsSize = await SpecsSize.find();
+
+        res.json({ success: true, categories, subCategories , unit , brand , productGroup , specsFinish , specsMaterial , color , specsThickness , specsRoom , specsType , specsPrint , specsUsage , specsSize });
     } catch (error) {
         console.error('Error fetching categories:', error);
         res.status(500).json({ success: false, message: 'Error fetching categories.' });

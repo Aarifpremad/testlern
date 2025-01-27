@@ -1,6 +1,7 @@
 let express = require("express");
 let mongoose = require("mongoose");
-let config = require("../config")
+let config = require("../config");
+const specsthicknessModel = require("./specsthickness.model.js");
 try {
     // DB Connect
     const dbConnection = mongoose.connect(
@@ -24,6 +25,7 @@ module.exports = {
     User: require('./user.js'),
     UserOtp: require('./userotp.model.js'),
     SuperAdmin: require('./superadmin.js'),
+    specsthickness : require("./specsthickness.model.js"),
     // Category : require("./category.model.js"),
     // SubCategory : require("./subcategory.model.js"),
     // Product : require("./product.model.js"),
