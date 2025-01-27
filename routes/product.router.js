@@ -57,29 +57,70 @@ router.get('/productsselect', async (req, res) => {
 
 // Create a new product
 router.post('/create-product', upload.array('images'), async (req, res) => {
-  try {
+    try {
       const { body, files } = req;
-
-      // Parse relatedProducts from the request body
-      const relatedProducts = body.relatedProducts ? JSON.parse(body.relatedProducts) : [];
-
-      const productData = {
-          ...body,
-          linkedProducts: {
-              relatedProducts, // Add related product IDs
-          },
-          images: files.map(file => file.filename), // Store only file names
+  
+      const imageFilenames = files.map(file => file.filename);
+        console.log(body.metaDescription.metaKeywords,body);
+      const linkedProducts = body.linkedProducts
+        ? body.linkedProducts
+        : { relatedProducts: [] };
+        console.log(body.metaDescription.metaKeywords,body);
+      const tilesPerfection = {
+        description: body.tdescription,
+        appearance: body.appearance,
+        material: body.material,
+        glaze: body.glaze,
+        rectified: body.Rectified,
+        color: body.color,
+        thickness: body.thickness,
+        recommendedRoom: body.recommendedRoom,
+        quantityPerSquareMeter: body.quantityPerSquareMeter,
+        type: body.type,
+        print: body.print,
+        usage: body.usage,
+        sizeMM: body.sizeMM,
+        boxQuantity: body.boxQuantity,
+        wastage: body.wastage,
       };
-
+  
+      const productData = {
+        name: body.name,
+        brand: body.brand,
+        sku: body.skuCode,
+        urlKey: body.urlKey,
+        size: body.size,
+        group: body.group,
+        productSerialNo: body.serialNo,
+        unit: body.unit,
+        description: body.description,
+        metaDescription: {
+          metaTitle: body.metaDescription.metaTitle,
+          metaKeywords: body.metaDescription.metaKeywords.split(',').map(k => k.trim()),
+          metaDescription: body.metaDescription.metaDescription,
+        },
+        price: {
+          price: body.price.price,
+          ourPrice: body.price.ourPrice,
+          ourCutPrice: body.price.ourCutPrice,
+          ourFullCutPrice: body.price.ourFullCutPrice,
+        },
+        tilesPerfection,
+        images: imageFilenames,
+        categories: body.categories ? body.categories: [],
+        subCategories: body.subCategories ? body.subCategories : [],
+        linkedProducts,
+      };
+  
       const product = new Product(productData);
       await product.save();
-
+  
       res.status(201).json({ success: true, product, message: 'Product created successfully.' });
-  } catch (error) {
+    } catch (error) {
       console.error('Error creating product:', error);
-      res.status(500).json({ success: false, message: 'Error creating product.' });
-  }
-});
+      res.status(500).json({ success: false, message: 'Error creating product.', error });
+    }
+  });
 
 
 module.exports = router;
