@@ -32,7 +32,7 @@
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
-      max-height: 200px; /* Set maximum height for scrolling */
+      max-height: 10px; /* Set maximum height for scrolling */
       overflow-y: auto; /* Enable vertical scrolling */
       border: 1px solid #ddd;
       border-radius: 5px;
@@ -40,8 +40,8 @@
       background-color: #f8f9fa;
     }
     #preview-images img {
-      width: 100px;
-      height: 100px;
+      width: 10px;
+      height: 10px;
       object-fit: cover;
       border: 1px solid #ddd;
       border-radius: 5px;
@@ -49,6 +49,18 @@
     .form-label {
       font-weight: bold;
     }
+
+    .formContainer {
+            overflow: aut
+        }
+
+        /* Adjust the form for mobile responsiveness */
+        @media (max-width: 768px) {
+            .container {
+                max-width: 100%;
+                margin: 0 10px;
+            }
+        }
   </style>
 </head>
 <body>
@@ -178,7 +190,7 @@
 
         <!-- Images -->
         <div class="mb-3">
-          <label for="images" class="form-label">Category Images</label>
+          <label for="images" class="form-label">Product Images</label>
           <input type="file" id="images" name="images" multiple accept="image/*" required>
           <div class="preview" id="preview"></div>
       </div>
@@ -213,9 +225,8 @@
               <input type="number" class="form-control" name="material" placeholder="material" required>
             </div>
             <div class="col-md-3">
-              <label for="glaze" class="form-label">glaze</label>
-              <select id="glaze" name="glaze" class="form-select">
-                <option value="">Select glaze</option>
+              <select id="glaze" name="glaze" class="form-select" required>
+                <option value="" disabled selected>Select Glaze</option>
                 <option value="Glazed">Glazed</option>
                 <option value="No">No</option>
               </select>
@@ -224,17 +235,15 @@
             <div class="col-md-3">
               <input type="number" class="form-control" name="description" placeholder="description" required>
             </div>
+
             <div class="col-md-3">
-              <input type="number" class="form-control" name="rectified" placeholder="rectified" required>
-              <div class="col-md-3">
-                <label for="rectified" class="form-label">Rectified</label>
-                <select id="rectified" name="rectified" class="form-select">
-                  <option value="">Select Rectified</option>
-                  <option value="Rectified">Rectified</option>
-                  <option value="No">No</option>
-                </select>
-              </div>
+              <select id="Rectified" name="Rectified" class="form-select" required>
+                <option value="" disabled selected>Select Rectified</option>
+                <option value="Rectified">Rectified</option>
+                <option value="No">No</option>
+              </select>
             </div>
+
             <div class="col-md-3">
               <input type="number" class="form-control" name="color" placeholder="color" required>
             </div>

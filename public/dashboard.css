@@ -59,7 +59,8 @@ header nav ul li a:hover {
 .main-container {
     display: flex;
     flex: 1;
-    overflow: hidden;
+    /* overflow: hidden; */
+    overflow-y: auto;
 }
 
 /* Sidebar Styles */
