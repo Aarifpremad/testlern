@@ -9,7 +9,7 @@ const SpecsSize = require('../models/specssize.model');
 const SpecsUsage = require('../models/specesusage.model');
 const ProductGroup = require('../models/productgroup.model');
 const Brand = require('../models/brand.model');
-
+const Unit = require("../models/unit.model")
 
 exports.getColors = async (req, res) => {
     try {
@@ -568,4 +568,63 @@ exports.deleteBrand = async (req, res) => {
   } catch (err) {
     res.status(500).json({ error: 'Failed to delete brand' });
   }
+};
+
+
+// Get all units
+exports.getAllUnits = async (req, res) => {
+    try {
+        const units = await Unit.find();
+        res.json({ data: units }); // Wrap the response in a `data` key for DataTables compatibility
+    } catch (err) {
+        res.status(500).json({ error: 'Failed to fetch units' });
+    }
+};
+
+// Add a new unit
+exports.addUnit = async (req, res) => {
+    const { name } = req.body;
+
+    try {
+        const newUnit = new Unit({ name });
+        await newUnit.save();
+        res.status(201).json({ message: 'Unit added successfully', unit: newUnit });
+    } catch (err) {
+        res.status(500).json({ error: 'Failed to add unit' });
+    }
+};
+
+// Update an existing unit
+exports.updateUnit = async (req, res) => {
+    const { id } = req.params;
+    const { name } = req.body;
+
+    try {
+        const updatedUnit = await Unit.findByIdAndUpdate(id, { name }, { new: true, runValidators: true });
+
+        if (!updatedUnit) {
+            return res.status(404).json({ error: 'Unit not found' });
+        }
+
+        res.json({ message: 'Unit updated successfully', unit: updatedUnit });
+    } catch (err) {
+        res.status(500).json({ error: 'Failed to update unit' });
+    }
+};
+
+// Delete a unit
+exports.deleteUnit = async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const deletedUnit = await Unit.findByIdAndDelete(id);
+
+        if (!deletedUnit) {
+            return res.status(404).json({ error: 'Unit not found' });
+        }
+
+        res.json({ message: 'Unit deleted successfully' });
+    } catch (err) {
+        res.status(500).json({ error: 'Failed to delete unit' });
+    }
 };

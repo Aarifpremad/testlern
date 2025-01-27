@@ -3,151 +3,61 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-// Define the Product Schema
-const ProductSchema = new Schema({
-  id: {
-    type: String, // Sequential ID
-    unique: true
-},
-  name: {
-    type: String,
-    // required: true,
-    trim: true
-  },
-  brand: {
-    type: String,
-    // required: true,
-    trim: true
-  },
-  skuCode: {
-    type: String,
-    // required: true,
-    // unique: true,
-    trim: true
-  },
-  urlKey: {
-    type: String,
-    // required: true,
-    // unique: true,
-    trim: true
-  },
-  visibility: {
-    type: Boolean,
-    default: true
-  },
-  productLabel: {
-    type: String,
-    trim: true
-  },
-  size: {
-    type: String,
-    // required: true
-  },
-  productType: {
-    type: String,
-    // required: true
-  },
-  group: {
-    type: String,
-    trim: true
-  },
-  unit: {
-    type: String,
-    // required: true
-  },
-  serialNo: {
-    type: String,
-    // required: true,
-    // unique: true
-  },
-  description: {
-    type: String,
-    // required: true
-  },
-  metaDescription: {
-    metaTitle: {
+const ProductSchema = new Schema(
+  {
+    id: {
       type: String,
-      trim: true
+      unique: true,
     },
-    metaKeywords: {
-      type: [String],
-      trim: true
-    },
+    name: { type: String, required: true, trim: true },
+    brand: { type: mongoose.Schema.Types.ObjectId, ref: 'Brand', required: true },
+    sku: { type: String, trim: true },
+    urlKey: { type: String, trim: true },
+    size: { type: String, enum: ['S', 'M', 'L', 'XL']},
+    group: { type: mongoose.Schema.Types.ObjectId, ref: 'ProductGroup' },
+    productSerialNo: { type: String, unique: true },
+    unit: { type: String, required: true },
+    description: { type: String },
     metaDescription: {
-      type: String,
-      trim: true
-    }
-  },
-  price: {
+      metaTitle: { type: String, trim: true },
+      metaKeywords: { type: [String], trim: true },
+      metaDescription: { type: String, trim: true },
+    },
     price: {
-      type: Number,
-      // required: true
+      price: { type: Number, required: true },
+      ourPrice: { type: Number, required: true },
+      ourCutPrice: { type: Number },
+      ourFullCutPrice: { type: Number },
     },
-    ourPrice: {
-      type: Number,
-      // required: true
+    tilesPerfection: {
+      description: { type: String },
+      appearance: { type: mongoose.Schema.Types.ObjectId, ref: 'SpecsFinish' },
+      material: { type: mongoose.Schema.Types.ObjectId, ref: 'SpecsMaterial' },
+      glaze: { type: String, enum: ['Glazed', 'No'], required: true },
+      rectified: { type: String, enum: ['Rectified', 'No'], required: true },
+      color: { type: mongoose.Schema.Types.ObjectId, ref: 'Color' },
+      thickness: { type: mongoose.Schema.Types.ObjectId, ref: 'SpecsThickness' },
+      recommendedRoom: { type: mongoose.Schema.Types.ObjectId, ref: 'SpecsRoom' },
+      quantityPerSquareMeter: { type: Number },
+      type: { type: mongoose.Schema.Types.ObjectId, ref: 'SpecsType' },
+      print: { type: mongoose.Schema.Types.ObjectId, ref: 'SpecsPrint' },
+      usage: { type: mongoose.Schema.Types.ObjectId, ref: 'SpecsUsage' },
+      sizeMM: { type: mongoose.Schema.Types.ObjectId, ref: 'SpecsSize' },
+      boxQuantity: { type: Number },
+      wastage: { type: Number },
     },
-    ourCutPrice: {
-      type: Number,
-      // required: true
+    images: [{ type: String }],
+    categories: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Category' }],
+    subCategories: [{ type: mongoose.Schema.Types.ObjectId, ref: 'SubCategory' }],
+    linkedProducts: {
+      relatedProducts: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Product' }],
     },
-    ourFullCutPrice: {
-      type: Number,
-      // required: true
-    }
   },
-  images: {
-    type: [String], // Array of image URLs
-    // required: true
-  },
-  categories: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Category',
-      // required: true
-    }
-  ],
-  subCategories: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'SubCategory',
-      // required: true
-    }
-  ],
-  linkedProducts: {
-    relatedProducts: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Product'
-      }
-    ],
-  }
-}, { timestamps: true });
+  { timestamps: true }
+);
 
-// Create an instance method to format the product response
-ProductSchema.methods.toProductJSON = function () {
-  return {
-    _id: this._id,
-    name: this.name,
-    brand: this.brand,
-    skuCode: this.skuCode,
-    urlKey: this.urlKey,
-    visibility: this.visibility,
-    productLabel: this.productLabel,
-    size: this.size,
-    productType: this.productType,
-    group: this.group,
-    unit: this.unit,
-    serialNo: this.serialNo,
-    description: this.description,
-    metaDescription: this.metaDescription,
-    price: this.price,
-    images: this.images,
-    categories: this.categories,
-    subCategories: this.subCategories,
-    linkedProducts: this.linkedProducts
-  };
-};
+
+
 
 
 ProductSchema.pre('save', async function (next) {

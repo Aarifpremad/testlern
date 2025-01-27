@@ -58,6 +58,13 @@ router.post('/brand', specifications.addBrand);
 router.put('/brand/:id', specifications.updateBrand);
 router.delete('/brand/:id', specifications.deleteBrand);
 
+
+router.get('/unit', specifications.getAllUnits);
+router.post('/unit', specifications.addUnit);
+router.put('/unit/:id', specifications.updateUnit);
+router.delete('/unit/:id', specifications.deleteUnit);
+
+
 module.exports = router;
 
 

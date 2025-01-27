@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unit Management</title>
+    <link rel="stylesheet" href="/dashboard.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+    <style>
+        .main-container {
+            display: flex;
+        }
+
+        .content-container {
+            flex: 1;
+            padding: 20px;
+        }
+
+        .table-container {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <%- include('partials/header') %>
+    <div class="main-container">
+        <%- include('partials/sidebar', { page: 'unit' }) %>
+        <div class="content-container">
+            <h1>Unit Management</h1>
+
+            <!-- Add Unit Button -->
+            <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addUnitModal">Add Unit</button>
+
+            <!-- Unit Table -->
+            <div class="table-container">
+                <table id="unitTable" class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Unit Name</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Unit Modal -->
+    <div class="modal fade" id="addUnitModal" tabindex="-1" aria-labelledby="addUnitModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addUnitModalLabel">Add Unit</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addUnitForm">
+                        <div class="mb-3">
+                            <label for="unitName" class="form-label">Unit Name</label>
+                            <input type="text" class="form-control" id="unitName" name="name" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Add Unit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Unit Modal -->
+    <div class="modal fade" id="editUnitModal" tabindex="-1" aria-labelledby="editUnitModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editUnitModalLabel">Edit Unit</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editUnitForm">
+                        <input type="hidden" id="editUnitId">
+                        <div class="mb-3">
+                            <label for="editUnitName" class="form-label">Unit Name</label>
+                            <input type="text" class="form-control" id="editUnitName" name="name" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Update Unit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            // Initialize DataTable
+            const table = $('#unitTable').DataTable({
+                ajax: '/admin/unit',
+                columns: [
+                    { data: null, render: (data, type, row, meta) => meta.row + 1 },
+                    { data: 'name' },
+                    {
+                        data: '_id',
+                        render: function (data, type, row) {
+                            return `
+                                <button class="btn btn-warning btn-sm edit-unit" data-id="${data}" data-name="${row.name}">Edit</button>
+                                <button class="btn btn-danger btn-sm delete-unit" data-id="${data}">Delete</button>
+                            `;
+                        }
+                    }
+                ]
+            });
+
+            // Add Unit
+            $('#addUnitForm').submit(function (e) {
+                e.preventDefault();
+                const unitName = $('#unitName').val();
+
+                $.post('/admin/unit', { name: unitName }, function () {
+                    $('#addUnitModal').modal('hide');
+                    table.ajax.reload();
+                });
+            });
+
+            // Edit Unit
+            $('#unitTable').on('click', '.edit-unit', function () {
+                const id = $(this).data('id');
+                const name = $(this).data('name');
+
+                $('#editUnitId').val(id);
+                $('#editUnitName').val(name);
+
+                $('#editUnitModal').modal('show');
+            });
+
+            // Update Unit
+            $('#editUnitForm').submit(function (e) {
+                e.preventDefault();
+                const id = $('#editUnitId').val();
+                const name = $('#editUnitName').val();
+
+                $.ajax({
+                    url: `/admin/unit/${id}`,
+                    type: 'PUT',
+                    data: { name },
+                    success: function () {
+                        $('#editUnitModal').modal('hide');
+                        table.ajax.reload();
+                    },
+                    error: function () {
+                        alert('Failed to update Unit');
+                    }
+                });
+            });
+
+            // Delete Unit
+            $('#unitTable').on('click', '.delete-unit', function () {
+                const unitId = $(this).data('id');
+                if (confirm('Are you sure you want to delete this unit?')) {
+                    $.ajax({
+                        url: `/admin/unit/${unitId}`,
+                        type: 'DELETE',
+                        success: function () {
+                            table.ajax.reload();
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
