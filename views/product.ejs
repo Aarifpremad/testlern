@@ -143,12 +143,6 @@
           <label for="relatedProducts" class="form-label">Related Products</label>
           <select id="relatedProducts" name="linkedProducts[relatedProducts][]" class="form-control" multiple></select>
         </div>
-
-        <!-- <div class="mb-3">
-          <label for="size" class="form-label">size</label>
-          <select id="size" name="size" class="form-control"></select>
-        </div> -->
-
         <div class="mb-3">
           <label for="group" class="form-label">Group</label>
           <select id="group" name="group" class="form-control"></select>
@@ -157,17 +151,11 @@
         <div class="mb-3">
           <label for="unit" class="form-label">Unit</label>
           <select id="unit" name="unit" class="form-control"></select>
-
-          <!-- <input type="text" class="form-control" id="unit" name="unit" required> -->
         </div>
-
         <div class="mb-3">
           <label for="serialNo" class="form-label">Product Serial No</label>
           <input type="text" class="form-control" id="serialNo" name="serialNo" required>
         </div>
-
-
-        <!-- Prices -->
         <div class="mb-3">
           <label for="price" class="form-label">Prices</label>
           <div class="row">
@@ -185,20 +173,15 @@
             </div>
           </div>
         </div>
-        
         <div class="mb-3">
           <label for="description" class="form-label">Description</label>
           <input type="text" class="form-control" id="description" name="description" required>
         </div>
-
-        <!-- Images -->
         <div class="mb-3">
           <label for="images" class="form-label">Product Images</label>
           <input type="file" id="images" name="images" multiple accept="image/*" required>
           <div class="preview" id="preview"></div>
       </div>
-
-        <!-- SEO Metadata -->
         <div class="mb-3">
           <label for="seo_meta_title" class="form-label">SEO Meta Title</label>
           <input type="text" class="form-control" id="seo_meta_title" name="metaDescription[metaTitle]" required>
@@ -222,11 +205,9 @@
               <input type="number" class="form-control" name="description" placeholder="description" required>
             </div>
             <div class="col-md-3">
-              <!-- <input type="number" class="form-control" name="appearance" placeholder="appearance" required> -->
               <select id="finish" name="finish" class="form-control"></select>
             </div>
             <div class="col-md-3">
-              <!-- <input type="number" class="form-control" name="material" placeholder="material" required> -->
               <select id="material" name="material" class="form-control"></select>
             </div>
             <div class="col-md-3">
@@ -236,11 +217,6 @@
                 <option value="No">No</option>
               </select>
             </div>
-
-            <!-- <div class="col-md-3">
-              <input type="number" class="form-control" name="description" placeholder="description" required>
-            </div> -->
-
             <div class="col-md-3">
               <select id="Rectified" name="Rectified" class="form-select" required>
                 <option value="" disabled selected>Select Rectified</option>
@@ -250,38 +226,26 @@
             </div>
 
             <div class="col-md-3">
-              <!-- <input type="number" class="form-control" name="color" placeholder="color" required> -->
               <select id="color" name="color" class="form-control"></select>
             </div>
             <div class="col-md-3">
-              <!-- <input type="number" class="form-control" name="thickness" placeholder="thickness" required> -->
               <select id="thickness" name="thickness" class="form-control"></select>
             </div>
 
-
-
             <div class="col-md-3">
-              <!-- <input type="number" class="form-control" name="recommendedRoom" placeholder="recommendedRoom" required> -->
               <select id="recommendedRoom" name="recommendedRoom" class="form-control"></select>
-
             </div>
             <div class="col-md-3">
-              <!-- <input type="number" class="form-control" name="quantityPerSquareMeter" placeholder="quantityPerSquareMeter" required> -->
               <select id="quantityPerSquareMeter" name="quantityPerSquareMeter" class="form-control"></select>
-
             </div>
             <div class="col-md-3">
               <input type="number" class="form-control" name="type" placeholder="type" required>
               <select id="type" name="type" class="form-control"></select>
-
             </div>
             <div class="col-md-3">
-              <!-- <input type="number" class="form-control" name="print" placeholder="print" required> -->
               <select id="print" name="print" class="form-control"></select>
-
             </div>
             <div class="col-md-3">
-              <!-- <input type="number" class="form-control" name="usage" placeholder="usage" required> -->
               <select id="usage" name="usage" class="form-control"></select>
             </div>
             <div class="col-md-3">
@@ -296,28 +260,19 @@
             </div>
           </div>
         </div>
-        <!-- tilesPerfection -->
-
-
-        <!-- Submit Button -->
         <button type="submit" class="btn btn-primary">Create Product</button>
       </form>
     </div>
   </div>
-
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
-
   <script>
-
-
 const cimagesInput = document.getElementById('images');
         const cpreviewContainer = document.getElementById('preview');
         cimagesInput.addEventListener('change', (event) => {
             const files = event.target.files;
-            // Append new images to the preview container without clearing previous ones
             Array.from(files).forEach(file => {
                 const reader = new FileReader();
                 reader.onload = (e) => {
@@ -330,79 +285,50 @@ const cimagesInput = document.getElementById('images');
         });
   
         $(document).ready(function () {
-  // Initialize Select2 for related products
   $('#categories, #subCategories, #relatedProducts, #group, #unit, #brand, sizeMM, #usage, #print, #type, #quantityPerSquareMeter, #recommendedRoom, #thickness, #color, #material, #finish').select2();
-
   fetch('/admin/categoriesselect')
   .then(response => response.json())
   .then(data => {
     if (data.success) {
-      // Populate categories
       data.categories.forEach(category => {
         $('#categories').append(new Option(category.name, category._id));
       });
-
-      // Populate subcategories
       data.subCategories.forEach(subCategory => {
         $('#subCategories').append(new Option(subCategory.name, subCategory._id));
       });
-
-      // Populate product group
       data.group.forEach(group => {
         $('#group').append(new Option(group.name, group._id));
       });
-
-      // Populate units
       data.unit.forEach(unitd => {
         $('#unit').append(new Option(unitd.name, unitd._id));
       });
-
-      // Populate sizes
       data.size.forEach(sized => {
         $('#size').append(new Option(sized.size, sized._id));
       });
-
-      // Populate brands
       data.brand.forEach(brandd => {
         $('#brand').append(new Option(brandd.name, brandd._id));
       });
-
-      // Populate finishes
       data.specsFinish.forEach(finish => {
         $('#finish').append(new Option(finish.name, finish._id));
       });
-
-      // Populate materials
       data.specsMaterial.forEach(material => {
         $('#material').append(new Option(material.name, material._id));
       });
-
-      // Populate colors
       data.color.forEach(color => {
         $('#color').append(new Option(color.name, color._id));
       });
-
-      // Populate thickness
       data.specsThickness.forEach(thickness => {
         $('#thickness').append(new Option(thickness.name, thickness._id));
       });
-
-      // Populate recommended rooms
       data.specsRoom.forEach(room => {
         $('#recommendedRoom').append(new Option(room.name, room._id));
       });
-
-      // Populate types
       data.specsType.forEach(type => {
         $('#type').append(new Option(type.name, type._id));
       });
-
-      // Populate prints
       data.specsPrint.forEach(print => {
         $('#print').append(new Option(print.name, print._id));
       });
-
-      // Populate usage
       data.specsUsage.forEach(usage => {
         $('#usage').append(new Option(usage.name, usage._id));
       });
@@ -411,8 +337,6 @@ const cimagesInput = document.getElementById('images');
     .catch(err => {
       console.error('Error fetching categories:', err);
     });
-
-  // Fetch products for related products dropdown
   fetch('/admin/productsselect')
     .then(response => response.json())
     .then(data => {
@@ -425,12 +349,9 @@ const cimagesInput = document.getElementById('images');
     .catch(err => {
       console.error('Error fetching products:', err);
     });
-
-  // Form submission
   $('#create-product-form').on('submit', function (e) {
     e.preventDefault(); // Prevent default form submission
     const formData = new FormData(this);
-
     fetch('/admin/create-product', {
       method: 'POST',
       body: formData,
@@ -463,8 +384,6 @@ const cimagesInput = document.getElementById('images');
       });
   });
 });
-
   </script>
-  
 </body>
 </html>
