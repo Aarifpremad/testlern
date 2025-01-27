@@ -81,7 +81,8 @@
         <!-- Brand -->
         <div class="mb-3">
           <label for="brand" class="form-label">Brand</label>
-          <input type="text" class="form-control" id="brand" name="brand" required>
+          <select id="brand" name="brand" class="form-control"></select>
+          <!-- <input type="text" class="form-control" id="brand" name="brand" required> -->
         </div>
 
         <!-- SKU Code -->
@@ -106,7 +107,7 @@
         </div>
         <div class="mb-3">
           <label for="size" class="form-label">Size</label>
-          <select id="size" name="size" class="form-select">
+          <select id="sizef" name="size" class="form-select">
             <option value="">Select Size</option>
             <option value="S">Small</option>
             <option value="M">Medium</option>
@@ -143,19 +144,21 @@
           <select id="relatedProducts" name="linkedProducts[relatedProducts][]" class="form-control" multiple></select>
         </div>
 
-        <div class="mb-3">
+        <!-- <div class="mb-3">
           <label for="size" class="form-label">size</label>
-          <input type="text" class="form-control" id="size" name="size" required>
-        </div>
+          <select id="size" name="size" class="form-control"></select>
+        </div> -->
 
         <div class="mb-3">
           <label for="group" class="form-label">Group</label>
-          <input type="text" class="form-control" id="group" name="group" required>
+          <select id="group" name="group" class="form-control"></select>
         </div>
 
         <div class="mb-3">
           <label for="unit" class="form-label">Unit</label>
-          <input type="text" class="form-control" id="unit" name="unit" required>
+          <select id="unit" name="unit" class="form-control"></select>
+
+          <!-- <input type="text" class="form-control" id="unit" name="unit" required> -->
         </div>
 
         <div class="mb-3">
@@ -219,10 +222,12 @@
               <input type="number" class="form-control" name="description" placeholder="description" required>
             </div>
             <div class="col-md-3">
-              <input type="number" class="form-control" name="appearance" placeholder="appearance" required>
+              <!-- <input type="number" class="form-control" name="appearance" placeholder="appearance" required> -->
+              <select id="finish" name="finish" class="form-control"></select>
             </div>
             <div class="col-md-3">
-              <input type="number" class="form-control" name="material" placeholder="material" required>
+              <!-- <input type="number" class="form-control" name="material" placeholder="material" required> -->
+              <select id="material" name="material" class="form-control"></select>
             </div>
             <div class="col-md-3">
               <select id="glaze" name="glaze" class="form-select" required>
@@ -232,9 +237,9 @@
               </select>
             </div>
 
-            <div class="col-md-3">
+            <!-- <div class="col-md-3">
               <input type="number" class="form-control" name="description" placeholder="description" required>
-            </div>
+            </div> -->
 
             <div class="col-md-3">
               <select id="Rectified" name="Rectified" class="form-select" required>
@@ -245,31 +250,43 @@
             </div>
 
             <div class="col-md-3">
-              <input type="number" class="form-control" name="color" placeholder="color" required>
+              <!-- <input type="number" class="form-control" name="color" placeholder="color" required> -->
+              <select id="color" name="color" class="form-control"></select>
             </div>
             <div class="col-md-3">
-              <input type="number" class="form-control" name="thickness" placeholder="thickness" required>
+              <!-- <input type="number" class="form-control" name="thickness" placeholder="thickness" required> -->
+              <select id="thickness" name="thickness" class="form-control"></select>
             </div>
 
 
 
             <div class="col-md-3">
-              <input type="number" class="form-control" name="recommendedRoom" placeholder="recommendedRoom" required>
+              <!-- <input type="number" class="form-control" name="recommendedRoom" placeholder="recommendedRoom" required> -->
+              <select id="recommendedRoom" name="recommendedRoom" class="form-control"></select>
+
             </div>
             <div class="col-md-3">
-              <input type="number" class="form-control" name="quantityPerSquareMeter" placeholder="quantityPerSquareMeter" required>
+              <!-- <input type="number" class="form-control" name="quantityPerSquareMeter" placeholder="quantityPerSquareMeter" required> -->
+              <select id="quantityPerSquareMeter" name="quantityPerSquareMeter" class="form-control"></select>
+
             </div>
             <div class="col-md-3">
               <input type="number" class="form-control" name="type" placeholder="type" required>
+              <select id="type" name="type" class="form-control"></select>
+
             </div>
             <div class="col-md-3">
-              <input type="number" class="form-control" name="print" placeholder="print" required>
+              <!-- <input type="number" class="form-control" name="print" placeholder="print" required> -->
+              <select id="print" name="print" class="form-control"></select>
+
             </div>
             <div class="col-md-3">
-              <input type="number" class="form-control" name="usage" placeholder="usage" required>
+              <!-- <input type="number" class="form-control" name="usage" placeholder="usage" required> -->
+              <select id="usage" name="usage" class="form-control"></select>
             </div>
             <div class="col-md-3">
               <input type="number" class="form-control" name="sizeMM" placeholder="sizeMM" required>
+              <select id="sizeMM" name="sizeMM" class="form-control"></select>
             </div>
             <div class="col-md-3">
               <input type="number" class="form-control" name="boxQuantity" placeholder="boxQuantity" required>
@@ -314,22 +331,83 @@ const cimagesInput = document.getElementById('images');
   
         $(document).ready(function () {
   // Initialize Select2 for related products
-  $('#categories, #subCategories, #relatedProducts').select2();
+  $('#categories, #subCategories, #relatedProducts, #group, #unit, #brand, sizeMM, #usage, #print, #type, #quantityPerSquareMeter, #recommendedRoom, #thickness, #color, #material, #finish').select2();
 
   fetch('/admin/categoriesselect')
-    .then(response => response.json())
-    .then(data => {
-      if (data.success) {
-        // Populate categories
-        data.categories.forEach(category => {
-          $('#categories').append(new Option(category.name, category._id));
-        });
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      // Populate categories
+      data.categories.forEach(category => {
+        $('#categories').append(new Option(category.name, category._id));
+      });
 
-        data.subCategories.forEach(subCategory => {
-          $('#subCategories').append(new Option(subCategory.name, subCategory._id));
-        });
-      }
-    })
+      // Populate subcategories
+      data.subCategories.forEach(subCategory => {
+        $('#subCategories').append(new Option(subCategory.name, subCategory._id));
+      });
+
+      // Populate product group
+      data.group.forEach(group => {
+        $('#group').append(new Option(group.name, group._id));
+      });
+
+      // Populate units
+      data.unit.forEach(unitd => {
+        $('#unit').append(new Option(unitd.name, unitd._id));
+      });
+
+      // Populate sizes
+      data.size.forEach(sized => {
+        $('#size').append(new Option(sized.size, sized._id));
+      });
+
+      // Populate brands
+      data.brand.forEach(brandd => {
+        $('#brand').append(new Option(brandd.name, brandd._id));
+      });
+
+      // Populate finishes
+      data.specsFinish.forEach(finish => {
+        $('#finish').append(new Option(finish.name, finish._id));
+      });
+
+      // Populate materials
+      data.specsMaterial.forEach(material => {
+        $('#material').append(new Option(material.name, material._id));
+      });
+
+      // Populate colors
+      data.color.forEach(color => {
+        $('#color').append(new Option(color.name, color._id));
+      });
+
+      // Populate thickness
+      data.specsThickness.forEach(thickness => {
+        $('#thickness').append(new Option(thickness.name, thickness._id));
+      });
+
+      // Populate recommended rooms
+      data.specsRoom.forEach(room => {
+        $('#recommendedRoom').append(new Option(room.name, room._id));
+      });
+
+      // Populate types
+      data.specsType.forEach(type => {
+        $('#type').append(new Option(type.name, type._id));
+      });
+
+      // Populate prints
+      data.specsPrint.forEach(print => {
+        $('#print').append(new Option(print.name, print._id));
+      });
+
+      // Populate usage
+      data.specsUsage.forEach(usage => {
+        $('#usage').append(new Option(usage.name, usage._id));
+      });
+    }
+  })
     .catch(err => {
       console.error('Error fetching categories:', err);
     });

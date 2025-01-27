@@ -51,8 +51,8 @@ router.get('/categoriesselect', async (req, res) => {
         const specsPrint = await SpecsPrint.find();
         const specsUsage = await SpecsUsage.find();
         const specsSize = await SpecsSize.find();
-
-        res.json({ success: true, categories, subCategories , unit , brand , productGroup , specsFinish , specsMaterial , color , specsThickness , specsRoom , specsType , specsPrint , specsUsage , specsSize });
+        console.log(specsSize ,"productGroup")
+        res.json({ success: true, categories, subCategories , unit , brand , group : productGroup , specsFinish , specsMaterial , color , specsThickness , specsRoom , specsType , specsPrint , specsUsage , size: specsSize });
     } catch (error) {
         console.error('Error fetching categories:', error);
         res.status(500).json({ success: false, message: 'Error fetching categories.' });
