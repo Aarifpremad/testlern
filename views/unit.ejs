@@ -16,9 +16,25 @@
             flex: 1;
             padding: 20px;
         }
-
+    
         .table-container {
             margin-top: 20px;
+        }
+    
+        /* Force table borders */
+        table.dataTable,
+        table.dataTable th,
+        table.dataTable td {
+            border: 1px solid #dee2e6 !important;
+        }
+    
+        /* Optional: Adjust table styles for readability */
+        table.dataTable th {
+            background-color: #f8f9fa;
+        }
+    
+        table.dataTable tbody tr:hover {
+            background-color: #f1f3f5;
         }
     </style>
 </head>

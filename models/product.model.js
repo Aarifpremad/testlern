@@ -16,7 +16,7 @@ const ProductSchema = new Schema(
     size: { type: String, enum: ['S', 'M', 'L', 'XL']},
     group: { type: mongoose.Schema.Types.ObjectId, ref: 'ProductGroup' },
     productSerialNo: { type: String, unique: true },
-    unit: { type: String, required: true },
+    unit: { type: String, ref: 'Unit' , required: true },
     description: { type: String },
     metaDescription: {
       metaTitle: { type: String, trim: true },
