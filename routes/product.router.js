@@ -59,31 +59,30 @@ router.get('/productsselect', async (req, res) => {
 router.post('/create-product', upload.array('images'), async (req, res) => {
     try {
       const { body, files } = req;
-  
+      
       const imageFilenames = files.map(file => file.filename);
         console.log(body.metaDescription.metaKeywords,body);
-      const linkedProducts = body.linkedProducts
-        ? body.linkedProducts
-        : { relatedProducts: [] };
-        console.log(body.metaDescription.metaKeywords,body);
-      const tilesPerfection = {
-        description: body.tdescription,
-        appearance: body.appearance,
-        material: body.material,
-        glaze: body.glaze,
-        rectified: body.Rectified,
-        color: body.color,
-        thickness: body.thickness,
-        recommendedRoom: body.recommendedRoom,
-        quantityPerSquareMeter: body.quantityPerSquareMeter,
-        type: body.type,
-        print: body.print,
-        usage: body.usage,
-        sizeMM: body.sizeMM,
-        boxQuantity: body.boxQuantity,
-        wastage: body.wastage,
-      };
-  
+      const  linkedProducts = body.linkedProducts && body.linkedProducts.relatedProducts 
+      ? body.linkedProducts.relatedProducts 
+      : [];
+        const tilesPerfection = {
+          description: body.tdescription,
+          appearance: Array.isArray(body.finish) ? body.finish.join(', ') : body.finish, // Convert array to comma-separated string
+          material: Array.isArray(body.material) ? body.material.join(', ') : body.material,
+          glaze: body.glaze,
+          rectified: body.Rectified,
+          color: Array.isArray(body.color) ? body.color.join(', ') : body.color,
+          thickness: Array.isArray(body.thickness) ? body.thickness.join(', ') : body.thickness,
+          recommendedRoom: Array.isArray(body.recommendedRoom) ? body.recommendedRoom.join(', ') : body.recommendedRoom,
+          quantityPerSquareMeter: body.quantityPerSquareMeter,
+          type: Array.isArray(body.type) ? body.type.join(', ') : body.type,
+          print: Array.isArray(body.print) ? body.print.join(', ') : body.print,
+          usage: Array.isArray(body.usage) ? body.usage.join(', ') : body.usage,
+          sizeMM: body.sizeMM,
+          boxQuantity: body.boxQuantity,
+          wastage: body.wastage,
+        };
+          
       const productData = {
         name: body.name,
         brand: body.brand,

@@ -160,16 +160,16 @@
           <label for="price" class="form-label">Prices</label>
           <div class="row">
             <div class="col-md-3">
-              <input type="number" class="form-control" name="price[price]" placeholder="Price" required>
+              <input type="number" class="form-control" name="price[price]" placeholder="Price" step="0.01" min="0" required>
             </div>
             <div class="col-md-3">
-              <input type="number" class="form-control" name="price[ourPrice]" placeholder="Our Price" required>
+              <input type="number" class="form-control" name="price[ourPrice]" placeholder="Our Price" step="0.01" min="0" required>
             </div>
             <div class="col-md-3">
-              <input type="number" class="form-control" name="price[ourCutPrice]" placeholder="Our Cut Price" required>
+              <input type="number" class="form-control" name="price[ourCutPrice]" placeholder="Our Cut Price" step="0.01" min="0" required>
             </div>
             <div class="col-md-3">
-              <input type="number" class="form-control" name="price[ourFullCutPrice]" placeholder="Full Cut Price" required>
+              <input type="number" class="form-control" name="price[ourFullCutPrice]" placeholder="Full Cut Price" step="0.01" min="0" required>
             </div>
           </div>
         </div>
@@ -439,6 +439,7 @@ const cimagesInput = document.getElementById('images');
           });
           this.reset();
           $('#preview-images').empty();
+          window.location.href = '/productlist';
         } else {
           Swal.fire({
             icon: 'error',
