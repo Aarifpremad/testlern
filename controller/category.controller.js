@@ -74,7 +74,7 @@ exports.createCategory = async (req, res) => {
 
 exports.getCategories = async (req, res) => {
     try {
-        const { page = 1, limit = 10, name = '', status } = req.query;
+        const { page = 1, limit = 10, name = '', status, draw } = req.query;
 
         // Build filter object
         const filter = {};
@@ -113,14 +113,16 @@ exports.getCategories = async (req, res) => {
 
         const totalCount = await Category.countDocuments(filter);
 
+        // Send response in DataTable-friendly format
         res.status(200).json({
-            categories,
-            totalCount,
-            totalPages: Math.ceil(totalCount / limit),
-            currentPage: parseInt(page),
+            draw: parseInt(draw) || 1, // Draw ID from request
+            recordsTotal: totalCount, // Total number of records (for pagination)
+            recordsFiltered: totalCount, // Total number of filtered records (same as total count in this case)
+            data: categories, // Data for the table
         });
     } catch (error) {
         console.error('Error fetching categories:', error);
         res.status(500).json({ message: 'An error occurred while fetching categories.' });
     }
 };
+
