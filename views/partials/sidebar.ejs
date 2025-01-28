@@ -1,14 +1,26 @@
 <aside class="sidebar">
     <ul>
-        <!-- <li><a href="/admin/dashboard" class="<%= page === 'dashboard' ? 'active' : '' %>">Dashboard</a></li> -->
-        <!-- <li><a href="/category" class="<%= page === 'category' ? 'active' : '' %>">Category Create</a></li> -->
-        <li><a href="/categorylist" class="<%= page === 'categorylist' ? 'active' : '' %>">Category List</a></li>
-        <!-- <li><a href="/subcategory" class="<%= page === 'subcategory' ? 'active' : '' %>">Subcategory Create</a></li> -->
-        <!-- <li><a href="/subcategorylist" class="<%= page === 'subcategorylist' ? 'active' : '' %>">Subcategory List</a></li> -->
-        <!-- <li><a href="/product" class="<%= page === 'product' ? 'active' : '' %>">Product Create</a></li> -->
-        
-        <!-- <li>
-            <a href="javascript:void(0)" class="specifications-toggle">Specifications</a>
+        <li><a href="/admin/dashboard" class="<%= page === 'dashboard' ? 'active' : '' %>">Dashboard</a></li>
+
+        <!-- Category Section -->
+        <li>
+            <a href="javascript:void(0)" class="category-toggle <%= page === 'category' || page === 'categorylist' || page === 'subcategory' || page === 'subcategorylist' ? 'active' : '' %>">
+                Catalog
+            </a>
+            <ul class="sub-menu">
+                <li><a href="/category" class="<%= page === 'category' ? 'active' : '' %>">Category Create</a></li>
+                <li><a href="/categorylist" class="<%= page === 'categorylist' ? 'active' : '' %>">Category List</a></li>
+                <li><a href="/subcategory" class="<%= page === 'subcategory' ? 'active' : '' %>">Subcategory Create</a></li>
+                <li><a href="/subcategorylist" class="<%= page === 'subcategorylist' ? 'active' : '' %>">Subcategory List</a></li>
+                <li><a href="/product" class="<%= page === 'product' ? 'active' : '' %>">Product Create</a></li>
+                <li><a href="/productlist" class="<%= page === 'productlist' ? 'active' : '' %>">Product List</a></li>
+            </ul>
+        </li>
+
+        <li>
+            <a href="javascript:void(0)" class="specifications-toggle <%= page === 'color' || page === 'specssize' || page === 'specsfinish' || page === 'specsmaterial' || page === 'specsthickness' || page === 'specsroom' || page === 'specstype' || page === 'specsprint' || page === 'specsusage' || page === 'productgroup' || page === 'brand' || page === 'unit' ? 'active' : '' %>">
+                Specifications
+            </a>
             <ul class="sub-menu">
                 <li><a href="/specifications/color" class="<%= page === 'color' ? 'active' : '' %>">Specs Color</a></li>
                 <li><a href="/specifications/size" class="<%= page === 'specssize' ? 'active' : '' %>">Specs Size</a></li>
@@ -21,15 +33,19 @@
                 <li><a href="/specifications/usage" class="<%= page === 'specsusage' ? 'active' : '' %>">Specs Usage</a></li>
                 <li><a href="/productgroup" class="<%= page === 'productgroup' ? 'active' : '' %>">Product Group</a></li>
                 <li><a href="/brand" class="<%= page === 'brand' ? 'active' : '' %>">Brand</a></li>
-                <li><a href="/unit" class="<%= page === 'unit' ? 'active' : '' %>">unit</a></li>
+                <li><a href="/unit" class="<%= page === 'unit' ? 'active' : '' %>">Unit</a></li>
             </ul>
-        </li> -->
-        <!-- <li><a href="/productlist" class="<%= page === 'product' ? 'active' : '' %>">Product List</a></li> -->
-
+        </li>
     </ul>
 </aside>
 
 <style>
+    /* Style for active link */
+    .active {
+        color: #fff;
+        background-color: #007bff;
+    }
+
     /* Style for sub-menu (hidden by default) */
     .sub-menu {
         display: none;
@@ -41,10 +57,33 @@
         display: block;
         padding: 5px 0;
     }
+
+    /* Style for parent items when active */
+    .sidebar a.active {
+        background-color: #0056b3;  /* Active color for parent link */
+    }
+
+    /* Hover effect for parent links */
+    .sidebar a:hover {
+        background-color: #0069d9;
+        color: white;
+    }
 </style>
 
 <script>
-    // Toggle sub-menu visibility
+    // Toggle sub-menu visibility for Categories
+    document.querySelector('.category-toggle').addEventListener('click', function () {
+        const subMenu = this.nextElementSibling;
+        subMenu.style.display = subMenu.style.display === 'block' ? 'none' : 'block';
+    });
+
+    // Toggle sub-menu visibility for Products
+    document.querySelector('.product-toggle').addEventListener('click', function () {
+        const subMenu = this.nextElementSibling;
+        subMenu.style.display = subMenu.style.display === 'block' ? 'none' : 'block';
+    });
+
+    // Toggle sub-menu visibility for Specifications
     document.querySelector('.specifications-toggle').addEventListener('click', function () {
         const subMenu = this.nextElementSibling;
         subMenu.style.display = subMenu.style.display === 'block' ? 'none' : 'block';
