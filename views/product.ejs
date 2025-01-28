@@ -205,13 +205,13 @@
               <input type="text" class="form-control" name="tdescription" placeholder="Enter Description" required>
             </div>
             <div class="col-md-6">
-              <select id="finish" name="finish" class="form-select">
-                <option value="" disabled selected>Select Finish</option>
+              <select id="finish" name="finish[]" class="form-select" multiple>
+                <option value="" disabled >Select Finish</option>
               </select>
             </div>
             <div class="col-md-6">
-              <select id="material" name="material" class="form-select">
-                <option value="" disabled selected>Select Material</option>
+              <select id="material" name="material[]" class="form-select" multiple>
+                <option value="" disabled >Select Material</option>
               </select>
             </div>
             <div class="col-md-6">
@@ -229,18 +229,18 @@
               </select>
             </div>
             <div class="col-md-6">
-              <select id="color" name="color" class="form-select">
-                <option value="" disabled selected>Select Color</option>
+              <select id="color" name="color[]" class="form-select" multiple>
+                <option value="" disabled >Select Color</option>
               </select>
             </div>
             <div class="col-md-6">
-              <select id="thickness" name="thickness" class="form-select">
-                <option value="" disabled selected>Select Thickness</option>
+              <select id="thickness" name="thickness[]" class="form-select" multiple>
+                <option value="" disabled>Select Thickness</option>
               </select>
             </div>
             <div class="col-md-6">
-              <select id="recommendedRoom" name="recommendedRoom" class="form-select">
-                <option value="" disabled selected>Select Recommended Room</option>
+              <select id="recommendedRoom" name="recommendedRoom[]" class="form-select" multiple>
+                <option value="" disabled>Select Recommended Room</option>
               </select>
             </div>
             <div class="col-md-6">
@@ -248,23 +248,23 @@
               </select>
             </div>
             <div class="col-md-6">
-              <select id="type" name="type" class="form-select">
-                <option value="" disabled selected>Select Type</option>
+              <select id="type" name="type[]" class="form-select" multiple>
+                <option value="" disabled>Select Type</option>
               </select>
             </div>
             <div class="col-md-6">
-              <select id="print" name="print" class="form-select">
-                <option value="" disabled selected>Select Print</option>
+              <select id="print" name="print[]" class="form-select" multiple>
+                <option value="" disabled>Select Print</option>
               </select>
             </div>
             <div class="col-md-6">
-              <select id="usage" name="usage" class="form-select">
-                <option value="" disabled selected>Select Usage</option>
+              <select id="usage" name="usage[]" class="form-select" multiple>
+                <option value="" disabled>Select Usage</option>
               </select>
             </div>
             <div class="col-md-6">
               <select id="sizeMM" name="sizeMM" class="form-select">
-                <option value="" disabled selected>Select Size (MM)</option>
+                <option value="" disabled>Size (MM)</option>
               </select>
             </div>
             <div class="col-md-6">
@@ -301,6 +301,62 @@ const cimagesInput = document.getElementById('images');
   
         $(document).ready(function () {
   $('#categories, #subCategories, #relatedProducts, #group, #unit, #brand, sizeMM, #usage, #print, #type,  #recommendedRoom, #thickness, #color, #material, #finish').select2();
+
+
+  $('#finish').select2({
+    placeholder: "Select Finish",
+    allowClear: true
+  });
+
+  $('#material').select2({
+    placeholder: "Select Material",
+    allowClear: true
+  });
+
+  $('#glaze').select2({
+    placeholder: "Select Glaze",
+    allowClear: true
+  });
+
+  $('#Rectified').select2({
+    placeholder: "Select Rectified",
+    allowClear: true
+  });
+
+  $('#color').select2({
+    placeholder: "Select Color",
+    allowClear: true
+  });
+
+  $('#thickness').select2({
+    placeholder: "Select Thickness",
+    allowClear: true
+  });
+
+  $('#recommendedRoom').select2({
+    placeholder: "Select Recommended Room",
+    allowClear: true
+  });
+
+  $('#type').select2({
+    placeholder: "Select Type",
+    allowClear: true
+  });
+
+  $('#print').select2({
+    placeholder: "Select Print",
+    allowClear: true
+  });
+
+  $('#usage').select2({
+    placeholder: "Select Usage",
+    allowClear: true
+  });
+
+  $('#sizeMM').select2({
+    placeholder: "Select Size (MM)",
+    allowClear: true
+  });
   fetch('/admin/categoriesselect')
   .then(response => response.json())
   .then(data => {
@@ -312,42 +368,42 @@ const cimagesInput = document.getElementById('images');
         $('#subCategories').append(new Option(subCategory.name, subCategory._id));
       });
       data.group.forEach(group => {
-        $('#group').append(new Option(group.name, group._id));
+        $('#group').append(new Option(group.name, group.name));
       });
       data.unit.forEach(unitd => {
-        $('#unit').append(new Option(unitd.name, unitd._id));
+        $('#unit').append(new Option(unitd.name, unitd.name));
       });
       data.size.forEach(sized => {
-        $('#sizeMM').append(new Option(sized.size, sized._id));
+        $('#sizeMM').append(new Option(sized.size, sized.size));
       });
       data.brand.forEach(brandd => {
-        $('#brand').append(new Option(brandd.name, brandd._id));
+        $('#brand').append(new Option(brandd.name, brandd.name));
       });
       data.specsFinish.forEach(finish => {
-        $('#finish').append(new Option(finish.name, finish._id));
+        $('#finish').append(new Option(finish.name, finish.name));
       });
       data.specsMaterial.forEach(material => {
-        $('#material').append(new Option(material.name, material._id));
+        $('#material').append(new Option(material.name, material.name));
       });
       data.color.forEach(color => {
-        $('#color').append(new Option(color.name, color._id));
+        $('#color').append(new Option(color.name, color.name));
       });
       data.specsThickness.forEach(thickness => {
-        $('#thickness').append(new Option(thickness.thickness, thickness._id));
+        $('#thickness').append(new Option(thickness.thickness, thickness.thickness));
       });
       console.log(data.specsRoom, data.specsType, data.specsPrint, data.specsUsage);
       data.specsRoom.forEach(room => {
-        $('#recommendedRoom').append(new Option(room.room, room._id));
+        $('#recommendedRoom').append(new Option(room.room, room.room));
       });
       console.log(data.specsType);
       data.specsType.forEach(type => {
-        $('#type').append(new Option(type.type, type._id));
+        $('#type').append(new Option(type.type, type.type));
       });
       data.specsPrint.forEach(print => {
-        $('#print').append(new Option(print.print, print._id));
+        $('#print').append(new Option(print.print, print.print));
       });
       data.specsUsage.forEach(usage => {
-        $('#usage').append(new Option(usage.usage, usage._id));
+        $('#usage').append(new Option(usage.usage, usage.usage));
       });
     }
   })
