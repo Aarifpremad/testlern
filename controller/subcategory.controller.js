@@ -45,7 +45,7 @@ exports.createSubCategory = async (req, res) => {
 
 exports.getSubCategories = async (req, res) => {
     try {
-        const { page = 1, limit = 10, name = '', category } = req.query;
+        const { page = 1, limit = 10, name = '', category, draw } = req.query;
 
         const filter = {};
         if (name) filter.name = { $regex: name, $options: 'i' }; // Search by name
@@ -56,9 +56,10 @@ exports.getSubCategories = async (req, res) => {
             .skip((page - 1) * limit)
             .limit(parseInt(limit))
             .populate('category', 'name') // Populate category name
-            .sort({ position: 1 })
+            .sort({ id: 1 })
             .lean();
 
+        // Get total count of all records for pagination (without any filters)
         const totalCount = await SubCategory.countDocuments(filter);
 
         // Aggregate product counts for subcategories
@@ -87,14 +88,18 @@ exports.getSubCategories = async (req, res) => {
             productCount: productCountMap[subCategory._id] || 0, // Default to 0 if no products
         }));
 
+        // Send response in DataTable-friendly format
         res.status(200).json({
-            subCategories: subCategoriesWithProductCount,
-            totalCount,
-            totalPages: Math.ceil(totalCount / limit),
-            currentPage: parseInt(page),
+            draw: parseInt(draw) || 1, // Draw ID from request
+            recordsTotal: totalCount, // Total number of records (for pagination)
+            recordsFiltered: totalCount, // Total number of filtered records (same as total count in this case)
+            data: subCategoriesWithProductCount, // Data for the table
         });
     } catch (error) {
         console.error('Error fetching subcategories:', error);
         res.status(500).json({ message: 'An error occurred while fetching subcategories.' });
     }
 };
+
+
+

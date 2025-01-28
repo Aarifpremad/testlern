@@ -145,7 +145,6 @@ router.post('/create-product', upload.array('images'), async (req, res) => {
 
         const totalRecords = await Product.countDocuments();
         const totalFilteredRecords = await Product.countDocuments(query);
-
         res.json({
             draw: parseInt(draw), // Draw ID from request
             recordsTotal: totalRecords, // Total number of records

@@ -37,7 +37,6 @@
             <div class="mb-3">
                 <label for="subcategory-name" class="form-label">Filter by Name</label>
                 <input type="text" id="subcategory-name" class="form-control" placeholder="Search by subcategory name">
-                <button id="apply-filter" class="btn btn-primary mt-2">Apply Filter</button>
             </div>
 
             <!-- DataTable -->
@@ -69,74 +68,69 @@
 
     <script>
         $(document).ready(function () {
-    const table = $('#subcategory-table').DataTable({
-        processing: true,
-        serverSide: true,
-        ajax: {
-            url: '/admin/subcategories',
-            type: 'GET',
-            data: function (d) {
-                d.page = d.start / d.length + 1; // Convert to 1-based page number
-                d.limit = d.length;
-                d.name = $('#subcategory-name').val(); // Apply name filter
-            },
-            dataSrc: function (json) {
-                return json.subCategories.map((subcategory, index) => ({
-                    ...subcategory,
-                    index: index + 1 + (json.currentPage - 1) * json.subCategories.length, // Proper count
-                }));
-            },
-        },
-        columns: [
-            { data: 'index' }, // Row number
-            { data: 'name' },
-            { data: 'position' },
-            {
-                data: 'category',
-                render: function (data) {
-                    return data ? data.name : 'N/A';
-                }
-            },
-            {
-                data: 'status',
-                render: function (data) {
-                    const status = data ? 'Active' : 'Inactive';
-                    const badgeClass = data ? 'success' : 'danger';
-                    return `<span class="badge bg-${badgeClass}">${status}</span>`;
+            const table = $('#subcategory-table').DataTable({
+                processing: true,
+                serverSide: true,
+                ajax: {
+                    url: '/admin/subcategories',
+                    type: 'GET',
+                    data: function (d) {
+                        d.page = d.start / d.length + 1; // Convert to 1-based page number
+                        d.limit = d.length;
+                        d.name = $('#subcategory-name').val(); // Apply name filter
+                    },
+                    dataSrc: function (json) {
+                        // Handle the API response to fill the table
+                        return json.data.map((subcategory, index) => ({
+                            ...subcategory,
+                            index: index + 1 + (json.draw - 1) * json.data.length, // Correct row index for pagination
+                        }));
+                    },
                 },
-            },
-            { data: 'productCount' }, // Product count from API
-            {
-                data: '_id',
-                render: function (data) {
-                    return `
-                        <button class="btn btn-info btn-sm me-2" onclick="editSubCategory('${data}')">Edit</button>
-                        <button class="btn btn-danger btn-sm" onclick="deleteSubCategory('${data}')">Delete</button>
-                    `;
+                columns: [
+                    { data: 'id' }, 
+                    { data: 'name' },
+                    { data: 'position' },
+                    {
+                        data: 'category',
+                        render: function (data) {
+                            return data ? data.name : 'N/A';
+                        }
+                    },
+                    {
+                        data: 'status',
+                        render: function (data) {
+                            const status = data ? 'Active' : 'Inactive';
+                            const badgeClass = data ? 'success' : 'danger';
+                            return `<span class="badge bg-${badgeClass}">${status}</span>`;
+                        },
+                    },
+                    { data: 'productCount' }, // Product count from API
+                    {
+                        data: '_id',
+                        render: function (data) {
+                            return `
+                                <button class="btn btn-info btn-sm me-2" onclick="editSubCategory('${data}')">Edit</button>
+                                <button class="btn btn-danger btn-sm" onclick="deleteSubCategory('${data}')">Delete</button>
+                            `;
+                        }
+                    },
+                ],
+                pageLength: 10,
+                lengthMenu: [10, 25, 50, 100],
+                language: {
+                    paginate: {
+                        previous: '<',
+                        next: '>',
+                    },
                 }
-            },
-        ],
-        pageLength: 10,
-        lengthMenu: [10, 25, 50, 100],
-    });
+            });
 
-    // Reload table with filter applied
-    $('#apply-filter').click(function () {
-        table.ajax.reload();
-    });
-});
-
-// Edit subcategory function
-function editSubCategory(id) {
-    alert('Edit subcategory with ID: ' + id);
-}
-
-// Delete subcategory function
-function deleteSubCategory(id) {
-    if (confirm('Are you sure you want to delete this subcategory?')) {
-        alert('Delete subcategory with ID: ' + id);
-    }
-}
+            // Apply the filter as the user types (no "Apply Filter" button)
+            $('#subcategory-name').on('input', function () {
+                table.ajax.reload(); // Reload table with the updated filter
+            });
+        });
 
         // Edit subcategory function
         function editSubCategory(id) {
