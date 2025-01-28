@@ -137,17 +137,17 @@
 
                 <div class="mb-3">
                     <label for="seo_meta_title" class="form-label">SEO Meta Title</label>
-                    <input type="text" class="form-control" id="seo_meta_title" name="seo[meta_title]">
+                    <input type="text" class="form-control" id="seo_meta_title" name="meta_title">
                 </div>
 
                 <div class="mb-3">
                     <label for="seo_meta_description" class="form-label">SEO Meta Description</label>
-                    <textarea class="form-control" id="seo_meta_description" name="seo[meta_description]" rows="3"></textarea>
+                    <textarea class="form-control" id="seo_meta_description" name="meta_description" rows="3"></textarea>
                 </div>
 
                 <div class="mb-3">
                     <label for="seo_meta_keywords" class="form-label">SEO Meta Keywords</label>
-                    <input type="text" class="form-control" id="seo_meta_keywords" name="seo[meta_keywords]">
+                    <input type="text" class="form-control" id="seo_meta_keywords" name="meta_keywords">
                 </div>
 
                 <div class="mb-3">
@@ -237,7 +237,7 @@
                         confirmButtonText: 'OK'
                     });
                     // page load 
-                    window.location.href = '/admin/categorylist';
+                    window.location.href = '/categorylist';
                 } else {
                     // Show error message
                     Swal.fire({

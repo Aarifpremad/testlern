@@ -39,11 +39,14 @@ exports.createCategory = async (req, res) => {
             category_image: categoryImages,  // Ensure this is an array of image URLs or paths
             banner_image: bannerImages,     // Ensure this is an array of image URLs or paths
             seo: {
-                meta_title: req.body['seo[meta_title]'] || '',
-                meta_description: req.body['seo[meta_description]'] || '',
-                meta_keywords: req.body['seo[meta_keywords]'] || '',
+                meta_title: req.body.meta_title || '',
+                meta_description: req.body.meta_description || '',
+                meta_keywords: req.body.meta_keywords || '',
             },
-            id : String(id)
+            id : String(id),
+            heading :req.body.heading,
+            content :req.body.content,
+
         });
 
         await newCategory.save();
