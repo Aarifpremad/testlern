@@ -28,7 +28,7 @@ const subCategorySchema = new mongoose.Schema(
         },
         image: {
             type: String, // Path to uploaded image
-            required: true
+            // required: true
         },
         seo: {
             meta_title: {

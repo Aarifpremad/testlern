@@ -10,48 +10,62 @@ const ProductSchema = new Schema(
       unique: true,
     },
     name: { type: String, required: true, trim: true },
-    brand: { type: mongoose.Schema.Types.ObjectId, ref: 'Brand', required: true },
+    brand: { type: String },
     sku: { type: String, trim: true },
     urlKey: { type: String, trim: true },
-    size: { type: String, enum: ['S', 'M', 'L', 'XL']},
-    group: { type: mongoose.Schema.Types.ObjectId, ref: 'ProductGroup' },
-    productSerialNo: { type: String, unique: true },
-    unit: { type: String, ref: 'Unit' , required: true },
+    size: { type: String },
+    group: { type: String },
+    productSerialNo: { type: String,},
+    unit: { type: String },
     description: { type: String },
+    productType :{ type: String },
+    productLabel :{ type: String },
     metaDescription: {
       metaTitle: { type: String, trim: true },
       metaKeywords: { type: [String], trim: true },
       metaDescription: { type: String, trim: true },
     },
     price: {
-      price: { type: Number, required: true },
-      ourPrice: { type: Number, required: true },
+      price: { type: Number, },
+      ourPrice: { type: Number, },
       ourCutPrice: { type: Number },
       ourFullCutPrice: { type: Number },
     },
     tilesPerfection: {
       description: { type: String },
-      appearance: { type: mongoose.Schema.Types.ObjectId, ref: 'SpecsFinish' },
-      material: { type: mongoose.Schema.Types.ObjectId, ref: 'SpecsMaterial' },
-      glaze: { type: String, enum: ['Glazed', 'No'], required: true },
-      rectified: { type: String, enum: ['Rectified', 'No'], required: true },
-      color: { type: mongoose.Schema.Types.ObjectId, ref: 'Color' },
-      thickness: { type: mongoose.Schema.Types.ObjectId, ref: 'SpecsThickness' },
-      recommendedRoom: { type: mongoose.Schema.Types.ObjectId, ref: 'SpecsRoom' },
-      quantityPerSquareMeter: { type: Number },
-      type: { type: mongoose.Schema.Types.ObjectId, ref: 'SpecsType' },
-      print: { type: mongoose.Schema.Types.ObjectId, ref: 'SpecsPrint' },
-      usage: { type: mongoose.Schema.Types.ObjectId, ref: 'SpecsUsage' },
-      sizeMM: { type: mongoose.Schema.Types.ObjectId, ref: 'SpecsSize' },
-      boxQuantity: { type: Number },
-      wastage: { type: Number },
+      appearance:  { type: String },
+      material:  { type: String },
+      glaze: { type: String },
+      rectified:  { type: String },
+      color:  { type: String },
+      thickness:  { type: String },
+      recommendedRoom:  { type: String },
+      quantityPerSquareMeter: { type: String },
+      type:  { type: String },
+      print:  { type: String },
+      usage:  { type: String },
+      sizeMM:  { type: String },
+      boxQuantity:  { type: String },
+      wastage:  { type: String },
     },
     images: [{ type: String }],
     categories: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Category' }],
     subCategories: [{ type: mongoose.Schema.Types.ObjectId, ref: 'SubCategory' }],
-    linkedProducts: {
-      relatedProducts: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Product' }],
+    linkedProducts:  [{ type: mongoose.Schema.Types.ObjectId, ref: 'Product' }],
+    stock:{type:String,default:""},
+    status:{
+      type: Boolean,
+      default :true
     },
+    serialno :{
+      type:Number,
+      default :0
+    },
+    isVisible: {
+      type: Boolean,
+      default :true
+    },
+
   },
   { timestamps: true }
 );
@@ -78,3 +92,6 @@ ProductSchema.pre('save', async function (next) {
 const Product = mongoose.model('Product', ProductSchema);
 
 module.exports = Product;
+
+
+let call = require("./addproduct")

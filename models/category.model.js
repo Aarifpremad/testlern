@@ -21,6 +21,8 @@ const categorySchema = new mongoose.Schema({
         meta_description: { type: String, default: '' },
         meta_keywords: { type: String, default: '' }
     },
+    heading: { type: String, default: '' },
+    content: { type: String, default: '' },
     id: { type: Number, default: 0 },  // Auto increment ID
 }, { timestamps: true });
 

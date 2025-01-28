@@ -16,6 +16,7 @@ try {
     }).catch((err) => {
         // logger.info('ERROR CONNECTING TO DB', err);
     });
+    
 } catch (err) {
     console.log('DBCONNECT ERROR', err);
 }
