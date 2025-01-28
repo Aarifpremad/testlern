@@ -123,4 +123,46 @@ router.post('/create-product', upload.array('images'), async (req, res) => {
   });
 
 
+
+  router.get('/products', async (req, res) => {
+    try {
+        const { draw = 1, start = 0, length = 10, search = '' } = req.query;
+      console.log(JSON.stringify(req.query))
+        const page = Math.ceil(start / length) + 1; // 1-based page number
+        const limit = parseInt(length);
+
+        const query = {
+            $or: [
+                { name: new RegExp(search, 'i') },
+                { sku: new RegExp(search, 'i') }
+            ]
+        };
+
+        const products = await Product.find(query)
+            .skip((page - 1) * limit)
+            .limit(limit)
+            .lean();
+
+        const totalRecords = await Product.countDocuments();
+        const totalFilteredRecords = await Product.countDocuments(query);
+
+        res.json({
+            draw: parseInt(draw), // Draw ID from request
+            recordsTotal: totalRecords, // Total number of records
+            recordsFiltered: totalFilteredRecords, // Total number of filtered records
+            data: products, // Actual data for the table
+        });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+
+  
+
+
+
+
+
+
 module.exports = router;

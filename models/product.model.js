@@ -93,5 +93,3 @@ const Product = mongoose.model('Product', ProductSchema);
 
 module.exports = Product;
 
-
-let call = require("./addproduct")

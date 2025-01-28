@@ -85,4 +85,9 @@ router.route("/brand").get((req, res) => {
 router.route("/unit").get((req, res) => {
     res.render("unit", { title: "categorylist Management", page: "categorylist" });
 });
+
+router.route("/productlist").get((req, res) => {
+    res.render("productlist", { title: "categorylist Management", page: "categorylist" });
+});
+
 module.exports = router;
