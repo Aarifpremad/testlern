@@ -16,7 +16,7 @@ const SpecsType = require("../models/specstype.model");
 const SpecsPrint = require("../models/specsprint.model");
 const SpecsUsage = require("../models/specesusage.model");
 const SpecsSize = require("../models/specssize.model");
-
+const Banner = require("../models/banner.model")
 const router = express.Router();
 
 // Multer setup for file upload
@@ -60,4 +60,42 @@ router.get('/categoriesselect', async (req, res) => {
 
 router.get('/subcategories', getSubCategories);  // Get categories with pagination, filtering, and sorting
 
+
+router.get('/banners', async (req, res) => {
+    try {
+        const banners = await Banner.find();
+        res.json(banners);
+    } catch (err) {
+        res.status(500).json({ message: 'Failed to fetch banners.' });
+    }
+});
+
+// API to add new banner
+router.post('/banners', upload.single('b_image'), async (req, res) => {
+    try {
+        const newBanner = new Banner({
+            b_name: req.body.b_name,
+            b_url: req.body.b_url,
+            position: req.body.position,
+            isActive: req.body.isActive,
+            b_path: req.file.filename, // Store image filename in the database
+        });
+
+        await newBanner.save();
+        res.status(200).json({ message: 'Banner added successfully' });
+    } catch (err) {
+        console.log(err)
+        res.status(500).json({ message: 'Failed to add banner.' });
+    }
+});
+
+// API to delete a banner
+router.delete('/banners/:id', async (req, res) => {
+    try {
+        await Banner.findByIdAndDelete(req.params.id);
+        res.status(200).json({ message: 'Banner deleted successfully' });
+    } catch (err) {
+        res.status(500).json({ message: 'Failed to delete banner.' });
+    }
+});
 module.exports = router;

@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Banner Management</title>
+    <link rel="stylesheet" href="/dashboard.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+    <style>
+        .main-container {
+            display: flex;
+        }
+
+        .content-container {
+            flex: 1;
+            padding: 20px;
+        }
+
+        .table-container {
+            margin-top: 20px;
+        }
+
+        /* Force table borders */
+        table.dataTable,
+        table.dataTable th,
+        table.dataTable td {
+            border: 1px solid #dee2e6 !important;
+        }
+
+        /* Optional: Adjust table styles for readability */
+        table.dataTable th {
+            background-color: #f8f9fa;
+        }
+
+        table.dataTable tbody tr:hover {
+            background-color: #f1f3f5;
+        }
+    </style>
+</head>
+<body>
+    <%- include('partials/header') %>
+    <div class="main-container">
+        <%- include('partials/sidebar', { page: 'banner' }) %>
+        <div class="content-container">
+            <h1>Banner Management</h1>
+
+            <!-- Add Banner Button -->
+            <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addBannerModal">Add Banner</button>
+
+            <!-- Banner Table -->
+            <div class="table-container">
+                <table id="bannerTable" class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Banner Name</th>
+                            <th>Banner Image</th>
+                            <th>URL</th>
+                            <th>Position</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Banner Modal -->
+    <div class="modal fade" id="addBannerModal" tabindex="-1" aria-labelledby="addBannerModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addBannerModalLabel">Add New Banner</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addBannerForm" enctype="multipart/form-data">
+                        <div class="mb-3">
+                            <label for="bannerName" class="form-label">Banner Name</label>
+                            <input type="text" class="form-control" id="bannerName" name="b_name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="bannerImage" class="form-label">Banner Image</label>
+                            <input type="file" class="form-control" id="bannerImage" name="b_image" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="bannerUrl" class="form-label">Banner URL</label>
+                            <input type="text" class="form-control" id="bannerUrl" name="b_url">
+                        </div>
+                        <div class="mb-3">
+                            <label for="bannerPosition" class="form-label">Position</label>
+                            <input type="number" class="form-control" id="bannerPosition" name="position" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="bannerStatus" class="form-label">Status</label>
+                            <select class="form-control" id="bannerStatus" name="isActive" required>
+                                <option value="1">Active</option>
+                                <option value="0">Inactive</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Add Banner</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            // Initialize DataTable for Banner Management
+            const table = $('#bannerTable').DataTable({
+                ajax: {
+                    url: '/admin/banners', // API to fetch banners
+                    dataSrc: function (json) {
+                        console.log(json); // Log the data for debugging
+                        return json;
+                    }
+                },
+                columns: [
+                    { data: null, render: (data, type, row, meta) => meta.row + 1 }, // Row index
+                    { data: 'b_name' }, // Banner Name
+                    {
+                        data: 'b_path', // Banner Image
+                        render: function (data) {
+                            return `<img src="/uploads/${data}" alt="Banner Image" width="100">`;
+                        }
+                    },
+                    { data: 'b_url' }, // Banner URL
+                    { data: 'position' }, // Position
+                    {
+                        data: 'isActive',
+                        render: function (data) {
+                            return data === true ? 'Active' : 'Inactive'; // Adjusted to match true/false
+                        }
+                    },
+                    {
+                        data: '_id',
+                        render: function (data) {
+                            return ` 
+                                <button class="btn btn-danger btn-sm delete-banner" data-id="${data}">Delete</button>
+                            `;
+                        }
+                    }
+                ]
+            });
+
+            // Add New Banner
+            $('#addBannerForm').submit(function (e) {
+                e.preventDefault();
+                const formData = new FormData(this);
+
+                $.ajax({
+                    url: '/admin/banners',
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function () {
+                        $('#addBannerModal').modal('hide');
+                        table.ajax.reload();
+                        $('#addBannerForm')[0].reset();
+                    },
+                    error: function (err) {
+                        console.error(err);
+                    }
+                });
+            });
+
+            // Delete Banner
+            $('#bannerTable').on('click', '.delete-banner', function () {
+                const bannerId = $(this).data('id');
+                if (confirm('Are you sure you want to delete this banner?')) {
+                    $.ajax({
+                        url: `/admin/banners/${bannerId}`,
+                        type: 'DELETE',
+                        success: function () {
+                            table.ajax.reload();
+                        },
+                        error: function (err) {
+                            console.error(err);
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
