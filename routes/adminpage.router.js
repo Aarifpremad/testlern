@@ -102,5 +102,8 @@ router.route("/header").get((req, res) => {
 router.route("/aboutdelivery").get((req, res) => {
     res.render("aboutdelivery", { title: "header Management", pages: [] });
 });
+router.route("/offersforuser").get((req, res) => {
+    res.render("offer", { title: "header Management", pages: [] });
+});
 
 module.exports = router;
