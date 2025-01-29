@@ -99,5 +99,8 @@ router.route("/banners").get((req, res) => {
 router.route("/header").get((req, res) => {
     res.render("header", { title: "header Management", pages: [] });
 });
+router.route("/aboutdelivery").get((req, res) => {
+    res.render("aboutdelivery", { title: "header Management", pages: [] });
+});
 
 module.exports = router;

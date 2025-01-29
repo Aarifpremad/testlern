@@ -36,4 +36,9 @@ let header = require("./routes/header.route")
 
 router.use("/admin",header)
 
+// let aboutdelivery = require("./routes/aboutdeveliey.router")
+
+// router.use("/admin",aboutdelivery)
+
+
 module.exports = router;

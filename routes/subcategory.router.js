@@ -17,6 +17,9 @@ const SpecsPrint = require("../models/specsprint.model");
 const SpecsUsage = require("../models/specesusage.model");
 const SpecsSize = require("../models/specssize.model");
 const Banner = require("../models/banner.model")
+const AboutDelivery = require("../models/about.develivaery")
+const Page = require('../models/page.model');
+
 const router = express.Router();
 
 // Multer setup for file upload
@@ -96,6 +99,75 @@ router.delete('/banners/:id', async (req, res) => {
         res.status(200).json({ message: 'Banner deleted successfully' });
     } catch (err) {
         res.status(500).json({ message: 'Failed to delete banner.' });
+    }
+});
+
+
+
+router.get('/aboutDelivery', async (req, res) => {
+    try {
+        const { draw = 1, start = 0, length = 10 } = req.query;
+        const page = Math.floor(start / length) + 1;
+        const limit = parseInt(length);
+        const skip = (page - 1) * limit;
+
+        const aboutDeliveries = await AboutDelivery.find()
+            .populate('page_id', 'pg_title')
+            .skip(skip)
+            .limit(limit);
+
+        const totalRecords = await AboutDelivery.countDocuments();
+
+        res.json({
+            draw: parseInt(draw),
+            recordsTotal: totalRecords,
+            recordsFiltered: totalRecords,
+            data: aboutDeliveries
+        });
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({ error: 'Failed to fetch data' });
+    }
+});
+
+// Get pages list
+router.get('/aboutDelivery/pages', async (req, res) => {
+    try {
+        const pages = await Page.find({}, '_id pg_title');
+        res.json({ pages });
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to fetch pages' });
+    }
+});
+
+// Add a new About Delivery item with image upload
+router.post('/aboutDelivery', upload.single('icon_image'), async (req, res) => {
+    try {
+        const { title, description, position, page_id } = req.body;
+        const icon_image = req.file ? req.file.filename : null;
+
+        const newItem = new AboutDelivery({
+            title,
+            description,
+            position,
+            page_id,
+            icon_image
+        });
+
+        await newItem.save();
+        res.json({ message: 'About Delivery item added successfully' });
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to add item' });
+    }
+});
+
+// Delete an About Delivery item
+router.delete('/aboutDelivery/:id', async (req, res) => {
+    try {
+        await AboutDelivery.findByIdAndDelete(req.params.id);
+        res.json({ message: 'Item deleted successfully' });
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to delete item' });
     }
 });
 module.exports = router;
