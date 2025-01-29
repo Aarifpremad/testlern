@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teach Pages Management</title>
+    <link rel="stylesheet" href="/dashboard.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+    <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
+
+    <style>
+        .main-container {
+            display: flex;
+        }
+
+        .content-container {
+            flex: 1;
+            padding: 20px;
+        }
+
+        .table-container {
+            margin-top: 20px;
+        }
+
+        table.dataTable,
+        table.dataTable th,
+        table.dataTable td {
+            border: 1px solid #dee2e6 !important;
+        }
+
+        table.dataTable th {
+            background-color: #f8f9fa;
+        }
+
+        table.dataTable tbody tr:hover {
+            background-color: #f1f3f5;
+        }
+
+        /* Modal Form Styling */
+        .modal-content {
+            border-radius: 10px;
+        }
+
+        .modal-header {
+            background: #007bff;
+            color: white;
+            border-radius: 10px 10px 0 0;
+        }
+
+        .form-control[readonly] {
+            background-color: #e9ecef;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <%- include('partials/header') %>
+    <div class="main-container">
+        <%- include('partials/sidebar', { page: 'teach-pages' }) %>
+        <div class="content-container">
+            <h1>Teach Pages Management</h1>
+
+            <!-- Add Page Button -->
+            <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addPageModal">+ Add New Page</button>
+
+            <!-- Teach Pages Table -->
+            <div class="table-container">
+                <table id="teachPagesTable" class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Title</th>
+                            <th>URL Key</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Page Modal -->
+    <div class="modal fade" id="addPageModal" tabindex="-1" aria-labelledby="addPageModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addPageModalLabel">Add New Teach Page</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addPageForm">
+                        <div class="mb-3">
+                            <label class="form-label">Title</label>
+                            <input type="text" class="form-control" id="pg_title" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">URL Key (Auto-Generated)</label>
+                            <input type="text" class="form-control" id="pg_url_key" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Content</label>
+                            <textarea id="pg_content" class="form-control"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Save Page</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            let editor;
+            ClassicEditor
+                .create(document.querySelector('#pg_content'))
+                .then(newEditor => {
+                    editor = newEditor;
+                })
+                .catch(error => {
+                    console.error(error);
+                });
+
+            // Auto-generate URL key from title
+            $('#pg_title').on('input', function () {
+                let title = $(this).val();
+                let urlKey = title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+                $('#pg_url_key').val(urlKey);
+            });
+
+            // Initialize DataTable
+            const table = $('#teachPagesTable').DataTable({
+                ajax: '/admin/teach-pages', // API to fetch teach pages
+                columns: [
+                    { data: null, render: (data, type, row, meta) => meta.row + 1 }, // Row index
+                    { data: 'pg_title' }, // Title
+                    { data: 'pg_url_key' }, // URL Key
+                    {
+                        data: '_id',
+                        render: function (data) {
+                            return `
+                                <button class="btn btn-danger btn-sm delete-page" data-id="${data}">Delete</button>
+                            `;
+                        }
+                    }
+                ]
+            });
+
+            // Add New Teach Page
+            $('#addPageForm').submit(function (e) {
+                e.preventDefault();
+                const formData = {
+                    pg_title: $('#pg_title').val(),
+                    pg_url_key: $('#pg_url_key').val(),
+                    pg_content: editor.getData()
+                };
+
+                $.post('/admin/teach-pages', formData, function () {
+                    $('#addPageModal').modal('hide');
+                    table.ajax.reload(); // Refresh the table
+                    $('#pg_title').val(''); 
+                    $('#pg_url_key').val('');
+                    editor.setData(''); // Clear the editor content
+                });
+            });
+
+            // Delete Teach Page
+            $('#teachPagesTable').on('click', '.delete-page', function () {
+                const pageId = $(this).data('id');
+                if (confirm('Are you sure you want to delete this page?')) {
+                    $.ajax({
+                        url: `/admin/teach-pages/${pageId}`,
+                        type: 'DELETE',
+                        success: function () {
+                            table.ajax.reload(); // Refresh the table
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

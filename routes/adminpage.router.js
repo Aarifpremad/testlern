@@ -89,5 +89,8 @@ router.route("/unit").get((req, res) => {
 router.route("/productlist").get((req, res) => {
     res.render("productlist", { title: "categorylist Management", page: "categorylist" });
 });
+router.route("/page").get((req, res) => {
+    res.render("pages", { title: "categorylist Management", page: "categorylist" });
+});
 
 module.exports = router;

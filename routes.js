@@ -28,4 +28,9 @@ let specifications = require("./routes/specifications.router")
 
 router.use("/admin",specifications)
 
+let pages = require("./routes/page.router")
+
+router.use("/admin",pages)
+
+
 module.exports = router;
