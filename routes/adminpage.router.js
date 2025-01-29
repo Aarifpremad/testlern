@@ -96,4 +96,8 @@ router.route("/banners").get((req, res) => {
     res.render("banners", { title: "categorylist Management", page: "categorylist" });
 });
 
+router.route("/header").get((req, res) => {
+    res.render("header", { title: "header Management", pages: [] });
+});
+
 module.exports = router;

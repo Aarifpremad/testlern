@@ -9,6 +9,36 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
     <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
 </head>
+<style>
+    .main-container {
+        display: flex;
+    }
+
+    .content-container {
+        flex: 1;
+        padding: 20px;
+    }
+
+    .table-container {
+        margin-top: 20px;
+    }
+
+    /* Force table borders */
+    table.dataTable,
+    table.dataTable th,
+    table.dataTable td {
+        border: 1px solid #dee2e6 !important;
+    }
+
+    /* Optional: Adjust table styles for readability */
+    table.dataTable th {
+        background-color: #f8f9fa;
+    }
+
+    table.dataTable tbody tr:hover {
+        background-color: #f1f3f5;
+    }
+</style>
 <body>
     <%- include('partials/header') %>
     <div class="main-container">

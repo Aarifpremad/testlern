@@ -32,5 +32,8 @@ let pages = require("./routes/page.router")
 
 router.use("/admin",pages)
 
+let header = require("./routes/header.route")
+
+router.use("/admin",header)
 
 module.exports = router;

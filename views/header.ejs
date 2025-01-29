@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Header Management</title>
+    <link rel="stylesheet" href="/dashboard.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+</head>
+<style>
+    .main-container { display: flex; }
+    .content-container { flex: 1; padding: 20px; }
+    .table-container { margin-top: 20px; }
+    table.dataTable, table.dataTable th, table.dataTable td { border: 1px solid #dee2e6 !important; }
+    table.dataTable th { background-color: #f8f9fa; }
+    table.dataTable tbody tr:hover { background-color: #f1f3f5; }
+</style>
+<body>
+    <%- include('partials/header') %>
+    <div class="main-container">
+        <%- include('partials/sidebar', { page: 'header-management' }) %>
+        <div class="content-container">
+            <h1>Header Management</h1>
+            <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addHeaderModal">+ Add New Header</button>
+            <div class="table-container">
+                <table id="headerTable" class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Header Name</th>
+                            <th>Page</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Header Modal -->
+    <div class="modal fade" id="addHeaderModal" tabindex="-1" aria-labelledby="addHeaderModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addHeaderModalLabel">Add New Header</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addHeaderForm">
+                        <div class="mb-3">
+                            <label class="form-label">Header Name</label>
+                            <input type="text" class="form-control" id="header_name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Select Page</label>
+                            <select class="form-control" id="page_id" required>
+                                <option value="">Select Page</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Save Header</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            const table = $('#headerTable').DataTable({
+    processing: true,
+    serverSide: true,
+    ajax: {
+        url: '/admin/headers',
+        type: 'GET',
+        data: function(d) {
+            d.page = (d.start / d.length) + 1;  // Convert start index to page number
+            d.limit = d.length;  // Use DataTables' page length
+            return d;
+        },
+        dataSrc: function(json) {
+            return json.headers;  // Return headers array properly
+        }
+    },
+    columns: [
+        { data: null, render: (data, type, row, meta) => meta.row + 1 },
+        { data: 'headerName' },
+        { data: 'pageName' },
+        { data: '_id', render: function (data) {
+            return `<button class="btn btn-danger btn-sm delete-header" data-id="${data}">Delete</button>`;
+        }}
+    ],
+    lengthMenu: [[10, 25, 50], [10, 25, 50]],
+    pageLength: 10,  // Default page length
+    serverSide: true,
+    processing: true,
+    paging: true,
+    searching: false
+});
+
+            function loadPages() {
+                $.get('/admin/pages', function (data) {
+                    $('#page_id').html('<option value="">Select Page</option>');
+                    data.pages.forEach(page => {
+                        $('#page_id').append(`<option value="${page._id}">${page.pg_title}</option>`);
+                    });
+                });
+            }
+            loadPages();
+
+            $('#addHeaderForm').submit(function (e) {
+                e.preventDefault();
+                const formData = {
+                    headerName: $('#header_name').val(),
+                    pageId: $('#page_id').val(),
+                };
+                $.post('/admin/headers', formData, function () {
+                    $('#addHeaderModal').modal('hide');
+                    table.ajax.reload();
+                    $('#header_name').val('');
+                });
+            });
+
+            $('#headerTable').on('click', '.delete-header', function () {
+                const headerId = $(this).data('id');
+                if (confirm('Are you sure you want to delete this header?')) {
+                    $.ajax({
+                        url: `/admin/headers/${headerId}`,
+                        type: 'DELETE',
+                        success: function () {
+                            table.ajax.reload();
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
