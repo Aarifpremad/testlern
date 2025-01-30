@@ -9,6 +9,7 @@ const SpecsUsage = require('../models/specesusage.model');
 const ProductGroup = require('../models/productgroup.model');
 const Brand = require('../models/brand.model');
 const Unit = require("../models/unit.model")
+const specsmaterial = require("../models/model").specsmaterial
 
 exports.getColors = async (req, res) => {
     try {
@@ -308,7 +309,7 @@ exports.createSpecsMaterial = async (req, res) => {
 // Get all Specs Materials
 exports.getSpecsMaterials = async (req, res) => {
     try {
-        const materials = await SpecsMaterial.find();
+        const materials = await specsmaterial.find();
         res.status(200).json({ success: true, data: materials });
     } catch (error) {
         console.error('Error fetching Specs Materials:', error);

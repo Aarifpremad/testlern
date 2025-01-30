@@ -1,19 +1,12 @@
 <aside class="sidebar">
     <ul>
         <li><a href="/admin/dashboard" class="<%= page === 'dashboard' ? 'active' : '' %>">Dashboard</a></li>
-        <li><a href="/page" class="<%= page === 'pages' ? 'active' : '' %>">Add pages</a></li>
-        <li><a href="/header" class="<%= page === 'pages' ? 'active' : '' %>">Headers</a></li>
-        <li><a href="/banners" class="<%= page === 'pages' ? 'active' : '' %>">Banners</a></li>
-        <li><a href="/aboutdelivery" class="<%= page === 'pages' ? 'active' : '' %>">aboutdelivery</a></li>
-        <li><a href="/offersforuser" class="<%= page === 'pages' ? 'active' : '' %>">offers</a></li>
-
-
-        <!-- Category Section -->
-        <!-- <li>
-            <a href="javascript:void(0)" class="category-toggle <%= page === 'category' || page === 'categorylist' || page === 'subcategory' || page === 'subcategorylist' ? 'active' : '' %>">
+        
+        <li>
+            <a href="javascript:void(0)" class="toggle category-toggle <%= ['category', 'categorylist', 'subcategory', 'subcategorylist', 'product', 'productlist'].includes(page) ? 'active' : '' %>">
                 Catalog
             </a>
-            <ul class="sub-menu">
+            <ul class="sub-menu" style="display: none;">
                 <li><a href="/category" class="<%= page === 'category' ? 'active' : '' %>">Category Create</a></li>
                 <li><a href="/categorylist" class="<%= page === 'categorylist' ? 'active' : '' %>">Category List</a></li>
                 <li><a href="/subcategory" class="<%= page === 'subcategory' ? 'active' : '' %>">Subcategory Create</a></li>
@@ -21,13 +14,13 @@
                 <li><a href="/product" class="<%= page === 'product' ? 'active' : '' %>">Product Create</a></li>
                 <li><a href="/productlist" class="<%= page === 'productlist' ? 'active' : '' %>">Product List</a></li>
             </ul>
-        </li> -->
+        </li>
 
-        <!-- <li>
-            <a href="javascript:void(0)" class="specifications-toggle <%= page === 'color' || page === 'specssize' || page === 'specsfinish' || page === 'specsmaterial' || page === 'specsthickness' || page === 'specsroom' || page === 'specstype' || page === 'specsprint' || page === 'specsusage' || page === 'productgroup' || page === 'brand' || page === 'unit' ? 'active' : '' %>">
+        <li>
+            <a href="javascript:void(0)" class="toggle specifications-toggle <%= page.startsWith('specs') || ['productgroup', 'brand', 'unit'].includes(page) ? 'active' : '' %>">
                 Specifications
             </a>
-            <ul class="sub-menu">
+            <ul class="sub-menu" style="display: none;">
                 <li><a href="/specifications/color" class="<%= page === 'color' ? 'active' : '' %>">Specs Color</a></li>
                 <li><a href="/specifications/size" class="<%= page === 'specssize' ? 'active' : '' %>">Specs Size</a></li>
                 <li><a href="/specifications/finish" class="<%= page === 'specsfinish' ? 'active' : '' %>">Specs Finish</a></li>
@@ -41,35 +34,31 @@
                 <li><a href="/brand" class="<%= page === 'brand' ? 'active' : '' %>">Brand</a></li>
                 <li><a href="/unit" class="<%= page === 'unit' ? 'active' : '' %>">Unit</a></li>
             </ul>
-        </li> -->
+        </li>
+        
+        <li><a href="/page" class="<%= page === 'pages' ? 'active' : '' %>">Add Pages</a></li>
+        <li><a href="/header" class="<%= page === 'header' ? 'active' : '' %>">Headers</a></li>
+        <li><a href="/banners" class="<%= page === 'banners' ? 'active' : '' %>">Banners</a></li>
+        <li><a href="/aboutdelivery" class="<%= page === 'aboutdelivery' ? 'active' : '' %>">About Delivery</a></li>
+        <li><a href="/offersforuser" class="<%= page === 'offersforuser' ? 'active' : '' %>">Offers</a></li>
     </ul>
 </aside>
 
 <style>
-    /* Style for active link */
     .active {
         color: #fff;
         background-color: #007bff;
     }
 
-    /* Style for sub-menu (hidden by default) */
     .sub-menu {
         display: none;
         padding-left: 20px;
     }
 
-    /* Style for showing the sub-menu */
-    .sub-menu a {
-        display: block;
-        padding: 5px 0;
-    }
-
-    /* Style for parent items when active */
     .sidebar a.active {
-        background-color: #0056b3;  /* Active color for parent link */
+        background-color: #0056b3;
     }
 
-    /* Hover effect for parent links */
     .sidebar a:hover {
         background-color: #0069d9;
         color: white;
@@ -77,21 +66,10 @@
 </style>
 
 <script>
-    // Toggle sub-menu visibility for Categories
-    document.querySelector('.category-toggle').addEventListener('click', function () {
-        const subMenu = this.nextElementSibling;
-        subMenu.style.display = subMenu.style.display === 'block' ? 'none' : 'block';
-    });
-
-    // Toggle sub-menu visibility for Products
-    document.querySelector('.product-toggle').addEventListener('click', function () {
-        const subMenu = this.nextElementSibling;
-        subMenu.style.display = subMenu.style.display === 'block' ? 'none' : 'block';
-    });
-
-    // Toggle sub-menu visibility for Specifications
-    document.querySelector('.specifications-toggle').addEventListener('click', function () {
-        const subMenu = this.nextElementSibling;
-        subMenu.style.display = subMenu.style.display === 'block' ? 'none' : 'block';
+    document.querySelectorAll('.toggle').forEach(toggle => {
+        toggle.addEventListener('click', function () {
+            const subMenu = this.nextElementSibling;
+            subMenu.style.display = subMenu.style.display === 'block' ? 'none' : 'block';
+        });
     });
 </script>

@@ -27,6 +27,7 @@ module.exports = {
     UserOtp: require('./userotp.model.js'),
     SuperAdmin: require('./superadmin.js'),
     specsthickness : require("./specsthickness.model.js"),
+    specsmaterial : require("./specsMaterial.model.js"),
     // Category : require("./category.model.js"),
     // SubCategory : require("./subcategory.model.js"),
     // Product : require("./product.model.js"),

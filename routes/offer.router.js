@@ -71,6 +71,7 @@ router.post('/offers', async (req, res) => {
 // Endpoint for deleting an offer
 router.delete('/offers/:id', async (req, res) => {
     try {
+        console.log(req.params)
         await Offer.findByIdAndDelete(req.params.id);
         res.json({ message: 'Offer deleted successfully' });
     } catch (err) {
