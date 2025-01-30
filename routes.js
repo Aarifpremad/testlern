@@ -49,4 +49,8 @@ const imageforuser = require('./routes/imagesforuser.router');
 
 router.use('/admin', imageforuser);
 
+const popuprouter = require('./routes/popup.router');
+
+router.use('/admin', popuprouter);
+
 module.exports = router;

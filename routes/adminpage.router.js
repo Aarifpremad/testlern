@@ -114,4 +114,8 @@ router.route("/imagesforuser").get((req, res) => {
     res.render("imagesforusers", { title: "header Management", pages: [] });
 });
 
+router.route("/websitepopup").get((req, res) => {
+    res.render("websitepopup", { title: "header Management", pages: [] });
+});
+
 module.exports = router;
