@@ -36,7 +36,6 @@
             </ul>
         </li>
 
-        <!-- Settings Section -->
         <li>
             <a href="javascript:void(0)" class="toggle settings-toggle <%= ['pages', 'header', 'aboutdelivery', 'offersforuser', 'banners'].includes(page) ? 'active' : '' %>">
                 Settings
@@ -47,6 +46,16 @@
                 <li><a href="/aboutdelivery" class="<%= page === 'aboutdelivery' ? 'active' : '' %>">About Delivery</a></li>
                 <li><a href="/offersforuser" class="<%= page === 'offersforuser' ? 'active' : '' %>">Header Offers</a></li>
                 <li><a href="/banners" class="<%= page === 'banners' ? 'active' : '' %>">Banners</a></li>
+            </ul>
+        </li>
+
+        <!-- Advertisement Section -->
+        <li>
+            <a href="javascript:void(0)" class="toggle advertisement-toggle <%= page === 'Slidbar' ? 'active' : '' %>">
+                Advertisement
+            </a>
+            <ul class="sub-menu">
+                <li><a href="/slidbar" class="<%= page === 'Slidbar' ? 'active' : '' %>">Slidbar</a></li>
             </ul>
         </li>
         
@@ -80,10 +89,8 @@
             const subMenu = this.nextElementSibling;
             const isActive = subMenu.style.display === 'block';
 
-            // Close all other sub-menus
             document.querySelectorAll('.sub-menu').forEach(menu => menu.style.display = 'none');
 
-            // Toggle clicked menu
             subMenu.style.display = isActive ? 'none' : 'block';
         });
     });

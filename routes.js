@@ -40,5 +40,8 @@ const offerRoutes = require('./routes/offer.router');
 
 router.use('/admin', offerRoutes);
 
+const slidbarroute = require('./routes/slidbar.route');
+
+router.use('/admin', slidbarroute);
 
 module.exports = router;

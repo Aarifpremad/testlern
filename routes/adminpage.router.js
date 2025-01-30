@@ -106,4 +106,8 @@ router.route("/offersforuser").get((req, res) => {
     res.render("offer", { title: "header Management", pages: [] });
 });
 
+router.route("/slidbar").get((req, res) => {
+    res.render("slidbar", { title: "header Management", pages: [] });
+});
+
 module.exports = router;
