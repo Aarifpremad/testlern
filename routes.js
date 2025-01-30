@@ -53,4 +53,8 @@ const popuprouter = require('./routes/popup.router');
 
 router.use('/admin', popuprouter);
 
+const coupenrouter = require('./routes/coupen.router');
+
+router.use('/admin', coupenrouter);
+
 module.exports = router;

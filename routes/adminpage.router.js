@@ -118,4 +118,8 @@ router.route("/websitepopup").get((req, res) => {
     res.render("websitepopup", { title: "header Management", pages: [] });
 });
 
+router.route("/coupens").get((req, res) => {
+    res.render("coupens", { title: "header Management", pages: [] });
+});
+
 module.exports = router;
