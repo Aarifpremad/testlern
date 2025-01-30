@@ -44,4 +44,9 @@ const slidbarroute = require('./routes/slidbar.route');
 
 router.use('/admin', slidbarroute);
 
+
+const imageforuser = require('./routes/imagesforuser.router');
+
+router.use('/admin', imageforuser);
+
 module.exports = router;

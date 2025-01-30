@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Images for Users Management</title>
+    <link rel="stylesheet" href="/dashboard.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+</head>
+<style>
+    .main-container {
+        display: flex;
+    }
+
+    .content-container {
+        flex: 1;
+        padding: 20px;
+    }
+
+    .table-container {
+        margin-top: 20px;
+    }
+
+    table.dataTable,
+    table.dataTable th,
+    table.dataTable td {
+        border: 1px solid #dee2e6 !important;
+    }
+
+    table.dataTable th {
+        background-color: #f8f9fa;
+    }
+
+    table.dataTable tbody tr:hover {
+        background-color: #f1f3f5;
+    }
+</style>
+<body>
+    <%- include('partials/header') %>
+    <div class="main-container">
+        <%- include('partials/sidebar', { page: 'imagesforusers' }) %>
+        <div class="content-container">
+            <h1>Images for Users Management</h1>
+
+            <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addImageModal">Add Image</button>
+
+            <div class="table-container">
+                <table id="imagesTable" class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Image Title</th>
+                            <th>Image</th>
+                            <th>Description</th>
+                            <th>URL</th>
+                            <th>Position</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for adding new image -->
+    <div class="modal fade" id="addImageModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add New Image</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addImageForm" enctype="multipart/form-data">
+                        <div class="mb-3">
+                            <label class="form-label">Image Title</label>
+                            <input type="text" class="form-control" name="img_title" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Image</label>
+                            <input type="file" class="form-control" name="img_path" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Description</label>
+                            <input type="text" class="form-control" name="img_desc">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">URL</label>
+                            <input type="text" class="form-control" name="redirect_url">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Position</label>
+                            <input type="number" class="form-control" name="position" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Status</label>
+                            <select class="form-control" name="isActive" required>
+                                <option value="1">Active</option>
+                                <option value="0">Inactive</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Add Image</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            const table = $('#imagesTable').DataTable({
+                ajax: {
+                    url: '/admin/imagesforusers',
+                    dataSrc: ''
+                },
+                columns: [
+                    { data: null, render: (data, type, row, meta) => meta.row + 1 },
+                    { data: 'img_title' },
+                    { data: 'img_path', render: data => `<img src="/uploads/${data}" width="100">` },
+                    { data: 'img_desc' },
+                    { data: 'redirect_url' },
+                    { data: 'position' },
+                    { data: 'isActive', render: data => data === '1' ? 'Active' : 'Inactive' },
+                    {
+                        data: '_id',
+                        render: data => `<button class="btn btn-danger btn-sm delete-image" data-id="${data}">Delete</button>`
+                    }
+                ]
+            });
+
+            $('#addImageForm').submit(function (e) {
+                e.preventDefault();
+                const formData = new FormData(this);
+                $.ajax({
+                    url: '/admin/imagesforusers',
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function () {
+                        $('#addImageModal').modal('hide');
+                        table.ajax.reload();
+                        $('#addImageForm')[0].reset();
+                    }
+                });
+            });
+
+            $('#imagesTable').on('click', '.delete-image', function () {
+                const imageId = $(this).data('id');
+                if (confirm('Are you sure you want to delete this image?')) {
+                    $.ajax({
+                        url: `/admin/imagesforusers/${imageId}`,
+                        type: 'DELETE',
+                        success: function () {
+                            table.ajax.reload();
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
