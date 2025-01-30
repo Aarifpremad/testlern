@@ -6,7 +6,7 @@
             <a href="javascript:void(0)" class="toggle category-toggle <%= ['category', 'categorylist', 'subcategory', 'subcategorylist', 'product', 'productlist'].includes(page) ? 'active' : '' %>">
                 Catalog
             </a>
-            <ul class="sub-menu" style="display: none;">
+            <ul class="sub-menu">
                 <li><a href="/category" class="<%= page === 'category' ? 'active' : '' %>">Category Create</a></li>
                 <li><a href="/categorylist" class="<%= page === 'categorylist' ? 'active' : '' %>">Category List</a></li>
                 <li><a href="/subcategory" class="<%= page === 'subcategory' ? 'active' : '' %>">Subcategory Create</a></li>
@@ -20,7 +20,7 @@
             <a href="javascript:void(0)" class="toggle specifications-toggle <%= page.startsWith('specs') || ['productgroup', 'brand', 'unit'].includes(page) ? 'active' : '' %>">
                 Specifications
             </a>
-            <ul class="sub-menu" style="display: none;">
+            <ul class="sub-menu">
                 <li><a href="/specifications/color" class="<%= page === 'color' ? 'active' : '' %>">Specs Color</a></li>
                 <li><a href="/specifications/size" class="<%= page === 'specssize' ? 'active' : '' %>">Specs Size</a></li>
                 <li><a href="/specifications/finish" class="<%= page === 'specsfinish' ? 'active' : '' %>">Specs Finish</a></li>
@@ -35,12 +35,21 @@
                 <li><a href="/unit" class="<%= page === 'unit' ? 'active' : '' %>">Unit</a></li>
             </ul>
         </li>
+
+        <!-- Settings Section -->
+        <li>
+            <a href="javascript:void(0)" class="toggle settings-toggle <%= ['pages', 'header', 'aboutdelivery', 'offersforuser', 'banners'].includes(page) ? 'active' : '' %>">
+                Settings
+            </a>
+            <ul class="sub-menu">
+                <li><a href="/page" class="<%= page === 'pages' ? 'active' : '' %>">Add Pages</a></li>
+                <li><a href="/header" class="<%= page === 'header' ? 'active' : '' %>">Headers</a></li>
+                <li><a href="/aboutdelivery" class="<%= page === 'aboutdelivery' ? 'active' : '' %>">About Delivery</a></li>
+                <li><a href="/offersforuser" class="<%= page === 'offersforuser' ? 'active' : '' %>">Header Offers</a></li>
+                <li><a href="/banners" class="<%= page === 'banners' ? 'active' : '' %>">Banners</a></li>
+            </ul>
+        </li>
         
-        <li><a href="/page" class="<%= page === 'pages' ? 'active' : '' %>">Add Pages</a></li>
-        <li><a href="/header" class="<%= page === 'header' ? 'active' : '' %>">Headers</a></li>
-        <li><a href="/banners" class="<%= page === 'banners' ? 'active' : '' %>">Banners</a></li>
-        <li><a href="/aboutdelivery" class="<%= page === 'aboutdelivery' ? 'active' : '' %>">About Delivery</a></li>
-        <li><a href="/offersforuser" class="<%= page === 'offersforuser' ? 'active' : '' %>">Offers</a></li>
     </ul>
 </aside>
 
@@ -69,7 +78,22 @@
     document.querySelectorAll('.toggle').forEach(toggle => {
         toggle.addEventListener('click', function () {
             const subMenu = this.nextElementSibling;
-            subMenu.style.display = subMenu.style.display === 'block' ? 'none' : 'block';
+            const isActive = subMenu.style.display === 'block';
+
+            // Close all other sub-menus
+            document.querySelectorAll('.sub-menu').forEach(menu => menu.style.display = 'none');
+
+            // Toggle clicked menu
+            subMenu.style.display = isActive ? 'none' : 'block';
+        });
+    });
+
+    // Expand the active section on page load
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('.toggle').forEach(toggle => {
+            if (toggle.classList.contains('active')) {
+                toggle.nextElementSibling.style.display = 'block';
+            }
         });
     });
 </script>

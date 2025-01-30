@@ -132,7 +132,7 @@
                     { data: 'content' },
                     { data: 'extra' },
                     { data: 'status' },
-                    { data: 'id', render: function (data, type, row) {
+                    { data: '_id', render: function (data, type, row) {
                         return `
                             <button class="btn btn-sm btn-warning edit-offer" data-id="${data}">Edit</button>
                             <button class="btn btn-sm btn-danger delete-offer" data-id="${data}">Delete</button>
@@ -158,8 +158,8 @@
                 });
             });
     
-            $('#offersTable').on('click', '.delete-offer', function () {
-                const offerId = $(this).data('id');
+            $('#offersTable').on('click', '.delete-offer', function (data) {
+                const offerId = $(this).data('_id');
                 if (confirm('Are you sure you want to delete this offer?')) {
                     $.ajax({
                         url: `/admin/offers/${offerId}`,
