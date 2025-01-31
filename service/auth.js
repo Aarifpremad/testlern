@@ -12,13 +12,13 @@ let localization = require("./localization")
 const authenticateUser = async (req, res, next) => {
     try {
         const token = req.headers['authorization'];
+        console.log(token)
 
         if (!token) {
             return res.status(401).json(Service.response(false, "please provide token", null));
         }
 
-        const decoded = jwt.verify(token, config.tokensecret); 
-
+        const decoded = jwt.verify(token, "config.tokensecret"); 
         const user = await Model.User.findById(decoded.id);
 
         if (!user) {
@@ -27,7 +27,8 @@ const authenticateUser = async (req, res, next) => {
         req.user = user;
         next(); 
     } catch (error) {
-        return res.status(401).json(Service.response(false, localization.invalidToken, null));
+      console.log(error)
+        return res.status(401).json(Service.response(false, "invalidToken", null));
     }
 };
 

@@ -36,12 +36,12 @@ const UserSchema = new Schema(
     },
     email: {
       type: String,
-      unique: true,
+      // unique: true,
       sparse: true, // ✅ Empty values ko ignore karega unique constraint
     },
     mobileno: {
       type: String,
-      unique: true,
+      // unique: true,
       sparse: true, // ✅ Empty values ko ignore karega unique constraint
     },
     password: {
@@ -103,10 +103,14 @@ UserSchema.pre('save', async function (next) {
  * Authenticate user by comparing passwords using bcrypt
  */
 UserSchema.methods.authenticate = async function (password) {
+  // Ensure password is a string
+  if (typeof password !== 'string') {
+    throw new Error('Password must be a string');
+  }
+
   // Comparing hashed password with input password
   return await bcrypt.compare(password, this.password);
 };
-
 /**
  * Remove expired tokens
  */
@@ -123,7 +127,7 @@ UserSchema.methods.removeExpiredTokens = function () {
  * JWT Token Generator
  */
 UserSchema.methods.generateJWT = function () {
-  const exp = Math.floor(Date.now() / 1000) + 60; // 1 min expiry
+  const exp = Math.floor(Date.now() / 1000) + 6000; // 1 min expiry
   return jwt.sign({ id: this._id, email: this.email, exp }, 'config.tokensecret');
 };
 
@@ -146,17 +150,23 @@ UserSchema.methods.toAuthJSON = function () {
 };
 
 UserSchema.pre('save', async function (next) {
-  if (!this.id) {
-    const maxId = await mongoose
-      .model('User')
-      .findOne({})
-      .sort({ numeric_id: -1 })
-      .select('numeric_id')
-      .lean();
-    this.numeric_id = maxId ? maxId.numeric_id + 1 : 1; // Set the ID sequentially
+  if (this.isNew || this.isModified('numeric_id')) {
+    if (!this.numeric_id) {
+      const maxId = await mongoose
+        .model('User')
+        .findOne({})
+        .sort({ numeric_id: -1 })
+        .select('numeric_id')
+        .lean();
+        
+      // Set numeric_id to 1 if no previous record exists
+      this.numeric_id = maxId ? maxId.numeric_id + 1 : 1;
+    }
   }
   next();
 });
+
+
 
 // If you want to hash password when it's set, use this preparePassword function
 UserSchema.methods.preparePassword = async function () {

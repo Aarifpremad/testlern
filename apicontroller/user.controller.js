@@ -10,17 +10,17 @@ module.exports = {
         try {
           const { email, mobileno, password, firstname, lastname } = req.body;
       
-          if (!email || !password || !firstname || !lastname || !mobileno) {
+          if (!email || !password) {
             return res
               .status(200)
               .json(Service.response(false, localization.missingParamError, null));
           }
       
-          // Check if the user already exists (by email or mobile number)
-          let checkuser = await Model.User.findOne({ 
-            $or: [{ email }, { mobileno }], 
-            isdeleted: false 
+          let checkuser = await Model.User.findOne({
+            email: email ,
+            isdeleted: false
           });
+      
       
           if (checkuser) {
             return res
@@ -28,7 +28,6 @@ module.exports = {
               .json(Service.response(false, localization.UserAlreadyExist, null));
           }
       
-          // Create user and hash the password
           let user = new Model.User({
             email,
             mobileno,
@@ -36,7 +35,11 @@ module.exports = {
             lastname,
             password,
             token: [],
+            numeric_id: 1, 
           });
+      
+          const maxId = await Model.User.findOne({}).sort({ numeric_id: -1 }).select('numeric_id');
+          user.numeric_id = maxId ? maxId.numeric_id + 1 : 1;
       
           const Token = user.generateJWT();
           user.token.push(Token);
@@ -50,27 +53,40 @@ module.exports = {
           console.log(error);
           return res.status(200).json(Service.response(false, localization.ServerError, null));
         }
-    },
+      },
+      
+      
       
     login: async function (req, res, next) {
         try {
-            const { name, email, password } = req.body;
+            const { firstname, email, password } = req.body;
     
-            if ((!email && !name) || !password) {
+            if ((!email && !firstname) || !password) {
                 return res.status(200).json(Service.response(false, localization.missingParamError, null));
             }
-    
-            // Find user by email OR name
-            const user = await Model.User.findOne({
-                $or: [{ email }, { firstname: name }],
-                isdeleted: false,
-            });
-    
-            if (!user) {
-                return res.status(200).json(Service.response(false, localization.usernotin, null));
+            let user
+            if(email){
+                 user = await Model.User.findOne({
+                    email:email,
+                    isdeleted: false,
+                });
+                if (!user) {
+                    return res.status(200).json(Service.response(false, localization.usernotin, null));
+                }
+            }else{
+                 user = await Model.User.findOne({
+                    firstname:firstname,
+                    isdeleted: false,
+                });
+                if (!user) {
+                    return res.status(200).json(Service.response(false, localization.usernotin, null));
+                }
             }
+            
+            
+            
     
-            let match = user.authenticate(password);
+            let match =await user.authenticate(password);
             if (!match) {
                 return res.status(200).json(Service.response(false, localization.incorrectPassword, null));
             }
@@ -198,39 +214,34 @@ module.exports = {
         if (!user) {
             return res.status(200).json(Service.response(false, 'User not found', null));
         }
-            user.password = newPassword; // Set new password
-            await user.preparePassword(); // Ensure this is awaited for password hashing
+            user.password = newPassword; 
             await user.save();
             return res.status(200).json(Service.response(true, 'Password reset successful', null));
 
     },
   
     deleteAccount: async function (req, res, next) {
-        const { email, password, numeric_id } = req.body;
+        const { email, password  } = req.body;
     
-        if (!email || !password || !numeric_id) {
+        if (!email || !password ) {
             return res.status(400).json(Service.response(0, 'Email, password aur numeric_id required hain', null));
         }
     
-        const user = await Model.User.findOne({ email, isdeleted: false, numeric_id });
+        const user = await Model.User.findOne({ email, isdeleted: false });
     
         if (!user) {
             return res.status(404).json(Service.response(false, 'User nahi mil raha hai', null));
         }
     
-        // Password authentication
         const isValidPassword = await user.authenticate(password);
         if (!isValidPassword) {
             return res.status(401).json(Service.response(false, 'Invalid password', null));
         }
     
-        // Marking user as deleted instead of deleting the record
         user.isdeleted = true;
         await user.save();
     
-        // Optionally, remove the user's associated tokens if required
-        // user.token = []; // If you want to delete all tokens
-        // await user.save();
+
     
         return res.status(200).json(Service.response(true, 'Account successfully deleted (marked as deleted)', null));
     },
@@ -249,15 +260,13 @@ module.exports = {
                 return res.status(404).json(Service.response(false, localization.UserNotFound, null));
             }
     
-            // Check for old password
             const isOldPasswordValid = await user.authenticate(oldPassword);
+            console.log(isOldPasswordValid)
             if (!isOldPasswordValid) {
                 return res.status(400).json(Service.response(false, 'Old password invalid hai', null));
             }
     
-            // Set the new password and hash it
             user.password = newPassword;
-            await user.preparePassword(); // This ensures the password is hashed before saving
             await user.save();
     
             return res.status(200).json(Service.response(true, 'Password successfully updated', null));
