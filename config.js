@@ -4,5 +4,6 @@ let db = process.env.DB
 
 module.exports={
     port:port,
-    db:db
+    db:db,
+    tokensecret:"xys"
 }

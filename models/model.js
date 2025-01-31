@@ -23,7 +23,7 @@ try {
 
 
 module.exports = {
-    User: require('./user.js'),
+    User: require('./user.model.js'),
     UserOtp: require('./userotp.model.js'),
     SuperAdmin: require('./superadmin.js'),
     specsthickness : require("./specsthickness.model.js"),

@@ -3,23 +3,35 @@ const Model = require('../models/model'); // Adjust the path based on your folde
 
 // main file to io import
 
-const authenticateToken = async (req, res, next) => {
-    const token = req.header('token'); // Extract the token from the 'Authorization' header
-    if (!token) return res.status(401).json({ message: 'Access denied. No token provided.' });
-
+const config = require('../config'); // Ensure to use your config setup
+let Service = require("./index")
+let localization = require("./localization")
+/**
+ * Authentication Middleware to verify the token.
+ */
+const authenticateUser = async (req, res, next) => {
     try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const token = req.headers['authorization'];
+
+        if (!token) {
+            return res.status(401).json(Service.response(false, "please provide token", null));
+        }
+
+        const decoded = jwt.verify(token, config.tokensecret); 
+
         const user = await Model.User.findById(decoded.id);
-        if (!user) return res.status(404).json({ message: 'User not found' });
 
-        if (user.isDeleted) return res.status(403).json({ message: 'Account is deactivated' });
-
-        req.user = user; // Attach the user object to the request
-        next();
+        if (!user) {
+            return res.status(401).json(Service.response(false, localization.userNotFound, null));
+        }
+        req.user = user;
+        next(); 
     } catch (error) {
-        res.status(400).json({ message: 'Invalid token', error: error.message });
+        return res.status(401).json(Service.response(false, localization.invalidToken, null));
     }
 };
+
+
 
 let socketauth = (socket, next) => {
     const token = socket.handshake.query.token;
@@ -51,4 +63,4 @@ const authenticateSessionadmin = (req, res, next) => {
 };
 
 
-module.exports = {authenticateToken, socketauth , authenticateSessionadmin};
+module.exports = {authenticateUser, socketauth , authenticateSessionadmin};

@@ -35,7 +35,10 @@ app.use(cors());
 
 
 let router = require("./adminroutes")
-app.use(router)
+// app.use(router)
+
+let apirouter = require("./apiroutes")
+app.use(apirouter)
 
 
 
