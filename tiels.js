@@ -34,7 +34,7 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use(cors());
 
 
-let router = require("./routes")
+let router = require("./adminroutes")
 app.use(router)
 
 

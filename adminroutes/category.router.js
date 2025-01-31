@@ -2,7 +2,7 @@ const express = require('express');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
-const categoryController = require('../controller/category.controller');
+const categoryController = require('../admincontroller/category.controller');
 
 // Create an express router
 const router = express.Router();

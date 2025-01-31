@@ -1,10 +1,9 @@
-const e = require('express');
 const express = require('express');
 const router = express.Router();
 const path = require('path');
 
 const Model = require('../models/model');
-let AdminPagesController = require('../controller/adminpage.controller');
+let AdminPagesController = require('../admincontroller/adminpage.controller');
 
 
 

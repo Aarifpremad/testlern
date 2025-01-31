@@ -1,7 +1,7 @@
 // routes/colorRoutes.js
 const express = require('express');
 
-const  specifications = require("../controller/specifications.controller")
+const  specifications = require("../admincontroller/specifications.controller")
 const router = express.Router();
 
 router.get('/colors', specifications.getColors); 

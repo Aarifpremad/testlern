@@ -1,7 +1,7 @@
 const express = require('express');
 const multer = require('multer');
 const path = require('path');
-const { createSubCategory  ,getSubCategories } = require('../controller/subcategory.controller');
+const { createSubCategory  ,getSubCategories } = require('../admincontroller/subcategory.controller');
 const Category = require('../models/category.model');
 const SubCategory = require("../models/subcategory.model")
 const Unit = require("../models/unit.model");

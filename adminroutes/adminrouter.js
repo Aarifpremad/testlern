@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const path = require('path');
-let AdminController = require('../controller/admin.controller');
+let AdminController = require('../admincontroller/admin.controller');
 
 
 
