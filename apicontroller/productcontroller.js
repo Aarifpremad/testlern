@@ -59,6 +59,7 @@ module.exports = {
                 }
             }
         ]);
+        console.log(products.length)
             return res
              .status(200)
              .json(Service.response(true, "products",products));

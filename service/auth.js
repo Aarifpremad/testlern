@@ -70,7 +70,7 @@ const authenticateUserforproduct = async (req) => {
       if (!token) return null;
       
       const decoded = jwt.verify(token, 'config.tokensecret'); // Replace with actual secret key
-      const user = await User.findById(decoded.id).select('favorites');
+      const user = await Model.User.findById(decoded.id).select('favorites');
       return user;
   } catch (error) {
       return null;

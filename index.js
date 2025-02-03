@@ -37,13 +37,13 @@ app.use(cors());
 
 app.use((req, res, next) => {
   console.log(req.url)
-  const originalSend = res.json; // Backup original res.json
+  // const originalSend = res.json; // Backup original res.json
 
-  res.json = function (data) {  // Overriding res.json
-      console.log("API Response:", JSON.stringify(data, null, 2)); // Log the response
-      originalSend.call(this, data); // Call the original res.json
+  // res.json = function (data) {  // Overriding res.json
+  //     console.log("API Response:", JSON.stringify(data, null, 2)); // Log the response
+  //     originalSend.call(this, data); // Call the original res.json
 
-  };
+  // };
 
   next();
 });
