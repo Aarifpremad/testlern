@@ -130,4 +130,16 @@ router.route("/admin/users").get((req, res) => {
     res.render("userdetails", { title: "header Management", pages: [] });
 });
 
+
+
+router.get('/user-details/:id', async (req, res) => {
+    try {
+        const user = await Model.User.findById(req.params.id);
+        res.render('userdetails', { user });
+    } catch (error) {
+        res.status(500).send('Error loading user details');
+    }
+});
+
+
 module.exports = router;
