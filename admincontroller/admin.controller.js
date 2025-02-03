@@ -28,17 +28,19 @@ module.exports = {
           email:email
         });
           console.log(user,"user")
-        // if (!user){
-        //   return res
-        //   .status(200)
-        //   .json(Service.response(0, localization.invalidCredentials, null));
-        // }
-        let match = await user.authenticate(password);
-        // if (!match) { 
-        //       return res
-        //         .status(400)
-        //         .json(Service.response(0, localization.incorrectPassword, null));
-        //     }
+        if (!user){
+          return res
+          .status(400)
+          .json(Service.response(0, localization.invalidCredentials, null));
+        }
+        // let match = await user.authenticate(password);
+        let match = password == user.password
+        console.log(match)
+        if (!match) { 
+              return res
+                .status(400)
+                .json(Service.response(0, localization.incorrectPassword, null));
+            }
         
             const newToken = user.generateJWT();
   
@@ -146,7 +148,7 @@ updateprofile :  async (req, res) => {
 
     try {
         // Find the admin using the admin id from the session
-        let admin = await Model.SuperAdmin.findById(req.session.admin.id);
+        let admin = await Model.SuperAdmin.findOne({});
         if (!admin) {
             return res.status(404).send("Admin not found");
         }
@@ -158,7 +160,7 @@ updateprofile :  async (req, res) => {
         if (password) {
             admin.password = password;  // Password will be hashed in the pre-save hook
         }
-
+        console.log(admin,"admin")
         await admin.save(); // Save the updated admin details
         res.send("Profile updated successfully"); // Send success response
     } catch (error) {

@@ -52,15 +52,8 @@ router.post('/offers', async (req, res) => {
     const { id, dynamic_section, content, extra, status } = req.body;
 
     try {
-        let offer;
-        if (id) {
-            // Update existing offer
-            offer = await Offer.findByIdAndUpdate(id, { dynamic_section, content, extra, status }, { new: true });
-        } else {
-            // Create a new offer
-            offer = new Offer({ dynamic_section, content, extra, status });
-            await offer.save();
-        }
+        let offer = await Offer.findOneAndUpdate({dynamic_section:dynamic_section},{ content, extra, status })
+        
         res.json(offer);
     } catch (err) {
         console.error(err);

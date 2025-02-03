@@ -4,7 +4,8 @@ const otpSchema = new mongoose.Schema({
     otp: { type: String, required: true },
     expireTime: { type: Date, required: true },
     lastSentTime: { type: Date, required: true },
-    hitCount: { type: Number, default: 0 } // Tracks hits within 1 minute
+    hitCount: { type: Number, default: 0 }, // Tracks hits within 1 minute
+    email: { type: String, required: true }
 }, { timestamps: true });
 
 const OTP = mongoose.model('OTP', otpSchema);

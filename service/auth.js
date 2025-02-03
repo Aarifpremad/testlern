@@ -11,7 +11,7 @@ let localization = require("./localization")
  */
 const authenticateUser = async (req, res, next) => {
     try {
-        const token = req.headers['authorization'];
+        const token = req.headers['authorization'].split(" ")[1];
         console.log(token)
 
         if (!token) {
@@ -64,4 +64,17 @@ const authenticateSessionadmin = (req, res, next) => {
 };
 
 
-module.exports = {authenticateUser, socketauth , authenticateSessionadmin};
+const authenticateUserforproduct = async (req) => {
+  try {
+      const token = req.headers.authorization?.split(' ')[1]; // Get token from headers
+      if (!token) return null;
+      
+      const decoded = jwt.verify(token, 'config.tokensecret'); // Replace with actual secret key
+      const user = await User.findById(decoded.id).select('favorites');
+      return user;
+  } catch (error) {
+      return null;
+  }
+};
+
+module.exports = {authenticateUser, socketauth , authenticateSessionadmin,authenticateUserforproduct};

@@ -173,14 +173,13 @@ module.exports = {
 
     verifyotp: async function (req, res, next) {
         try {
-            const {  otp } = req.body;
-            let user = req.user
+            const {  email ,otp} = req.body;
             if (!otp) {
                 return res.status(400).json(Service.response(false, "OTP are required"));
             }
     
     
-            const otpRecord = await Model.OTP.findOne({ user: user._id, otp });
+            const otpRecord = await Model.OTP.findOne({ email: email , otp });
             if (!otpRecord) {
                 return res.status(400).json(Service.response(false, "Invalid OTP"));
             }
@@ -191,7 +190,7 @@ module.exports = {
     
             await Model.OTP.deleteOne({ _id: otpRecord._id });
     
-            return res.status(200).json({ message: 'OTP verified successfully',user });
+            return res.status(200).json({ message: 'OTP verified successfully' });
         } catch (error) {
             console.error('Error in verifyOtp API:', error);
             res.status(500).json({ message: 'Internal server error', error: error.message });
@@ -254,10 +253,10 @@ module.exports = {
             if (!email || !oldPassword || !newPassword) {
                 return res.status(400).json(Service.response(false, localization.missingParamError, null));
             }
-    
+            
             const user = await Model.User.findOne({ email, isdeleted: false });
             if (!user) {
-                return res.status(404).json(Service.response(false, localization.UserNotFound, null));
+                return res.status(404).json(Service.response(false, "user Not Found", null));
             }
     
             const isOldPasswordValid = await user.authenticate(oldPassword);
@@ -276,5 +275,5 @@ module.exports = {
         }
     },
     
-  
+    
   }
