@@ -48,9 +48,9 @@ const UserSchema = new Schema(
       type: String,
       validate: [validateLocalStrategyPassword, 'Password should be longer'],
     },
-    status: {
+    isactive: {
       type: Boolean,
-      default: false,
+      default: true,
     },
     token: [
       {

@@ -26,7 +26,7 @@ router.get('/userslist', async (req, res) => {
             .sort({ createdAt: -1 })
             .skip(start)
             .limit(length)
-            .select('numeric_id firstname lastname mobileno balance createdAt email');
+            .select('numeric_id firstname lastname mobileno balance createdAt email status');
 
         res.json({
             draw: req.query.draw || 1,
@@ -39,15 +39,6 @@ router.get('/userslist', async (req, res) => {
     }
 });
 
-// ✅ Soft Delete User
-router.delete('/users/:id', async (req, res) => {
-    try {
-        const user = await User.findByIdAndUpdate(req.params.id, { isdeleted: true }, { new: true });
-        if (!user) return res.status(404).json({ message: 'User not found' });
-        res.json({ message: 'User deleted successfully' });
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-});
+
 
 module.exports = router;
