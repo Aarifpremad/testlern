@@ -35,6 +35,14 @@ app.use(cors());
             
 
 
+let router = require("./adminroutes")
+app.use(router)
+
+
+let apirouter = require("./apiroutes")
+app.use(apirouter)
+
+    
 app.use((req, res, next) => {
   console.log(req.url)
   // const originalSend = res.json; // Backup original res.json
@@ -46,15 +54,7 @@ app.use((req, res, next) => {
   // };
 
   next();
-});
-let router = require("./adminroutes")
-app.use(router)
-
-
-let apirouter = require("./apiroutes")
-app.use(apirouter)
-
-            
+});        
             
 
 

@@ -57,4 +57,8 @@ const coupenrouter = require('./adminroutes/coupen.router');
 
 router.use('/admin', coupenrouter);
 
+const userrouter = require('./adminroutes/adminuser.route');
+
+router.use('/admin', userrouter);
+
 module.exports = router;

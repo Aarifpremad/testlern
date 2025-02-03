@@ -121,4 +121,9 @@ router.route("/coupens").get((req, res) => {
     res.render("coupens", { title: "header Management", pages: [] });
 });
 
+
+router.route("/admin/users").get((req, res) => {
+    res.render("userlist", { title: "header Management", pages: [] });
+});
+
 module.exports = router;
