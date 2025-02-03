@@ -46,6 +46,9 @@ module.exports = {
     Slidbar :require("./slidbar.model.js"),
     Room :require("./room.model.js"),
     Page: require("./page.model.js"),
-    Cart : require("./cart.model.js")
-
+    Cart : require("./cart.model.js"),
+    Order : require("./order.model.js"),
+    deliveryaddress : require("./orderdeliveryaddress.js"),
+    Shipment : require("./ordershipment.model.js"),
+    
 }
