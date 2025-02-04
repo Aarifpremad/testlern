@@ -131,6 +131,11 @@ router.route("/admin/users").get((req, res) => {
 });
 
 
+router.route("/allorders").get((req, res) => {
+    res.render("order", { title: "header Management", pages: [] });
+});
+
+
 
 router.get('/user-details/:id', async (req, res) => {
     try {

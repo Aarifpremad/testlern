@@ -61,4 +61,8 @@ const userrouter = require('./adminroutes/adminuser.route');
 
 router.use('/admin', userrouter);
 
+const orderrouter = require('./adminroutes/order.router');
+
+router.use('/admin', orderrouter);
+
 module.exports = router;
