@@ -48,7 +48,7 @@ module.exports = {
     Page: require("./page.model.js"),
     Cart : require("./cart.model.js"),
     Order : require("./order.model.js"),
-    deliveryaddress : require("./orderdeliveryaddress.js"),
+    OrderAddress : require("./orderdeliveryaddress.js"),
     Shipment : require("./ordershipment.model.js"),
     
 }

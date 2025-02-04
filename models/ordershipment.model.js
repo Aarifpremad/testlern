@@ -1,3 +1,6 @@
+const mongoose = require('mongoose');
+
+
 const shipmentSchema = new mongoose.Schema({
     order_no: { type: String, required: true },
     current_status: String,
