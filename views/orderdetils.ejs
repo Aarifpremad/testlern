@@ -307,5 +307,51 @@
             });
         }
     </script>
+    <script>
+        $(document).on('click', '#create-shipment-btn', function() {
+            Swal.fire({
+                title: 'Shipping Information <br/><%= OrderDetils.orderno %>',
+                html:
+                    '<input id="shipment-title" class="swal2-input" placeholder="Carrier Title">' +
+                    '<input id="shipment-number" class="swal2-input" placeholder="Carrier Number">'+
+                    '<input id="shipment-number" class="swal2-input" placeholder="Shipping Rates">'+
+                    '<input id="shipment-number" class="swal2-input" placeholder="message">',
+                showCancelButton: true,
+                confirmButtonText: 'Create',
+                preConfirm: () => {
+                    const title = $('#shipment-title').val();
+                    const number = $('#shipment-number').val();
+                    if (!title || !number) {
+                        Swal.showValidationMessage('Both fields are required');
+                    }
+                    return { title, number };
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: '/admin/create-shipment',
+                        method: 'POST',
+                        data: {
+                            orderId: '<%= OrderDetils._id %>',
+                            title: result.value.title,
+                            number: result.value.number
+                        },
+                        success: function(response) {
+                            if (response.success) {
+                                Swal.fire('Success', 'Shipment Created Successfully', 'success');
+                                $('#shipment-container').append(`<p>Shipment Created: ${result.value.title} - ${result.value.number}</p>`);
+                            } else {
+                                Swal.fire('Error', 'Failed to create shipment', 'error');
+                            }
+                        },
+                        error: function() {
+                            Swal.fire('Error', 'Request Failed', 'error');
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+    
 </body>
 </html>
