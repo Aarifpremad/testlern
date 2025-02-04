@@ -92,6 +92,112 @@
             border-radius: 5px;
         }
     </style>
+    
+    <style>
+        body {
+          font-family: Arial, sans-serif;
+          margin: 0;
+          padding: 0;
+          background-color: #f9f9f9;
+          color: #333;
+        }
+        .container {
+          max-width: 900px;
+          margin: 50px auto;
+          background-color: #fff;
+          padding: 20px;
+          border: 1px solid #ddd;
+          border-radius: 8px;
+        }
+        .logo {
+          text-align: center;
+          margin-bottom: 30px;
+        }
+        .logo img {
+          width: 150px;
+        }
+        h2 {
+          text-align: center;
+          color: #333;
+        }
+        .section {
+          margin-bottom: 20px;
+        }
+        .section h4 {
+          font-size: 18px;
+          color: #555;
+          margin-bottom: 10px;
+        }
+        .section p {
+          margin: 5px 0;
+          font-size: 16px;
+        }
+        /* New flex container for Invoice & Customer Info */
+        .info-row {
+          display: flex;
+          justify-content: space-between;
+          gap: 20px;
+          flex-wrap: wrap;
+        }
+        .info-box {
+          flex: 1;
+          min-width: 280px;
+          background: #f7f7f7;
+          padding: 15px;
+          border-radius: 5px;
+        }
+        .info-box h4 {
+          margin-top: 0;
+        }
+        .address-container {
+          display: flex;
+          justify-content: space-between;
+          gap: 20px;
+        }
+        .address {
+          font-size: 14px;
+          width: 48%;
+        }
+        .address p {
+          margin: 2px 0;
+        }
+        .order-summary table {
+          width: 100%;
+          border-collapse: collapse;
+          margin-top: 20px;
+        }
+        .order-summary th,
+        .order-summary td {
+          padding: 10px;
+          text-align: left;
+          border: 1px solid #ddd;
+        }
+        .order-summary th {
+          background-color: #f4f4f4;
+        }
+        .total {
+          text-align: right;
+          font-size: 18px;
+          margin-top: 10px;
+        }
+        .btn {
+          display: block;
+          width: 200px;
+          margin: 30px auto;
+          padding: 10px;
+          background-color: #007bff;
+          color: #fff;
+          text-align: center;
+          border: none;
+          border-radius: 5px;
+          text-decoration: none;
+          cursor: pointer;
+        }
+        .btn:hover {
+          background-color: #0056b3;
+        }
+      </style>
+
 </head>
 <body>
     <%- include('partials/header') %>
@@ -214,6 +320,96 @@
                     <h4>Shipment Details</h4>
                     <div id="shipment-container"></div>                
                 </div>
+
+                <div class="container" id="invoice-details" >
+                    <!-- Invoice Header with Logo -->
+                    <div class="logo">
+                      <img src="https://naturaltilestone.co.uk/public/app-assets/images/logo/logo.png" alt="Company Logo" />
+                      <h2>Invoice</h2>
+                    </div>
+                
+                    <!-- Invoice & Customer Information in one row -->
+                    <div class="info-row">
+                      <!-- Invoice Information Box -->
+                      <div class="info-box">
+                        <h4>Invoice Information</h4>
+                        <p><strong>Invoice No:</strong> <%= OrderDetils.orderno %></p>
+                        <p><strong>Order ID:</strong> <%= OrderDetils.orderno %></p>
+                        <p><strong>Order Date:</strong> <%= OrderDetils.order_date.toLocaleDateString() %></p>
+                      </div>
+                
+                      <!-- Customer Information Box -->
+                      <div class="info-box">
+                        <h4>Customer Information</h4>
+                        <p><strong>Name:</strong> <%= OrderDetils.customer_name %></p>
+                        <p><strong>Email:</strong> <%= OrderDetils.email %></p>
+                        <p><strong>Phone:</strong> <%= OrderDetils.telephone %></p>
+                      </div>
+                    </div>
+                
+                    <!-- Billing and Shipping Address in one row -->
+                    <div class="section">
+                      <h4>Billing & Shipping Address</h4>
+                      <div class="address-container">
+                        <div class="address">
+                          <h5><strong>Billing Address</strong></h5>
+                          <p><%= Address[1].firstname %> <%= Address[1].lastname %></p>
+                          <p>
+                            <%= Address[1].streetaddress %>, <%= Address[1].towncity %>,
+                            <%= Address[1].state %>, <%= Address[1].country %>
+                          </p>
+                          <p><strong>Postal Code:</strong> <%= Address[1].postalcode %></p>
+                          <p><strong>Phone:</strong> <%= Address[1].telephone %></p>
+                        </div>
+                        <div class="address">
+                          <h5><strong>Shipping Address</strong></h5>
+                          <p><%= Address[0].firstname %> <%= Address[0].lastname %></p>
+                          <p>
+                            <%= Address[0].streetaddress %>, <%= Address[0].towncity %>,
+                            <%= Address[0].state %>, <%= Address[0].country %>
+                          </p>
+                          <p><strong>Postal Code:</strong> <%= Address[0].postalcode %></p>
+                          <p><strong>Phone:</strong> <%= Address[0].telephone %></p>
+                        </div>
+                      </div>
+                    </div>
+                
+                    <!-- Ordered Products -->
+                    <div class="section">
+                      <h4>Ordered Products</h4>
+                      <div class="order-summary">
+                        <table>
+                          <thead>
+                            <tr>
+                              <th>Product Name</th>
+                              <th>Price</th>
+                              <th>Quantity</th>
+                              <th>Total</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <% OrderDetils.items.forEach(function(item) { %>
+                            <tr>
+                              <td><%= item.product_id.metaDescription.metaTitle %></td>
+                              <td>₹<%= item.product_price %></td>
+                              <td><%= item.product_quantity %></td>
+                              <td>₹<%= item.total_amount %></td>
+                            </tr>
+                            <% }); %>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                
+                    <!-- Payment and Total Summary -->
+                    <div class="total">
+                      <p><strong>Total Amount:</strong> ₹<%= OrderDetils.grand_total %></p>
+                      <p><strong>Payment Mode:</strong> <%= OrderDetils.payment_mode %></p>
+                    </div>
+                
+                    <!-- Download Button -->
+                    <a href="#" id="download-invoice" class="btn">Download Invoice</a>
+                </div>
                 </div>
             </div>
         </div>
@@ -273,14 +469,14 @@
     });
 });
 
-        $('#invoice-btn').on('click', function() {
-            $('#order-details').hide();
-            $('#shipment-details').hide();
-            $('#invoice-details').show();
-            $(this).addClass('active');
-            $('#orders-btn').removeClass('active');
-            $('#shipment-btn').removeClass('active');
-        });
+$('#invoice-btn').on('click', function() {
+    $('#order-details, #shipment-details').hide();
+    $('#invoice-details').show();
+    $(this).addClass('active');
+    $('#orders-btn, #shipment-btn').removeClass('active');
+});
+
+
         // create-shipment-btn
 
         $('#orders-btn').on('click', function() {

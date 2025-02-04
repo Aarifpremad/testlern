@@ -154,7 +154,8 @@ router.get('/admin/orders/:id', async (req, res) => {
                             .exec()
         const Address = await Model.OrderAddress.find({orderid:req.params.id});
         const orderproduct = OrderDetils.items
-        // console.log({OrderDetils , Address,orderproduct})
+        
+        console.log({OrderDetils , Address,orderproduct:JSON.stringify(orderproduct)})
         res.render('orderdetils', {OrderDetils , Address,orderproduct});
     } catch (error) {
         console.log(error)
