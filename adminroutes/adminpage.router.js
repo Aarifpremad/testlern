@@ -147,4 +147,19 @@ router.get('/user-details/:id', async (req, res) => {
 });
 
 
+router.get('/admin/orders/:id', async (req, res) => {
+    try {
+        const OrderDetils = await Model.Order.findById(req.params.id)
+                            .populate('items.product_id') // Populate product_id directly in items array
+                            .exec()
+        const Address = await Model.OrderAddress.find({orderid:req.params.id});
+        const orderproduct = OrderDetils.items
+        console.log({OrderDetils , Address,orderproduct})
+        res.render('orderdetils', {OrderDetils , Address,orderproduct});
+    } catch (error) {
+        console.log(error)
+        res.status(500).send('Error loading user details');
+    }
+});
+
 module.exports = router;
