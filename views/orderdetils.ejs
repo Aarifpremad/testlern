@@ -133,7 +133,19 @@
                             <td><%= OrderDetils.order_status %></td>
                         </tr>
                     </table>
+                    <button class="collapsible">Payment And Shipping</button>
+                    <div class="content">
+                            <div>
+                                <h5>Payment method :   <% OrderDetils.payment_mode %></h5>
+                                <p>Currency : N/A</p>
+                            </div>
+                            <div>
+                                <h5>Shippingdetils :   <% OrderDetils.payment_mode %></h5>
+                                <p>titel : N/A</p>
+                                <p>number : N/A</p>
 
+                            </div>
+                    </div>
                     <!-- Address Section with Collapsible -->
                     <button class="collapsible">Address</button>
                     <div class="content">
@@ -203,6 +215,7 @@
                     <h4>Shipment Details</h4>
                     <div id="shipment-container"></div>
                     <button id="create-shipment" class="btn btn-primary" style="display:none;">Create Shipment</button>
+                </div>
                 </div>
             </div>
         </div>
