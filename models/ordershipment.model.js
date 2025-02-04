@@ -10,6 +10,8 @@ const shipmentSchema = new mongoose.Schema({
     next_status: String,
     next_status_date_time: String,
     message: String
-}, { timestamps: true });
+},
+{ timestamps: true },
+);
 
 module.exports = mongoose.model('Shipment', shipmentSchema);

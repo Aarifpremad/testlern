@@ -198,6 +198,12 @@
                     <h4>Order Notes</h4>
                     <p><%= OrderDetils.items[0]?.ordernotes || 'No notes available' %></p>
                 </div>
+
+                <div id="shipment-details" class="order-details" style="display:none;">
+                    <h4>Shipment Details</h4>
+                    <div id="shipment-container"></div>
+                    <button id="create-shipment" class="btn btn-primary" style="display:none;">Create Shipment</button>
+                </div>
             </div>
         </div>
     </div>
@@ -221,14 +227,40 @@
             $('#invoice-btn').removeClass('active');
         });
 
-        $('#shipment-btn').on('click', function() {
-            $('#order-details').hide();
-            $('#shipment-details').show();
-            $('#invoice-details').hide();
-            $(this).addClass('active');
-            $('#orders-btn').removeClass('active');
-            $('#invoice-btn').removeClass('active');
-        });
+        $('#shipment-btn').on('click', function () {
+    $('#order-details').hide();
+    $('#shipment-details').show();
+    $('#invoice-details').hide();
+    $(this).addClass('active');
+    $('#orders-btn').removeClass('active');
+    $('#invoice-btn').removeClass('active');
+
+    // Order ID lena
+    let orderId = "<%= OrderDetils._id %>"; // Backend se Order ID fetch karein
+
+    // API Call to Get Shipment
+    $.ajax({
+        url: `/admin/shipment/${orderId}`, // Shipment API
+        method: 'GET',
+        success: function (response) {
+            if (response.success && response.shipments.length > 0) {
+                // Shipment list show karna
+                let shipmentHTML = '<h4>Shipments</h4><ul>';
+                response.shipments.forEach(shipment => {
+                    shipmentHTML += `<li>Tracking ID: ${shipment.tracking_id} | Status: ${shipment.status}</li>`;
+                });
+                shipmentHTML += '</ul>';
+                $('#shipment-details').html(shipmentHTML);
+            } else {
+                // Shipment nahi mila, Create Shipment ka button dikhana
+                $('#shipment-details').html('<h4>No Shipment Found</h4><button id="create-shipment-btn" class="btn btn-primary">Create Shipment</button>');
+            }
+        },
+        error: function () {
+            Swal.fire('Error', 'Failed to load shipment data', 'error');
+        }
+    });
+});
 
         $('#invoice-btn').on('click', function() {
             $('#order-details').hide();
