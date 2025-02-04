@@ -79,24 +79,37 @@
 
         .btn-status {
             background-color: #2196f3;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-status:hover {
+            background-color: #1976d2;
+        }
+
+        .active {
+            background-color: #007bff !important;
         }
 
         .order-details {
             margin-top: 40px;
+            display: none;
         }
 
-        /* Styles for table */
+        .order-summary td, .order-summary th {
+            padding: 10px;
+            text-align: left;
+        }
+
+        .order-summary tr:hover {
+            background-color: #f0f0f0;
+        }
+
         .table-container {
             margin-top: 30px;
             background: #f9f9f9;
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
-
-        .order-summary td, .order-summary th {
-            padding: 10px;
-            text-align: left;
         }
 
         .pagination-container {
@@ -114,6 +127,35 @@
         .current-page {
             background-color: #007bff;
             color: white;
+        }
+
+        /* Loading spinner */
+        .spinner {
+            border: 2px solid #f3f3f3;
+            border-top: 2px solid #3498db;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+            display: none;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .user-details-header {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .user-details-header img {
+                margin-bottom: 10px;
+            }
         }
     </style>
 </head>
@@ -186,10 +228,35 @@
                             </tr>
                         <% }); %>
                     </table>
-                    
+                    <div class="order-summary">
+                        <table class="table">
+                            <tr>
+                                <th>Grand Total</th>
+                                <td><%= OrderDetils.grand_total %></td>
+                            </tr>
+                            <tr>
+                                <th>Shipping Charge</th>
+                                <td><%= OrderDetils.shipping_charge || '0' %></td>
+                            </tr>
+                            <tr>
+                                <th>Tax</th>
+                                <td><%= OrderDetils.tax || '0' %></td>
+                            </tr>
+                            <tr>
+                                <th>Total Paid</th>
+                                <td>0</td>
+                            </tr>
+                            <tr>
+                                <th>Total Due</th>
+                                <td>0</td>
+                            </tr>
+                        </table>
+                    </div>
                     <h4>Order Notes</h4>
                     <p><%= OrderDetils.items[0]?.ordernotes || 'No notes available' %></p>
                 </div>
+
+                <div class="spinner" id="loading-spinner"></div>
             </div>
         </div>
     </div>
@@ -202,32 +269,53 @@
     <script src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.html5.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
+        // Show and hide loading spinner during section switch
+        function showLoading() {
+            $('#loading-spinner').show();
+        }
+
+        function hideLoading() {
+            $('#loading-spinner').hide();
+        }
+
         // Button click logic to toggle between sections
         $('#orders-btn').on('click', function() {
-            $('#order-details').show();
-            $('#shipment-details').hide();
-            $('#invoice-details').hide();
-            $(this).addClass('active');
-            $('#shipment-btn').removeClass('active');
-            $('#invoice-btn').removeClass('active');
+            showLoading();
+            setTimeout(function() {
+                $('#order-details').show();
+                $('#shipment-details').hide();
+                $('#invoice-details').hide();
+                $(this).addClass('active');
+                $('#shipment-btn').removeClass('active');
+                $('#invoice-btn').removeClass('active');
+                hideLoading();
+            }, 500);
         });
 
         $('#shipment-btn').on('click', function() {
-            $('#order-details').hide();
-            $('#shipment-details').show();
-            $('#invoice-details').hide();
-            $(this).addClass('active');
-            $('#orders-btn').removeClass('active');
-            $('#invoice-btn').removeClass('active');
+            showLoading();
+            setTimeout(function() {
+                $('#order-details').hide();
+                $('#shipment-details').show();
+                $('#invoice-details').hide();
+                $(this).addClass('active');
+                $('#orders-btn').removeClass('active');
+                $('#invoice-btn').removeClass('active');
+                hideLoading();
+            }, 500);
         });
 
         $('#invoice-btn').on('click', function() {
-            $('#order-details').hide();
-            $('#shipment-details').hide();
-            $('#invoice-details').show();
-            $(this).addClass('active');
-            $('#orders-btn').removeClass('active');
-            $('#shipment-btn').removeClass('active');
+            showLoading();
+            setTimeout(function() {
+                $('#order-details').hide();
+                $('#shipment-details').hide();
+                $('#invoice-details').show();
+                $(this).addClass('active');
+                $('#orders-btn').removeClass('active');
+                $('#shipment-btn').removeClass('active');
+                hideLoading();
+            }, 500);
         });
     </script>
 </body>
