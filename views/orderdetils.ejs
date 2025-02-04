@@ -140,9 +140,19 @@
                                 <p>Currency : N/A</p>
                             </div>
                             <div>
-                                <h5>Shippingdetils :   <% OrderDetils.payment_mode %></h5>
+                                <h5>Shippingdetils</h5>
                                 <p>titel : N/A</p>
                                 <p>number : N/A</p>
+
+                            </div>
+
+                            <div>
+                                <h5>Shippingdetils</h5>
+                                <p>titel</p>
+                                <input type="number" class="form-control" id="title" required>
+                                <p>number : N/A</p>
+                                <input type="number" class="form-control" id="title" required>
+
 
                             </div>
                     </div>
@@ -214,7 +224,6 @@
                 <div id="shipment-details" class="order-details" style="display:none;">
                     <h4>Shipment Details</h4>
                     <div id="shipment-container"></div>
-                    <button id="create-shipment" class="btn btn-primary" style="display:none;">Create Shipment</button>
                 </div>
                 </div>
             </div>
@@ -241,12 +250,12 @@
         });
 
         $('#shipment-btn').on('click', function () {
-    $('#order-details').hide();
-    $('#shipment-details').show();
-    $('#invoice-details').hide();
-    $(this).addClass('active');
-    $('#orders-btn').removeClass('active');
-    $('#invoice-btn').removeClass('active');
+          $('#order-details').hide();
+          $('#shipment-details').show();
+          $('#invoice-details').hide();
+          $(this).addClass('active');
+          $('#orders-btn').removeClass('active');
+          $('#invoice-btn').removeClass('active');
 
     // Order ID lena
     let orderId = "<%= OrderDetils._id %>"; // Backend se Order ID fetch karein
@@ -283,6 +292,17 @@
             $('#orders-btn').removeClass('active');
             $('#shipment-btn').removeClass('active');
         });
+        // create-shipment-btn
+
+        $('#orders-btn').on('click', function() {
+            $('#order-details').show();
+            $('#shipment-details').hide();
+            $('#invoice-details').hide();
+            $(this).addClass('active');
+            $('#shipment-btn').removeClass('active');
+            $('#invoice-btn').removeClass('active');
+        });
+
 
         // Collapsible sections
         var coll = document.getElementsByClassName("collapsible");
