@@ -6,6 +6,9 @@ const orderAddressSchema = new mongoose.Schema({
         ref: 'Order',
         required: true
     },
+    addresstype:{
+        type: String,
+    },
     user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', default: null },     
     email: {
         type: String,

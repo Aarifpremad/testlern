@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Details</title>
+    <title>Order Details</title>
     <link rel="stylesheet" href="/dashboard.css">
     <!-- DataTables CSS -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
@@ -77,32 +77,28 @@
             margin: 5px;
         }
 
-        .btn-credit {
-            background-color: #4caf50;
-        }
-
-        .btn-debit {
-            background-color: #f44336;
-        }
-
-        .btn-freeze {
-            background-color: #ff9800;
-        }
-
         .btn-status {
             background-color: #2196f3;
         }
 
-        .order-history {
+        .order-details {
             margin-top: 40px;
+        }
+
+        /* Styles for table */
+        .table-container {
+            margin-top: 30px;
             background: #f9f9f9;
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            display: none;
         }
 
-        /* Pagination Styles */
+        .order-summary td, .order-summary th {
+            padding: 10px;
+            text-align: left;
+        }
+
         .pagination-container {
             margin-top: 20px;
             text-align: center;
@@ -119,13 +115,6 @@
             background-color: #007bff;
             color: white;
         }
-
-        @media (max-width: 767px) {
-            .user-details-header {
-                flex-direction: column;
-                align-items: center;
-            }
-        }
     </style>
 </head>
 <body>
@@ -136,16 +125,71 @@
 
         <div class="content-container">
             <div class="user-details-container">
-                <h6>orderId</h6>
+                <h6>Order ID: <%= OrderDetils.orderno %></h6>
                 <div class="user-actions">
-                    <button class="btn-status"> Orders details
-                    </button>
-                    <button class="btn-freeze" >shipments
-                    </button>
-                    <button class="btn-status">invoice
-                    </button>
+                    <button class="btn-status active" id="orders-btn">Order Details</button>
+                    <button class="btn-status" id="shipment-btn">Shipment</button>
+                    <button class="btn-status" id="invoice-btn">Invoice</button>
                 </div>
 
+                <!-- Order Details Tab -->
+                <div id="order-details" class="order-details">
+                    <h4>Order Summary</h4>
+                    <table class="table order-summary">
+                        <tr>
+                            <th>Email</th>
+                            <td><%= OrderDetils.email %></td>
+                        </tr>
+                        <tr>
+                            <th>Telephone</th>
+                            <td><%= OrderDetils.telephone %></td>
+                        </tr>
+                        <tr>
+                            <th>Grand Total</th>
+                            <td><%= OrderDetils.grand_total %></td>
+                        </tr>
+                        <tr>
+                            <th>Payment Mode</th>
+                            <td><%= OrderDetils.payment_mode %></td>
+                        </tr>
+                        <tr>
+                            <th>Order Status</th>
+                            <td><%= OrderDetils.order_status %></td>
+                        </tr>
+                    </table>
+
+                    <h4>Address</h4>
+                    <% Address.forEach(address => { %>
+                        <div>
+                            <h5><%= address.addresstype.charAt(0).toUpperCase() + address.addresstype.slice(1) %> Address</h5>
+                            <p><%= address.firstname %> <%= address.lastname %></p>
+                            <p><%= address.streetaddress %>, <%= address.towncity %>, <%= address.state %>, <%= address.country %> - <%= address.postalcode %></p>
+                            <p><%= address.telephone %></p>
+                            <p>Order Notes: <%= address.ordernotes %></p>
+                        </div>
+                    <% }); %>
+
+                    <h4>Ordered Products</h4>
+                    <table class="table order-summary">
+                        <tr>
+                            <th>Product</th>
+                            <th>Quantity</th>
+                            <th>Price</th>
+                            <th>Total</th>
+                        </tr>
+                        <% orderproduct.forEach(product => { %>
+                            <tr>
+                                <td><%= product.product_id.name %></td>
+                                <td><%= product.product_quantity %></td>
+                                <td><%= product.product_price %></td>
+                                <td><%= product.total_amount %></td>
+                            </tr>
+                        <% }); %>
+                    </table>
+                    
+                    <h4>Order Notes</h4>
+                    <p><%= OrderDetils.items[0]?.ordernotes || 'No notes available' %></p>
+                </div>
             </div>
         </div>
     </div>
@@ -157,8 +201,34 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.html5.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
     <script>
+        // Button click logic to toggle between sections
+        $('#orders-btn').on('click', function() {
+            $('#order-details').show();
+            $('#shipment-details').hide();
+            $('#invoice-details').hide();
+            $(this).addClass('active');
+            $('#shipment-btn').removeClass('active');
+            $('#invoice-btn').removeClass('active');
+        });
+
+        $('#shipment-btn').on('click', function() {
+            $('#order-details').hide();
+            $('#shipment-details').show();
+            $('#invoice-details').hide();
+            $(this).addClass('active');
+            $('#orders-btn').removeClass('active');
+            $('#invoice-btn').removeClass('active');
+        });
+
+        $('#invoice-btn').on('click', function() {
+            $('#order-details').hide();
+            $('#shipment-details').hide();
+            $('#invoice-details').show();
+            $(this).addClass('active');
+            $('#orders-btn').removeClass('active');
+            $('#shipment-btn').removeClass('active');
+        });
     </script>
 </body>
 </html>
