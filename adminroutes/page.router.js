@@ -15,7 +15,7 @@ router.get('/teach-pages', async (req, res) => {
 // Add a new page
 router.post('/teach-pages', async (req, res) => {
     try {
-        const { pg_title, pg_content, pg_url_key } = req.body;
+        const { pg_title, pg_content, pg_url_key,meta_title,meta_description,meta_keywords } = req.body;
         const newPage = new Page({ pg_title, pg_content, pg_url_key,meta_title,meta_description,meta_keywords  });
         await newPage.save();
         res.sendStatus(201);
