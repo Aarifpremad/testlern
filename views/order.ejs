@@ -73,7 +73,22 @@
                     { data: 'orderno' }, // Order ID
                     { data: 'grand_total', render: (data) => `₹${data.toFixed(2)}` }, // Grand Total
                     { data: 'order_date', render: (data) => new Date(data).toLocaleDateString() }, // Order Date
-                    { data: 'order_status' }, // Status
+                    { 
+                             data: 'order_status',
+                             render: function (data) {
+                               let statusColors = {
+                                   'Placed': '#007bff',     // Blue
+                                   'Confirmed': '#17a2b8',  // Light Blue
+                                   'Shipped': '#ffc107',    // Orange
+                                   'Delivered': '#28a745',  // Green
+                                   'Cancelled': '#dc3545'   // Red
+                               };
+
+                                let bgColor = statusColors[data] || '#6c757d'; // Default to gray if status is unknown
+                                                    
+                                return `<span style="background-color: ${bgColor}; color: white; padding: 5px 10px; border-radius: 5px;">${data}</span>`;
+                            }
+                    },
                     { 
                         data: 'user', 
                         render: function (data, type, row) {

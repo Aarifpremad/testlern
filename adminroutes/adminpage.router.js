@@ -19,7 +19,7 @@ router.route("/admin/userlist").get((req, res) => {
     res.render("userlist", { title: "User Management", page: "users" });
 });
 
-router.get('/admin/adminprofile', async (req, res) => {
+router.get('/admin/profile', async (req, res) => {
     let admin =await Model.SuperAdmin.findOne();
     res.render('profile', { title: 'profile', page: 'profile' ,admin : admin});
 });
