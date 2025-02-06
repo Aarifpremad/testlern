@@ -72,4 +72,25 @@ router.delete('/offers/:id', async (req, res) => {
     }
 });
 
+router.patch('/offers/status', async (req, res) => {
+    const { ids, status } = req.body;
+    try {
+        await Offer.updateMany({ _id: { $in: ids } }, { status });
+        res.json({ message: `Offers marked as ${status} successfully` });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: err.message });
+    }
+});
+
+router.get('/offers/:id', async (req, res) => {
+    try {
+        const offer = await Offer.findById(req.params.id);
+        if (!offer) return res.status(404).json({ error: 'Offer not found' });
+        res.json(offer);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: err.message });
+    }
+});
 module.exports = router;

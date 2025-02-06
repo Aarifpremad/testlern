@@ -139,23 +139,13 @@
                     { data: 'status' },
                     { data: '_id', render: function (data, type, row) {
                         return `
+                            <button class="btn btn-sm btn-warning edit-offer" data-id="${data}">Edit</button>
                             <button class="btn btn-sm btn-danger delete-offer" data-id="${data}">Delete</button>
                         `;
                     }}
                 ]
             });
 
-            $('#dynamic_section').change(function () {
-                if ($(this).val() === 'header_timer') {
-                    $('#timer_input_container').show();
-                    editor.setData(''); // Clear editor when switching to timer
-                    editor.isReadOnly = true; // Disable editor
-                } else {
-                    $('#timer_input_container').hide();
-                    editor.isReadOnly = false; // Enable editor
-                    $('#timer_input').val(''); // Clear timer input
-                }
-            });
 
             $('#timer_input').change(function () {
                 if ($('#dynamic_section').val() === 'header_timer') {
@@ -181,29 +171,46 @@
                 });
             });
 
-            $('#offersTable').on('click', '.edit-offer', function () {
-                const offerId = $(this).data('id');
-                $.get(`/admin/offers/${offerId}`, function (data) {
-                    $('#offer_id').val(data.id);
-                    $('#dynamic_section').val(data.dynamic_section);
-                    $('#extra').val(data.extra);
-                    $('#status').val(data.status);
+        $('#offersTable').on('click', '.edit-offer', function () {
+            const offerId = $(this).data('id');
+            $.get(`/admin/offers/${offerId}`, function (data) {
+                $('#offer_id').val(data.id);
+                $('#dynamic_section').val(data.dynamic_section);
+                $('#extra').val(data.extra);
+                $('#status').val(data.status);
 
-                    if (data.dynamic_section === 'header_timer') {
-                        $('#timer_input_container').show();
-                        $('#timer_input').val(data.content);
-                        editor.setData(data.content);
-                        editor.isReadOnly = true;
-                    } else {
-                        $('#timer_input_container').hide();
-                        editor.setData(data.content);
-                        editor.isReadOnly = false;
-                    }
+                if (data.dynamic_section === 'header_timer') {
+                    $('#timer_input_container').show();
+                    $('#timer_input').val(data.content);
+                    $('#content_container').hide(); 
+                } else {
+                    $('#timer_input_container').hide();
+                    editor.setData(data.content);
+                    $('#content_container').show(); 
+                }
 
-                    $('#addOfferModal').modal('show');
-                });
+                $('#addOfferModal').modal('show');
             });
         });
+
+        });
+
+              $('#dynamic_section').change(function () {
+          if ($(this).val() === 'header_timer') {
+              $('#timer_input_container').show();
+              $('#timer_input').val('');
+              $('#content_container').hide(); 
+
+              //     editor.setData(''); // Clear the CKEditor content
+              //     editor.isReadOnly = true; // Make CKEditor read-only
+              // }
+          } else {
+              $('#timer_input_container').hide();
+              $('#timer_input').val(''); 
+              $('#content_container').show(); 
+          }
+            });
+
     </script>
 </body>
 </html>
