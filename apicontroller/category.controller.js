@@ -32,7 +32,6 @@ module.exports = {
 
     getsubcategroybycate : async (req, res) => {
         try {
-            console.log(req.params, req.query)
             const { categoryId } = req.params; // URL se categoryId extract karein
             
             const subcategories = await Model.Subcategory.find({ category: categoryId });

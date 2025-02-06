@@ -260,7 +260,6 @@ module.exports = {
             }
     
             const isOldPasswordValid = await user.authenticate(oldPassword);
-            console.log(isOldPasswordValid)
             if (!isOldPasswordValid) {
                 return res.status(400).json(Service.response(false, 'Old password invalid hai', null));
             }

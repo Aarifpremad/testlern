@@ -140,7 +140,6 @@ module.exports = {
 
 updateprofile :  async (req, res) => {
     const { name, password, confirmPassword } = req.body;
-    console.log(req.body)
     // Ensure the passwords match
     if (password !== confirmPassword) {
         return res.status(400).send("Passwords do not match");

@@ -12,7 +12,6 @@ let localization = require("./localization")
 const authenticateUser = async (req, res, next) => {
     try {
         const token = req.headers['authorization'].split(" ")[1];
-        console.log(token)
 
         if (!token) {
             return res.status(401).json(Service.response(false, "please provide token", null));

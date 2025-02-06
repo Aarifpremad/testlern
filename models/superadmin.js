@@ -103,7 +103,6 @@ UserSchema.methods.hashPassword = function (password) {
  * Create instance method for authenticating user
  */
 UserSchema.methods.authenticate = async function (password) {
-  // console.log(this.password.toString(),this.hashPassword(password).toString())
   return this.password.toString() == this.hashPassword(password).toString();
 };
 

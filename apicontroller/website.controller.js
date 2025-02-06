@@ -11,7 +11,6 @@ module.exports = {
         try {
 
             const user = await authenticateUserforproduct(req);
-            console.log(user)
             const userFavorites = user ? new Set(user.favorites.map(id => id.toString())) : new Set();
             
             const [aboutdelivery, banner, slidbar, header, popup, offers, toproducts, bestsellers] = await Promise.all([

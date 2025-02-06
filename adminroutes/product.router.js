@@ -61,7 +61,6 @@ router.post('/create-product', upload.array('images'), async (req, res) => {
       const { body, files } = req;
       
       const imageFilenames = files.map(file => file.filename);
-        console.log(body.metaDescription.metaKeywords,body);
       const  linkedProducts = body.linkedProducts && body.linkedProducts.relatedProducts 
       ? body.linkedProducts.relatedProducts 
       : [];
@@ -126,7 +125,6 @@ router.post('/create-product', upload.array('images'), async (req, res) => {
   router.get('/products', async (req, res) => {
     try {
         const { draw = 1, start = 0, length = 10, search = '' } = req.query;
-      console.log(JSON.stringify(req.query))
         const page = Math.ceil(start / length) + 1; // 1-based page number
         const limit = parseInt(length);
 

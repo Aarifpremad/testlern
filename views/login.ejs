@@ -125,7 +125,6 @@
                     },
                     body: JSON.stringify({ email, password }),
                 });
-                console.log(response)
                 if (response.ok) {
                     window.location.href = '/admin/dashboard';
                 } else {

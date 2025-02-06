@@ -21,7 +21,6 @@ router.route("/userlist").get((req, res) => {
 
 router.get('/adminprofile', async (req, res) => {
     let admin =await Model.SuperAdmin.findOne();
-    console.log(admin,"admin")
     res.render('profile', { title: 'profile', page: 'profile' ,admin : admin});
 });
 
@@ -165,7 +164,6 @@ router.get('/admin/orders/:id', async (req, res) => {
 router.get('/admin/orders/track/:id', async (req, res) => {
     try {
         const OrderDetils = await Model.Order.findById(req.params.id)
-        console.log({ order: OrderDetils }); // Ensure order_status exists
         if (!OrderDetils) {
             return res.status(404).send('Order not found');
         }

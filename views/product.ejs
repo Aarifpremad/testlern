@@ -391,11 +391,9 @@ const cimagesInput = document.getElementById('images');
       data.specsThickness.forEach(thickness => {
         $('#thickness').append(new Option(thickness.thickness, thickness.thickness));
       });
-      console.log(data.specsRoom, data.specsType, data.specsPrint, data.specsUsage);
       data.specsRoom.forEach(room => {
         $('#recommendedRoom').append(new Option(room.room, room.room));
       });
-      console.log(data.specsType);
       data.specsType.forEach(type => {
         $('#type').append(new Option(type.type, type.type));
       });
