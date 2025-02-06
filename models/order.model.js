@@ -13,7 +13,18 @@ const orderSchema = new mongoose.Schema({
     grand_total: Number,
     payment_mode: String,
     payment_status: String,
-    order_status: String,
+    order_status: { 
+        type: String, 
+        enum: ['Placed', 'Confirmed', 'Shipped', 'Delivered', 'Cancelled'], 
+        default: 'Placed' 
+    },
+
+    status_history: [{
+        status: { type: String, enum: ['Placed', 'Confirmed', 'Shipped', 'Delivered', 'Cancelled'] },
+        changed_at: { type: Date, default: Date.now },
+        admin_message: {type:String,default:"Order Placed Successfully. "}
+    }],
+
     items: [{
         product_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Product' },
         product_price: Number,

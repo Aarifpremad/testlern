@@ -84,7 +84,10 @@
                     {
                         data: '_id',
                         render: function (data) {
-                            return `<a href="/admin/orders/${data}" class="btn btn-sm btn-primary">View</a>`;
+                            return `
+                                <a href="/admin/orders/${data}" class="btn btn-sm btn-primary">View</a>
+                                <a href="/admin/orders/track/${data}" class="btn btn-sm btn-secondary ms-2">Track</a>
+                            `;
                         }
                     } // Actions
                 ]

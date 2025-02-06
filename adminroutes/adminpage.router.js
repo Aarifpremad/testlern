@@ -163,4 +163,15 @@ router.get('/admin/orders/:id', async (req, res) => {
     }
 });
 
+router.get('/admin/orders/track/:id', async (req, res) => {
+    try {
+        const OrderDetils = await Model.Order.findById(req.params.id)
+        res.render('ordertrack', {order : OrderDetils});
+    } catch (error) {
+        console.log(error)
+        res.status(500).send('Error loading user details');
+    }
+});
+
+
 module.exports = router;
