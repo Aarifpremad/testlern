@@ -155,7 +155,6 @@ router.get('/admin/orders/:id', async (req, res) => {
         const Address = await Model.OrderAddress.find({orderid:req.params.id});
         const orderproduct = OrderDetils.items
         
-        console.log({OrderDetils , Address,orderproduct:JSON.stringify(orderproduct)})
         res.render('orderdetils', {OrderDetils , Address,orderproduct});
     } catch (error) {
         console.log(error)
@@ -166,12 +165,17 @@ router.get('/admin/orders/:id', async (req, res) => {
 router.get('/admin/orders/track/:id', async (req, res) => {
     try {
         const OrderDetils = await Model.Order.findById(req.params.id)
-        res.render('ordertrack', {order : OrderDetils});
+        console.log({ order: OrderDetils }); // Ensure order_status exists
+        if (!OrderDetils) {
+            return res.status(404).send('Order not found');
+        }
+        res.render('ordertrack', { order: OrderDetils });
     } catch (error) {
         console.log(error)
-        res.status(500).send('Error loading user details');
+        res.status(500).send('Error loading order details');
     }
 });
+
 
 
 module.exports = router;
