@@ -1,4 +1,4 @@
-<aside class="sidebar">
+<aside class="sidebar" style="background-color: #18453B;">
     <ul>
         <li><a href="/admin/dashboard" class="<%= page === 'dashboard' ? 'active' : '' %>">Dashboard</a></li>
         <li><a href="/admin/users" class="<%= page === 'userlist' ? 'active' : '' %>">Users</a></li>
@@ -68,7 +68,7 @@
     </ul>
 </aside>
 
-<style>
+<!-- <style>
     .active {
         color: #fff;
         background-color: #007bff;
@@ -87,7 +87,7 @@
         background-color: #0069d9;
         color: white;
     }
-</style>
+</style> -->
 
 <script>
     document.querySelectorAll('.toggle').forEach(toggle => {
@@ -110,3 +110,43 @@
         });
     });
 </script>
+
+
+
+
+<style>
+    /* Sidebar CSS */
+.sidebar {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 250px; /* Sidebar width */
+    background-color: #f8f9fa; /* Sidebar background */
+    padding-top: 20px; /* Optional padding */
+    height: 100vh; /* Full height */
+    overflow-y: auto; /* Scrollbar for content if required */
+}
+
+.sidebar .sub-menu {
+    display: none;
+    padding-left: 20px;
+}
+
+.sidebar a:hover {
+    background-color: #0069d9;
+    color: rgb(212, 23, 23);
+}
+
+.sidebar a.active {
+    background-color: #0056b3;
+}
+
+/* Make the main content area flexible */
+.main-container {
+    margin-left: 250px; /* Sidebar width */
+    width: calc(100% - 250px); /* Adjust content area */
+    min-height: 100vh; /* Ensure content takes full screen height */
+}
+
+</style>

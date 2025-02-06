@@ -29,23 +29,30 @@
       margin-bottom: 20px;
     }
     #preview-images {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      max-height: 10px; /* Set maximum height for scrolling */
-      overflow-y: auto; /* Enable vertical scrolling */
-      border: 1px solid #ddd;
-      border-radius: 5px;
-      padding: 10px;
-      background-color: #f8f9fa;
-    }
-    #preview-images img {
-      width: 10px;
-      height: 10px;
-      object-fit: cover;
-      border: 1px solid #ddd;
-      border-radius: 5px;
-    }
+  display: block; /* Change from flex to block for better overflow behavior */
+  max-height: 300px; /* Adjust this as per your preference */
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 10px;
+  background-color: #f8f9fa;
+}
+#preview-images img {
+  width: 80px; /* Adjust width for better image scaling */
+  height: 80px;
+  object-fit: cover;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+#preview-images {
+  display: block;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 10px;
+  background-color: #f8f9fa;
+}
+
     .form-label {
       font-weight: bold;
     }
