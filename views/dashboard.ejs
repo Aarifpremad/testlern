@@ -24,30 +24,37 @@
                     <h3>Total Users</h3>
                     <a href="/userlist"><p id="total-users">--</p></a>
                 </div>
-                <div class="dashboard-card" >
-                    <h3>Online Users</h3>
-                    <p id="online-users">--</p>
-                </div>
                 <div class="dashboard-card">
                     <h3>Today New Users</h3>
                     <p id="new-users">--</p>
                 </div>
                 <div class="dashboard-card">
                     <h3>Total Category</h3>
-                    <p id="total-revenue">--</p>
+                    <p id="total-category">--</p>
                 </div>
-
+                <div class="dashboard-card">
+                    <h3>Total SubCategory</h3>
+                    <p id="total-subcategory">--</p>
+                </div> 
                 <div class="dashboard-card">
                     <h3>Total product</h3>
-                    <p id="total-commissions">--</p>
+                    <p id="total-product">--</p>
+                </div>  
+                <div class="dashboard-card">
+                    <h3>Today orders</h3>
+                    <p id="today-orders">--</p>
                 </div>
                 <div class="dashboard-card">
-                    <h3>Total sb cate</h3>
-                    <p id="total-deposit">--</p>
-                </div>      
+                    <h3>Total orders</h3>
+                    <p id="total-orders">--</p>
+                </div>
                 <div class="dashboard-card">
-                    <h3>Total order</h3>
-                    <p id="total-withdrawal">--</p>
+                    <h3>Total Sales</h3>
+                    <p id="total-sales">--</p>
+                </div>
+                <div class="dashboard-card">
+                    <h3>Today's Sales</h3>
+                    <p id="today-sales">--</p>
                 </div>
             </div>
 
@@ -58,15 +65,23 @@
                     <h3>User Statistics</h3>
                     <canvas id="user-stats-chart"></canvas>
                 </div>
-
-                <!-- Top Users Section -->
-                <div class="top-users-container">
-                    <h3>Recent Users</h3>
-                    <div id="top-users">
-                        <!-- User details dynamically populated -->
-                    </div>
+                <div class="graph-container">
+                    <h3>Order Statistics</h3>
+                    <canvas id="order-stats-chart"></canvas>
                 </div>
             </div>
+
+            <div class="top-users-container">
+                <h3>Recent Users</h3>
+                <div id="top-users">
+                </div>
+            </div> 
+            
+            <!-- <div class="top-orders-container">
+                <h3>Recent Orders</h3>
+                <div id="top-orders">
+                </div>
+            </div>  -->
         </div>
     </div>
 
@@ -77,25 +92,21 @@
                 const response = await fetch('/admin/dashboarddetils'); // Update this endpoint as per your backend API
                 const data = await response.json();
 
-                // Update dashboard cards with unique IDs
                 document.getElementById('total-users').textContent = data.totalUsers;
-                document.getElementById('online-users').textContent = data.onlineUsers;
                 document.getElementById('new-users').textContent = data.newUsers;
-                document.getElementById('total-revenue').textContent = `${data.totalRevenue}`;
-                document.getElementById('total-commissions').textContent = data.totalCommissions;
-                document.getElementById('total-deposit').textContent = data.totalDeposit;
-                document.getElementById('total-withdrawal').textContent = data.totalWithdrawal;
-                document.getElementById('total-referral-amount').textContent = data.totalReferralAmount;
-                document.getElementById('active-tournament').textContent = data.activeTournament;
-                document.getElementById('active-pool').textContent = data.activePool;
-                document.getElementById('today-rooms').textContent = data.todayRooms;
-                document.getElementById('active-bots').textContent = data.activeBots;
+                document.getElementById('total-category').textContent = data.totalCategories;
+                document.getElementById('total-subcategory').textContent = data.totalSubcategories;
+                document.getElementById('total-product').textContent = `${data.totalProducts}`;
+                document.getElementById('today-orders').textContent = data.todayOrders;
+                document.getElementById('total-orders').textContent = data.totalOrders; 
+                document.getElementById('total-sales').textContent = `₹${data.totalSales}`;
+                document.getElementById('today-sales').textContent = `₹${data.todaySales}`;
 
-                // Update graph
                 updateGraph(data.monthlyUserStats);
-
-                // Update top users
                 updateTopUsers(data.topUsers);
+                updateOrderGraph(data.monthlyOrderStats);
+                // updateorders(data.newOrders);
+
             } catch (error) {
                 console.error('Error fetching dashboard data:', error);
             }
@@ -135,14 +146,57 @@
                 const userCard = document.createElement('div');
                 userCard.classList.add('user-card');
                 userCard.innerHTML = `
-                    <img src= "http://194.238.18.201:4001/uploads/bot/${user.avatar}.png " alt="image" class="user-image">
-                    <p><strong>${user.username}</strong></p>
-                    <p>Balance: ${user.balance}</p>
+                    <p><strong>${user.numeric_id}</strong></p>
+                    <p>${user.email}</p>
                 `;
                 topUsersContainer.appendChild(userCard);
             });
         }
+       
+        function updateorders(orders) {
+            const topordersContainer = document.getElementById('top-orders');
+            topordersContainer.innerHTML = ''; // Clear existing orders
+            toporders.forEach(order => {
+                const orderCard = document.createElement('div');
+                orderCard.classList.add('orders-card');
+                orderCard.innerHTML = `
 
+                    <p><strong>${order.orderno}</strong></p>
+                    <p><strong>${order.grand_total}</strong></p>
+                    <p>${order.email}</p>
+                    <p>${order.order_status}</p>
+                `;
+                topordersContainer.appendChild(orderCard);
+            });
+        }
+       
+        
+        function updateOrderGraph(monthlyOrderStats) {
+            const ctx = document.getElementById('order-stats-chart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: monthlyOrderStats.labels,
+                    datasets: [{
+                        label: 'Orders (Monthly)',
+                        data: monthlyOrderStats.data,
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                        borderWidth: 2,
+                        tension: 0.3 // Creates smooth line curves
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: { beginAtZero: true }
+                    },
+                    plugins: {
+                        legend: { position: 'top' }
+                    }
+                },
+            });
+        }
         fetchDashboardData();
     </script>
 </body>

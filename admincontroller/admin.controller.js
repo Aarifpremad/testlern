@@ -75,53 +75,85 @@ module.exports = {
     },
     dashboard :async (req, res) => {
       try {
-        console.log("req.session.admin",req.session.admin)
-          const currentDate = moment();
-          const startOfDay = currentDate.clone().startOf('day'); 
-          const endOfDay = currentDate.clone().endOf('day'); 
-  
-          const totalUsers = await Model.User.countDocuments({});
-  
-          const newUsers = await Model.User.countDocuments({
-              createdAt: { $gte: startOfDay.toDate(), $lte: endOfDay.toDate() }
-          });
-  
-          const monthlyUserStats = {
-              labels: [],
-              data: []
-          };
-  
-          for (let i = 11; i >= 0; i--) {
-              const monthStart = currentDate.clone().subtract(i, 'months').startOf('month');
-              const monthEnd = currentDate.clone().subtract(i, 'months').endOf('month');
-  
-              const monthUsers = await Model.User.countDocuments({
-                  createdAt: { $gte: monthStart.toDate(), $lte: monthEnd.toDate() }
-              });
-  
-              monthlyUserStats.labels.push(monthStart.format('MMM'));
-              monthlyUserStats.data.push(monthUsers);
-          }
-  
-          const topUsers = await Model.User.find({})
-              .sort({ createdAt: -1 }) 
-              .limit(4)
-              .select('username balance avatar'); 
-  
-          const data = {
-              totalUsers,
-              newUsers,
-              monthlyUserStats,
-              topUsers,
-              totalRevenue :0,
-              totalCommissions :0,
-  
-          };
-          res.json(data);
-      } catch (error) {
-          console.error('something went wrong', error);
-          res.status(500).json({ message: 'something went wrong' });
-      }
+        const currentDate = moment();
+        const startOfDay = currentDate.clone().startOf('day').toDate();
+        const endOfDay = currentDate.clone().endOf('day').toDate();
+
+        // Fetch all required counts and statistics in parallel using `Promise.all()`
+        const [
+            totalUsers,
+            totalCategories,
+            totalSubcategories,
+            totalProducts,
+            totalOrders,
+            todayOrders,
+            totalSales,
+            todaySales,
+            newUsers,
+            topUsers,
+            newOrders,
+        ] = await Promise.all([
+            Model.User.countDocuments(),
+            Model.Category.countDocuments(),
+            Model.Subcategory.countDocuments(),
+            Model.Product.countDocuments(),
+            Model.Order.countDocuments(),
+            Model.Order.countDocuments({ createdAt: { $gte: startOfDay, $lte: endOfDay } }),
+            Model.Order.aggregate([{ $group: { _id: null, total: { $sum: "$grand_total" } } }]),
+            Model.Order.aggregate([{ $match: { createdAt: { $gte: startOfDay, $lte: endOfDay } } }, { $group: { _id: null, total: { $sum: "$grand_total" } } }]),
+            Model.User.countDocuments({ createdAt: { $gte: startOfDay, $lte: endOfDay } }),
+            Model.User.find().sort({ createdAt: -1 }).limit(4).select('numeric_id firstname email'),
+            Model.Order.find().sort({ createdAt: -1 }).limit(4).select('orderno email grand_total order_status')
+        ]);
+
+        // Calculate monthly user statistics
+        // const monthlyUserStats = { labels: [], data: [] };
+        // for (let i = 11; i >= 0; i--) {
+        //     const monthStart = currentDate.clone().subtract(i, 'months').startOf('month').toDate();
+        //     const monthEnd = currentDate.clone().subtract(i, 'months').endOf('month').toDate();
+        //     const monthUsers = await Model.User.countDocuments({ createdAt: { $gte: monthStart, $lte: monthEnd } });
+        //     monthlyUserStats.labels.push(currentDate.clone().subtract(i, 'months').format('MMM'));
+        //     monthlyUserStats.data.push(monthUsers);
+        // }
+
+
+        const monthlyUserStats = { labels: [], data: [] };
+        const monthlyOrderStats = { labels: [], data: [] };
+
+        for (let i = 11; i >= 0; i--) {
+            const monthStart = currentDate.clone().subtract(i, 'months').startOf('month').toDate();
+            const monthEnd = currentDate.clone().subtract(i, 'months').endOf('month').toDate();
+
+            const monthUsers = await Model.User.countDocuments({ createdAt: { $gte: monthStart, $lte: monthEnd } });
+            const monthOrders = await Model.Order.countDocuments({ createdAt: { $gte: monthStart, $lte: monthEnd } });
+
+            monthlyUserStats.labels.push(currentDate.clone().subtract(i, 'months').format('MMM'));
+            monthlyUserStats.data.push(monthUsers);
+
+            monthlyOrderStats.labels.push(currentDate.clone().subtract(i, 'months').format('MMM'));
+            monthlyOrderStats.data.push(monthOrders);
+        }
+
+
+        res.json({
+            totalUsers,
+            newUsers,
+            monthlyUserStats,
+            monthlyOrderStats,
+            topUsers,
+            totalCategories,
+            totalSubcategories,
+            totalProducts,
+            totalOrders,
+            todayOrders,
+            totalSales: totalSales.length ? totalSales[0].total : 0,  // Total sales (all orders)
+            todaySales: todaySales.length ? todaySales[0].total : 0 ,  // Today's sales
+            newOrders
+        });
+    } catch (error) {
+        console.error('Something went wrong', error);
+        res.status(500).json({ message: 'Something went wrong' });
+    }
   },
 
 
