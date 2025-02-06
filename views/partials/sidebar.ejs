@@ -2,7 +2,7 @@
     <ul>
         <li><a href="/admin/dashboard" class="<%= page === 'dashboard' ? 'active' : '' %>">Dashboard</a></li>
         <li><a href="/admin/users" class="<%= page === 'userlist' ? 'active' : '' %>">Users</a></li>
-        <li><a href="/allorders" class="<%= page === 'orders' ? 'active' : '' %>">Orders</a></li>
+        <li><a href="/admin/allorders" class="<%= page === 'orders' ? 'active' : '' %>">Orders</a></li>
 
                    
         <li>
@@ -10,45 +10,45 @@
                 Catalog
             </a>
             <ul class="sub-menu">
-                <li><a href="/category" class="<%= page === 'category' ? 'active' : '' %>">Category Create</a></li>
-                <li><a href="/categorylist" class="<%= page === 'categorylist' ? 'active' : '' %>">Category List</a></li>
-                <li><a href="/subcategory" class="<%= page === 'subcategory' ? 'active' : '' %>">Subcategory Create</a></li>
-                <li><a href="/subcategorylist" class="<%= page === 'subcategorylist' ? 'active' : '' %>">Subcategory List</a></li>
-                <li><a href="/product" class="<%= page === 'product' ? 'active' : '' %>">Product Create</a></li>
-                <li><a href="/productlist" class="<%= page === 'productlist' ? 'active' : '' %>">Product List</a></li>
+                <li><a href="/admin/category" class="<%= page === 'category' ? 'active' : '' %>">Category Create</a></li>
+                <li><a href="/admin/categorylist" class="<%= page === 'categorylist' ? 'active' : '' %>">Category List</a></li>
+                <li><a href="/admin/subcategory" class="<%= page === 'subcategory' ? 'active' : '' %>">Subcategory Create</a></li>
+                <li><a href="/admin/subcategorylist" class="<%= page === 'subcategorylist' ? 'active' : '' %>">Subcategory List</a></li>
+                <li><a href="/admin/product" class="<%= page === 'product' ? 'active' : '' %>">Product Create</a></li>
+                <li><a href="/admin/productlist" class="<%= page === 'productlist' ? 'active' : '' %>">Product List</a></li>
             </ul>
         </li>
 
         <li>
-            <a href="javascript:void(0)" class="toggle specifications-toggle <%= page.startsWith('specs') || ['productgroup', 'brand', 'unit'].includes(page) ? 'active' : '' %>">
+            <a href="javascript:void(0)" class="toggle specifications-toggle <%= page.startsWith('specs') || ['productgroups', 'brands', 'units'].includes(page) ? 'active' : '' %>">
                 Specifications
             </a>
             <ul class="sub-menu">
-                <li><a href="/specifications/color" class="<%= page === 'color' ? 'active' : '' %>">Specs Color</a></li>
-                <li><a href="/specifications/size" class="<%= page === 'specssize' ? 'active' : '' %>">Specs Size</a></li>
-                <li><a href="/specifications/finish" class="<%= page === 'specsfinish' ? 'active' : '' %>">Specs Finish</a></li>
-                <li><a href="/specifications/material" class="<%= page === 'specsmaterial' ? 'active' : '' %>">Specs Material</a></li>
-                <li><a href="/specifications/thickness" class="<%= page === 'specsthickness' ? 'active' : '' %>">Specs Thickness</a></li>
-                <li><a href="/specifications/room" class="<%= page === 'specsroom' ? 'active' : '' %>">Specs Room</a></li>
-                <li><a href="/specifications/type" class="<%= page === 'specstype' ? 'active' : '' %>">Specs Type</a></li>
-                <li><a href="/specifications/print" class="<%= page === 'specsprint' ? 'active' : '' %>">Specs Print</a></li>
-                <li><a href="/specifications/usage" class="<%= page === 'specsusage' ? 'active' : '' %>">Specs Usage</a></li>
-                <li><a href="/productgroup" class="<%= page === 'productgroup' ? 'active' : '' %>">Product Group</a></li>
-                <li><a href="/brand" class="<%= page === 'brand' ? 'active' : '' %>">Brand</a></li>
-                <li><a href="/unit" class="<%= page === 'unit' ? 'active' : '' %>">Unit</a></li>
+                <li><a href="/admin/specifications/color" class="<%= page === 'color' ? 'active' : '' %>">Specs Color</a></li>
+                <li><a href="/admin/specifications/size" class="<%= page === 'specssize' ? 'active' : '' %>">Specs Size</a></li>
+                <li><a href="/admin/specifications/finish" class="<%= page === 'specsfinish' ? 'active' : '' %>">Specs Finish</a></li>
+                <li><a href="/admin/specifications/material" class="<%= page === 'specsmaterial' ? 'active' : '' %>">Specs Material</a></li>
+                <li><a href="/admin/specifications/thickness" class="<%= page === 'specsthickness' ? 'active' : '' %>">Specs Thickness</a></li>
+                <li><a href="/admin/specifications/room" class="<%= page === 'specsroom' ? 'active' : '' %>">Specs Room</a></li>
+                <li><a href="/admin/specifications/type" class="<%= page === 'specstype' ? 'active' : '' %>">Specs Type</a></li>
+                <li><a href="/admin/specifications/print" class="<%= page === 'specsprint' ? 'active' : '' %>">Specs Print</a></li>
+                <li><a href="/admin/specifications/usage" class="<%= page === 'specsusage' ? 'active' : '' %>">Specs Usage</a></li>
+                <li><a href="/admin/productgroups" class="<%= page === 'productgroup' ? 'active' : '' %>">Product Group</a></li>
+                <li><a href="/admin/brands" class="<%= page === 'brand' ? 'active' : '' %>">Brand</a></li>
+                <li><a href="/admin/units" class="<%= page === 'unit' ? 'active' : '' %>">Unit</a></li>
             </ul>
         </li>
 
         <li>
-            <a href="javascript:void(0)" class="toggle settings-toggle <%= ['pages', 'header', 'aboutdelivery', 'offersforuser', 'banners'].includes(page) ? 'active' : '' %>">
+            <a href="javascript:void(0)" class="toggle settings-toggle <%= ['pages', 'header', 'aboutdeliveries', 'offersforuser', 'banners'].includes(page) ? 'active' : '' %>">
                 Settings
             </a>
             <ul class="sub-menu">
-                <li><a href="/page" class="<%= page === 'pages' ? 'active' : '' %>">Add Pages</a></li>
-                <li><a href="/header" class="<%= page === 'header' ? 'active' : '' %>">Headers</a></li>
-                <li><a href="/aboutdelivery" class="<%= page === 'aboutdelivery' ? 'active' : '' %>">About Delivery</a></li>
-                <li><a href="/offersforuser" class="<%= page === 'offersforuser' ? 'active' : '' %>">Header Offers</a></li>
-                <li><a href="/banners" class="<%= page === 'banners' ? 'active' : '' %>">Banners</a></li>
+                <li><a href="/admin/page" class="<%= page === 'pages' ? 'active' : '' %>">Add Pages</a></li>
+                <li><a href="/admin/header" class="<%= page === 'header' ? 'active' : '' %>">Headers</a></li>
+                <li><a href="/admin/aboutdeliveries" class="<%= page === 'aboutdelivery' ? 'active' : '' %>">About Delivery</a></li>
+                <li><a href="/admin/offersforuser" class="<%= page === 'offersforuser' ? 'active' : '' %>">Header Offers</a></li>
+                <li><a href="/admin/bannersadd" class="<%= page === 'banners' ? 'active' : '' %>">Banners</a></li>
             </ul>
         </li>
 
@@ -58,10 +58,10 @@
                 Advertisement
             </a>
             <ul class="sub-menu">
-                <li><a href="/slidbar" class="<%= page === 'Slidbar' ? 'active' : '' %>">Slidbar</a></li>
-                <li><a href="/imagesforuser" class="<%= page === 'Slidbar' ? 'active' : '' %>">User images</a></li>
-                <li><a href="/websitepopup" class="<%= page === 'Slidbar' ? 'active' : '' %>">websitepopup</a></li>
-                <li><a href="/coupens" class="<%= page === 'coupens' ? 'active' : '' %>">Coupen</a></li>
+                <li><a href="/admin/slidbars" class="<%= page === 'Slidbar' ? 'active' : '' %>">Slidbar</a></li>
+                <li><a href="/admin/imagesforuser" class="<%= page === 'Slidbar' ? 'active' : '' %>">User images</a></li>
+                <li><a href="/admin/websitepopup" class="<%= page === 'Slidbar' ? 'active' : '' %>">websitepopup</a></li>
+                <li><a href="/admin/coupens" class="<%= page === 'coupens' ? 'active' : '' %>">Coupen</a></li>
             </ul>
         </li>
         
