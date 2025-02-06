@@ -52,8 +52,11 @@ router.post('/offers', async (req, res) => {
     const { id, dynamic_section, content, extra, status } = req.body;
 
     try {
-        let offer = await Offer.findOneAndUpdate({dynamic_section:dynamic_section},{ content, extra, status })
-        
+        let offer = await Offer.findOneAndUpdate(
+            { dynamic_section: dynamic_section },
+            { content, extra, status },
+            { new: true, upsert: true }  // `upsert: true` will create the offer if it doesn't exist
+        );        
         res.json(offer);
     } catch (err) {
         console.error(err);
