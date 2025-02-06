@@ -27,6 +27,11 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json()); // For application/json
 
 app.get("/",(req,res)=>{
+
+  res.send("this are website")
+})
+
+app.get("/admin",(req,res)=>{
     res.render("login",{title :"login page"})
 })
 
