@@ -31,7 +31,10 @@
         <%- include('partials/sidebar', { page: 'categorylist' }) %> <!-- Sidebar Include -->
 
         <div class="container mt-4">
-            <h1>Category List</h1>
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h1>Category List</h1>
+                <a href="/admin/category" class="btn btn-primary">Add Category</a> <!-- Add Category Button -->
+            </div>
 
             <!-- Filter Form -->
             <div class="mb-3">
@@ -80,7 +83,6 @@
                         d.draw = d.draw || 1;  // Ensure draw value is passed for correct response handling
                     },
                     dataSrc: function (json) {
-                        // Handle the API response to fill the table
                         return json.data.map((category, index) => ({
                             ...category,
                             index: index + 1 + (json.draw - 1) * json.data.length, // Correct row index for pagination
@@ -117,15 +119,13 @@
                     },
                 },
                 drawCallback: function(settings) {
-                    // This will update the total records count in the footer
                     const totalRecords = settings.json.recordsTotal;
                     $('#category-table_info').html(`Showing ${settings._iDisplayStart + 1} to ${settings._iDisplayEnd} of ${totalRecords} entries`);
                 },
             });
 
-            // Reload table with filter applied (on input change)
             $('#category-name').on('input', function () {
-                table.ajax.reload();  // Reload table with new filter value
+                table.ajax.reload();
             });
         });
 

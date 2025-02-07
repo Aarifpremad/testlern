@@ -6,21 +6,21 @@
 
                    
         <li>
-            <a href="javascript:void(0)" class="toggle category-toggle <%= ['category', 'categorylist', 'subcategory', 'subcategorylist', 'product', 'productlist'].includes(page) ? 'active' : '' %>">
+            <a href="javascript:void(0)" class="toggle category-toggle <%= [ 'categorylist', 'subcategorylist', 'productlist'].includes(page) ? 'active' : '' %>">
                 Catalog
             </a>
             <ul class="sub-menu">
-                <li><a href="/admin/category" class="<%= page === 'category' ? 'active' : '' %>">Category Create</a></li>
+                <!-- <li><a href="/admin/category" class="<%= page === 'category' ? 'active' : '' %>">Category Create</a></li> -->
                 <li><a href="/admin/categorylist" class="<%= page === 'categorylist' ? 'active' : '' %>">Category List</a></li>
-                <li><a href="/admin/subcategory" class="<%= page === 'subcategory' ? 'active' : '' %>">Subcategory Create</a></li>
+                <!-- <li><a href="/admin/subcategory" class="<%= page === 'subcategory' ? 'active' : '' %>">Subcategory Create</a></li> -->
                 <li><a href="/admin/subcategorylist" class="<%= page === 'subcategorylist' ? 'active' : '' %>">Subcategory List</a></li>
-                <li><a href="/admin/product" class="<%= page === 'product' ? 'active' : '' %>">Product Create</a></li>
+                <!-- <li><a href="/admin/product" class="<%= page === 'product' ? 'active' : '' %>">Product Create</a></li> -->
                 <li><a href="/admin/productlist" class="<%= page === 'productlist' ? 'active' : '' %>">Product List</a></li>
             </ul>
         </li>
 
         <li>
-            <a href="javascript:void(0)" class="toggle specifications-toggle <%= page.startsWith('specs') || ['productgroups', 'brands', 'units'].includes(page) ? 'active' : '' %>">
+            <a href="javascript:void(0)" class="toggle specifications-toggle <%= page.startsWith('specs') || [ 'brand', 'unit','color','specssize','specsfinish','specsmaterial','specsthickness','specsroom','specsprint','specsusage','productgroup'].includes(page) ? 'active' : '' %>">
                 Specifications
             </a>
             <ul class="sub-menu">
@@ -40,28 +40,28 @@
         </li>
 
         <li>
-            <a href="javascript:void(0)" class="toggle settings-toggle <%= ['pages', 'header', 'aboutdeliveries', 'offersforuser', 'banners'].includes(page) ? 'active' : '' %>">
+            <a href="javascript:void(0)" class="toggle settings-toggle <%= ['pages', 'header-management', 'about-delivery', 'offers', 'banner'].includes(page) ? 'active' : '' %>">
                 Settings
             </a>
             <ul class="sub-menu">
                 <li><a href="/admin/page" class="<%= page === 'pages' ? 'active' : '' %>">Add Pages</a></li>
-                <li><a href="/admin/header" class="<%= page === 'header' ? 'active' : '' %>">Headers</a></li>
-                <li><a href="/admin/aboutdeliveries" class="<%= page === 'aboutdelivery' ? 'active' : '' %>">About Delivery</a></li>
-                <li><a href="/admin/offersforuser" class="<%= page === 'offersforuser' ? 'active' : '' %>">Header Offers</a></li>
-                <li><a href="/admin/bannersadd" class="<%= page === 'banners' ? 'active' : '' %>">Banners</a></li>
+                <li><a href="/admin/header" class="<%= page === 'header-management' ? 'active' : '' %>">Headers</a></li>
+                <li><a href="/admin/aboutdeliveries" class="<%= page === 'about-delivery' ? 'active' : '' %>">About Delivery</a></li>
+                <li><a href="/admin/offersforuser" class="<%= page === 'offers' ? 'active' : '' %>">Header Offers</a></li>
+                <li><a href="/admin/bannersadd" class="<%= page === 'banner' ? 'active' : '' %>">Banners</a></li>
             </ul>
         </li>
 
         <!-- Advertisement Section -->
         <li>
-            <a href="javascript:void(0)" class="toggle advertisement-toggle <%= page === 'Slidbar' ? 'active' : '' %>">
+            <a href="javascript:void(0)"  class="toggle category-toggle <%= [ 'slidbar', 'imagesforusers', 'popup','coupons'].includes(page) ? 'active' : '' %>">
                 Advertisement
             </a>
             <ul class="sub-menu">
-                <li><a href="/admin/slidbars" class="<%= page === 'Slidbar' ? 'active' : '' %>">Slidbar</a></li>
-                <li><a href="/admin/imagesforuser" class="<%= page === 'Slidbar' ? 'active' : '' %>">User images</a></li>
-                <li><a href="/admin/websitepopup" class="<%= page === 'Slidbar' ? 'active' : '' %>">websitepopup</a></li>
-                <li><a href="/admin/coupens" class="<%= page === 'coupens' ? 'active' : '' %>">Coupen</a></li>
+                <li><a href="/admin/slidbars" class="<%= page === 'slidbar' ? 'active' : '' %>">Slidbar</a></li>
+                <li><a href="/admin/imagesforuser" class="<%= page === 'imagesforusers' ? 'active' : '' %>">User images</a></li>
+                <li><a href="/admin/websitepopup" class="<%= page === 'popup' ? 'active' : '' %>">websitepopup</a></li>
+                <li><a href="/admin/coupens" class="<%= page === 'coupons' ? 'active' : '' %>">Coupen</a></li>
             </ul>
         </li>
         

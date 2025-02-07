@@ -31,8 +31,11 @@
         <%- include('partials/sidebar', { page: 'subcategorylist' }) %> <!-- Sidebar Include -->
 
         <div class="container mt-4">
-            <h1>SubCategory List</h1>
-
+            
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h1>SubCategory List</h1>
+                <a href="/admin/subcategory" class="btn btn-primary">Add SubCategory</a> <!-- Add Category Button -->
+            </div>
             <!-- Filter Form -->
             <div class="mb-3">
                 <label for="subcategory-name" class="form-label">Filter by Name</label>
