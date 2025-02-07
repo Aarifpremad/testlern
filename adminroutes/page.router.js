@@ -12,7 +12,6 @@ router.get('/teach-pages', async (req, res) => {
     }
 });
 
-// Get Teach Page by ID for editing
 router.get('/teach-pages/:id', async (req, res) => {
     try {
         const page = await Page.findById(req.params.id);

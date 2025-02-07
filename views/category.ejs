@@ -26,6 +26,13 @@
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
 
+        .content-container {
+         margin-left: 260px; 
+         margin-top: 70px; 
+          padding: 20px;
+          width: calc(100% - 260px);
+         height: 100vh;
+        }
         /* Preview Section for Images */
         .preview {
             display: flex;
@@ -88,7 +95,7 @@
     <div class="main-container">
         <%- include('partials/sidebar', { page: 'category' }) %>
 
-        <div class="container mt-4 formContainer">
+        <div class="content-container">
             <h1>Create Category</h1>
 
             <!-- Category Creation Form -->

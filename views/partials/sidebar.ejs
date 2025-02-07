@@ -4,17 +4,13 @@
         <li><a href="/admin/users" class="<%= page === 'userlist' ? 'active' : '' %>">Users</a></li>
         <li><a href="/admin/allorders" class="<%= page === 'orders' ? 'active' : '' %>">Orders</a></li>
 
-                   
         <li>
-            <a href="javascript:void(0)" class="toggle category-toggle <%= [ 'categorylist', 'subcategorylist', 'productlist'].includes(page) ? 'active' : '' %>">
+            <a href="javascript:void(0)" class="toggle category-toggle <%= [ 'categorylist', 'subcategorylist', 'productlist','category','product','subcategory'].includes(page) ? 'active' : '' %>">
                 Catalog
             </a>
             <ul class="sub-menu">
-                <!-- <li><a href="/admin/category" class="<%= page === 'category' ? 'active' : '' %>">Category Create</a></li> -->
                 <li><a href="/admin/categorylist" class="<%= page === 'categorylist' ? 'active' : '' %>">Category List</a></li>
-                <!-- <li><a href="/admin/subcategory" class="<%= page === 'subcategory' ? 'active' : '' %>">Subcategory Create</a></li> -->
                 <li><a href="/admin/subcategorylist" class="<%= page === 'subcategorylist' ? 'active' : '' %>">Subcategory List</a></li>
-                <!-- <li><a href="/admin/product" class="<%= page === 'product' ? 'active' : '' %>">Product Create</a></li> -->
                 <li><a href="/admin/productlist" class="<%= page === 'productlist' ? 'active' : '' %>">Product List</a></li>
             </ul>
         </li>
@@ -52,7 +48,6 @@
             </ul>
         </li>
 
-        <!-- Advertisement Section -->
         <li>
             <a href="javascript:void(0)"  class="toggle category-toggle <%= [ 'slidbar', 'imagesforusers', 'popup','coupons'].includes(page) ? 'active' : '' %>">
                 Advertisement
@@ -87,6 +82,24 @@
         background-color: #0069d9;
         color: white;
     }
+
+    .sidebar {
+    width: 250px; /* Adjust as needed */
+    position: fixed; /* Keeps it in place */
+    height: 100vh; /* Full height */
+    overflow-y: auto; /* Enable scrolling within sidebar if needed */
+    background-color: #343a40; /* Example background */
+    padding-top: 70px;
+    }
+
+    header {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+    background-color: #304731; /* Ensure it matches your theme */
+}
+
 </style>
 
 <script>
@@ -101,7 +114,6 @@
         });
     });
 
-    // Expand the active section on page load
     document.addEventListener('DOMContentLoaded', function () {
         document.querySelectorAll('.toggle').forEach(toggle => {
             if (toggle.classList.contains('active')) {
@@ -110,43 +122,3 @@
         });
     });
 </script>
-
-<!-- 
-
-
-<style>
-    /* Sidebar CSS */
-.sidebar {
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    width: 250px; /* Sidebar width */
-    background-color: #f8f9fa; /* Sidebar background */
-    padding-top: 20px; /* Optional padding */
-    height: 100vh; /* Full height */
-    overflow-y: auto; /* Scrollbar for content if required */
-}
-
-.sidebar .sub-menu {
-    display: none;
-    padding-left: 20px;
-}
-
-.sidebar a:hover {
-    background-color: #0069d9;
-    color: rgb(212, 23, 23);
-}
-
-.sidebar a.active {
-    background-color: #0056b3;
-}
-
-/* Make the main content area flexible */
-.main-container {
-    margin-left: 250px; /* Sidebar width */
-    width: calc(100% - 250px); /* Adjust content area */
-    min-height: 100vh; /* Ensure content takes full screen height */
-}
-
-</style> -->

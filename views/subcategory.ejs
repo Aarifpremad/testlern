@@ -9,12 +9,22 @@
   <link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 </head>
+<style>
+  
+  .content-container {
+         margin-left: 260px; 
+         margin-top: 70px; 
+          padding: 20px;
+          width: calc(100% - 260px);
+         height: 100vh;
+        }
+</style>
 <body>
   <%- include('partials/header') %> <!-- Header Include -->
   <div class="main-container">
     <%- include('partials/sidebar', { page: 'subcategory' }) %> <!-- Sidebar Include -->
 
-    <div class="container mt-4">
+    <div class="content-container">
       <h1>Create SubCategory</h1>
 
       <!-- SubCategory Creation Form -->

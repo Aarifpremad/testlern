@@ -33,6 +33,14 @@
         .alert {
             margin-top: 20px;
         }
+        
+        .content-container {
+         margin-left: 260px; 
+         margin-top: 70px; 
+          padding: 20px;
+          width: calc(100% - 260px);
+         height: 100vh;
+        }
     </style>
 </head>
 <body>
@@ -42,7 +50,7 @@
     <div class="main-container">
         <%- include('partials/sidebar', { page: 'profile' }) %>
 
-        <div class="container mt-4">
+        <div class="content-container">
             <h1 class="mb-4">Admin Profile</h1>
             <div class="profile-section">
                 <p><strong>Name:</strong> <%= admin.name %></p>
