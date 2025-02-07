@@ -26,7 +26,7 @@ router.get('/userslist', async (req, res) => {
             .sort({ createdAt: -1 })
             .skip(start)
             .limit(length)
-            .select('numeric_id firstname lastname mobileno balance createdAt email status isactive');
+            .select('numeric_id firstname lastname mobileno createdAt email status isactive');
 
         res.json({
             draw: req.query.draw || 1,
