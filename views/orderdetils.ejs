@@ -454,22 +454,55 @@
         url: `/admin/shipment/${orderId}`, // Shipment API
         method: 'GET',
         success: function (response) {
-            if (response.success && response.shipments.length > 0) {
-                // Shipment list show karna
-                let shipmentHTML = '<h4>Shipments</h4><ul>';
-                response.shipments.forEach(shipment => {
-                    shipmentHTML += `<li>Tracking ID: ${shipment.tracking_id} | Status: ${shipment.status}</li>`;
-                });
-                shipmentHTML += '</ul>';
-                $('#shipment-details').html(shipmentHTML);
-            } else {
-                // Shipment nahi mila, Create Shipment ka button dikhana
-                $('#shipment-details').html('<h4>No Shipment Found</h4><button id="create-shipment-btn" class="btn btn-primary">Create Shipment</button>');
-            }
-        },
-        error: function () {
-            Swal.fire('Error', 'Failed to load shipment data', 'error');
-        }
+    if (response.success && response.shipments.length > 0) {
+        // Shipment data ko table format me show karna
+        let orderdate = response.order.createdAt
+        let orderstatus = response.order.order_status
+        let shipmentHTML = `
+            <h4>Shipments</h4>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Order No</th>
+                        <th>Carrier</th>
+                        <th>Tracking ID</th>
+                        <th>Status</th>
+                        <th>Message</th>
+                        <th>Rates</th>
+                        <th>Order Date</th>
+                        <th>Shipment Date</th>
+                    </tr>
+                </thead>
+                <tbody>`;
+
+        response.shipments.forEach(shipment => {
+            shipmentHTML += `
+                <tr>
+                    <td>${shipment.order_no}</td>
+                    <td>${shipment.carrier_title}</td>
+                    <td>${shipment.carrier_number}</td>
+                    <td>${orderstatus || "N/A"}</td>
+                    <td>${shipment.message}</td>
+                    <td>${shipment.rates}</td>
+                    <td>${orderdate}</td>
+                    <td>${new Date(shipment.createdAt).toLocaleString()}</td>
+                </tr>`;
+        });
+
+        shipmentHTML += `</tbody></table>`;
+        $('#shipment-details').html(shipmentHTML);
+    } else {
+        // Shipment nahi mila, "Create Shipment" button dikhana
+        $('#shipment-details').html(`
+            <h4>No Shipment Found</h4>
+            <button id="create-shipment-btn" class="btn btn-primary">Create Shipment</button>
+        `);
+    }
+},
+error: function () {
+    Swal.fire('Error', 'Failed to load shipment data', 'error');
+}
+
     });
 });
 
@@ -514,17 +547,20 @@ $('#invoice-btn').on('click', function() {
                 html:
                     '<input id="shipment-title" class="swal2-input" placeholder="Carrier Title">' +
                     '<input id="shipment-number" class="swal2-input" placeholder="Carrier Number">'+
-                    '<input id="shipment-number" class="swal2-input" placeholder="Shipping Rates">'+
-                    '<input id="shipment-number" class="swal2-input" placeholder="message">',
+                    '<input id="shipment-rates" class="swal2-input" placeholder="Shipping Rates">'+
+                    '<input id="shipment-message" class="swal2-input" placeholder="message">',
                 showCancelButton: true,
                 confirmButtonText: 'Create',
                 preConfirm: () => {
                     const title = $('#shipment-title').val();
                     const number = $('#shipment-number').val();
+                    const rates = $('#shipment-rates').val();
+                    const message = $('#shipment-message').val();
+
                     if (!title || !number) {
                         Swal.showValidationMessage('Both fields are required');
                     }
-                    return { title, number };
+                    return { title, number ,rates,message};
                 }
             }).then((result) => {
                 if (result.isConfirmed) {
@@ -534,7 +570,9 @@ $('#invoice-btn').on('click', function() {
                         data: {
                             orderId: '<%= OrderDetils._id %>',
                             title: result.value.title,
-                            number: result.value.number
+                            number: result.value.number,
+                            message: result.value.message,
+                            rates: result.value.rates
                         },
                         success: function(response) {
                             if (response.success) {

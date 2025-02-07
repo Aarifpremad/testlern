@@ -4,20 +4,29 @@ const Order = require('../models/order.model');
 const Shipment = require("../models/ordershipment.model")
 router.get('/orders', async (req, res) => {
     try {
-        let { start, length, search } = req.query;
+        let { start, length, status, startDate, endDate, sku, email, mobile } = req.query;
         let query = {};
 
-        if (search.value) {
-            query.$or = [
-                { orderno: { $regex: search.value, $options: 'i' } },
-                { email: { $regex: search.value, $options: 'i' } }
-            ];
+        if (status) {
+            query.order_status = status;
+        }
+        if (startDate && endDate) {
+            query.order_date = { $gte: new Date(startDate), $lte: new Date(endDate) };
+        }
+        if (sku) {
+            query['order_items.sku'] = { $regex: sku, $options: 'i' };
+        }
+        if (email) {
+            query.email = { $regex: email, $options: 'i' };
+        }
+        if (mobile) {
+            query.telephone = { $regex: mobile, $options: 'i' };
         }
 
         const totalRecords = await Order.countDocuments();
         const filteredRecords = await Order.countDocuments(query);
         const orders = await Order.find(query)
-            .populate('user', 'username') 
+            .populate('user', 'username')
             .sort({ order_date: -1 })
             .skip(parseInt(start))
             .limit(parseInt(length));
@@ -35,13 +44,14 @@ router.get('/orders', async (req, res) => {
 });
 
 
+
 router.get('/shipment/:orderId', async (req, res) => {
     try {
         const { orderId } = req.params;
-        const shipments = await Shipment.find({ order_id: orderId });
-
+        let findorderno = await Order.findById(orderId)
+        const shipments = await Shipment.find({ order_no: findorderno.orderno });
         if (shipments.length > 0) {
-            res.json({ success: true, shipments });
+            res.json({ success: true, shipments :shipments, order:findorderno  });
         } else {
             res.json({ success: false, message: "No shipment found" });
         }
@@ -82,5 +92,26 @@ router.put('/orders/:id/status', async (req, res) => {
         return res.status(500).json({ success: false, message: 'Internal Server Error' });
     }
 });
+
+router.post('/create-shipment', async (req, res) => {
+    console.log(req.body,"body")
+    let orderid = req.body.orderId
+    let findorder = await Order.findById(orderid)
+
+
+
+    let createshipment = new Shipment({
+        order_no : findorder.orderno,
+        carrier_title : req.body.title,
+        carrier_number : req.body.number,
+        message : req.body.message,
+        rates : req.body.rates,
+    });
+
+    const savedshipment = await createshipment.save();
+    res.json({ success: true, message: "success fully create" });
+
+});
+
 
 module.exports = router;
