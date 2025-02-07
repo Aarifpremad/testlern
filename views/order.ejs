@@ -109,6 +109,7 @@
             let table = $('#ordersTable').DataTable({
                 processing: true,
                 serverSide: true,
+                searching:false,
                 ajax: {
                     url: '/admin/orders',
                     data: function (d) {
@@ -128,11 +129,11 @@
                              data: 'order_status',
                              render: function (data) {
                                let statusColors = {
-                                   'Placed': '#007bff',     // Blue
-                                   'Confirmed': '#17a2b8',  // Light Blue
-                                   'Shipped': '#ffc107',    // Orange
-                                   'Delivered': '#28a745',  // Green
-                                   'Cancelled': '#dc3545'   // Red
+                                   'Placed': '#007bff',   
+                                   'Confirmed': '#17a2b8',
+                                   'Shipped': '#ffc107',  
+                                   'Delivered': '#28a745',
+                                   'Cancelled': '#dc3545' 
                                };
 
                                 let bgColor = statusColors[data] || '#6c757d'; // Default to gray if status is unknown
