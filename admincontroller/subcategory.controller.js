@@ -56,7 +56,8 @@ exports.getSubCategories = async (req, res) => {
             .skip((page - 1) * limit)
             .limit(parseInt(limit))
             .populate('category', 'name') // Populate category name
-            .sort({ id: 1 })
+            // .sort({ id: 1 })
+            .sort({ createdAt: -1 })
             .lean();
 
         // Get total count of all records for pagination (without any filters)

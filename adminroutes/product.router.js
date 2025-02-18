@@ -137,6 +137,7 @@ router.post('/create-product', upload.array('images'), async (req, res) => {
 
         const products = await Product.find(query)
             .skip((page - 1) * limit)
+            .sort({ createdAt: -1 })
             .limit(limit)
             .lean();
 
