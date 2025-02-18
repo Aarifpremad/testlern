@@ -120,6 +120,8 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
     <script>
         function handleImagePreview(input, previewContainer) {
             previewContainer.innerHTML = "";
@@ -152,6 +154,55 @@
                 })
                 .catch(() => Swal.fire({ title: 'Error!', text: 'Submission failed.', icon: 'error', confirmButtonText: 'OK' }));
         });
+    
+        $(document).ready(function () {
+        const urlParams = new URLSearchParams(window.location.search);
+        const categoryId = urlParams.get('id'); 
+
+        if (categoryId) {
+            fetch(`/admin/category/${categoryId}`)
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data.category)
+                    if (data.success) {
+                        $('#name').val(data.category.name);
+                        $('#position').val(data.category.position);
+                        $('#description').val(data.category.description);
+                        $('#status').val(data.category.status.toString());
+                        $('#seo_meta_title').val(data.category.seo.meta_title);
+                        $('#seo_meta_keywords').val(data.category.seo.meta_keywords);
+                        $('#seo_meta_description').val(data.category.seo.meta_description);
+                        $('#heading').val(data.category.heading);
+                        $('#content').val(data.category.content);
+                        $('#label').val(data.category.label);
+                        $('#create-category-form').attr('action', `/admin/update-category/${categoryId}`);
+
+                        if (data.category.category_image && data.category.category_image.length > 0) {
+                        const cpreview = document.getElementById('cpreview');
+                        cpreview.innerHTML = "";
+                        data.category.category_image.forEach(imgPath => {
+                            const img = document.createElement('img');
+                            img.src = `/${imgPath.replace(/\\/g, '/')}`;
+                            cpreview.appendChild(img);
+                        });
+                    }
+
+                    // Banner Images Preview
+                    if (data.category.banner_image && data.category.banner_image.length > 0) {
+                        const bpreview = document.getElementById('bpreview');
+                        bpreview.innerHTML = "";
+                        data.category.banner_image.forEach(imgPath => {
+                            const img = document.createElement('img');
+                            img.src = `/${imgPath.replace(/\\/g, '/')}`;
+                            bpreview.appendChild(img);
+                        });
+                    }
+
+                    }
+                })
+                .catch(error => console.error('Error fetching category:', error));
+        }
+         });
     </script>
 </body>
 </html>

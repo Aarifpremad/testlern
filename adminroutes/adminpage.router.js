@@ -129,6 +129,30 @@ router.route("/admin/users").get((req, res) => {
     res.render("userdetails", { title: "header Management", pages: [] });
 });
 
+router.get('/admin/categories/view/:categoryId', async (req, res) => {
+    const { categoryId } = req.params;
+
+    try {
+        // Fetch the category from the database using the categoryId
+        const category = await Model.Category.findById(categoryId);
+
+        if (!category) {
+            return res.status(404).json({ message: 'Category not found' });
+        }
+
+        // Render the categoryview.ejs with the category data
+        console.log(category.category_image[0])
+        res.render('categoryview', {
+            category, // This will make the category data accessible in the template
+            pageTitle: 'Category Details',
+            image : "/"+category.category_image[0]
+        });
+    } catch (error) {
+        console.error('Error fetching category details:', error);
+        res.status(500).json({ message: 'Failed to load category details' });
+    }
+});
+
 
 router.route("/admin/allorders").get((req, res) => {
     res.render("order", { title: "header Management", pages: [] });

@@ -129,3 +129,54 @@ exports.getCategories = async (req, res) => {
     }
 };
 
+
+exports.getCategoy = async (req, res) => {
+    try {
+        const category = await Category.findById(req.params.id);
+        if (!category) return res.status(404).json({ success: false, message: 'Category not found' });
+
+        res.json({ success: true, category });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ success: false, message: 'Server error' });
+    }
+};
+
+exports.updtecategory = async (req, res) => {
+    try {
+        const { categoryImages, bannerImages } = uploadCategoryImages(req);
+
+
+
+        const category = await Category.findById(req.params.id);
+        if (!category) return res.status(404).json({ success: false, message: 'Category not found!' });
+
+        const exitcategory = await Category.findOne({ name: req.body.name });
+
+        if (exitcategory && exitcategory._id.toString() !== req.params.id) {
+            return res.status(400).json({ success: false , message: 'Category name already exists!' });
+        }
+
+        category.name = req.body.name;
+        category.position = req.body.position;
+        category.description = req.body.description;
+        category.status = req.body.status === 'true';
+        category.category_image = categoryImages.length ? categoryImages : category.category_image;
+        category.banner_image = bannerImages.length ? bannerImages : category.banner_image;
+
+        category.seo = {
+            meta_title: req.body.meta_title || category.seo.meta_title,
+            meta_description: req.body.meta_description || category.seo.meta_description,
+            meta_keywords: req.body.meta_keywords || category.seo.meta_keywords,
+        };
+        category.heading = req.body.heading || category.heading;
+        category.content = req.body.content || category.content;
+        category.label = req.body.label || category.label;
+
+        await category.save();
+        res.status(200).json({ success: true, message: 'Category updated successfully!', category });
+    } catch (error) {
+        console.error('Error updating category:', error);
+        res.status(500).json({ success: false, message: 'Error updating category', error: error.message });
+    }
+};

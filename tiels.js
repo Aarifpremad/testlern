@@ -26,6 +26,9 @@ app.use(express.static('public'));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json()); // For application/json
 
+app.use(express.json());  // JSON body parsing
+app.use(express.urlencoded({ extended: true }));  // Form-data parsing
+
 app.get("/",(req,res)=>{
     res.render("login",{title :"login page"})
 })
