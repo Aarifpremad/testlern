@@ -118,6 +118,40 @@
           .catch(() => Swal.fire('Error!', 'Submission failed.', 'error'));
       });
     });
+
+    
+    $(document).ready(function () {
+    const urlParams = new URLSearchParams(window.location.search);
+    const subcategoryId = urlParams.get('id'); 
+
+    if (subcategoryId) {
+        fetch(`/admin/subcategory/${subcategoryId}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    $('#name').val(data.subcategory.name);  // Subcategory Name
+                    $('#position').val(data.subcategory.position);
+                    $('#description').val(data.subcategory.description);
+                    $('#status').val(data.subcategory.status.toString());
+                    $('#seo_meta_title').val(data.subcategory.seo.meta_title);
+                    $('#seo_meta_keywords').val(data.subcategory.seo.meta_keywords);
+                    $('#seo_meta_description').val(data.subcategory.seo.meta_description);
+                    $('#heading').val(data.subcategory.heading);
+                    $('#content').val(data.subcategory.content);
+                    $('#label').val(data.subcategory.label);
+                    $('#create-category-form').attr('action', `/admin/update-category/${subcategoryId}`);
+
+                    // Parent Category - Set the parent category as selected
+                    console.log(data.subcategory.category)
+                    if (data.subcategory.category) {
+                        $('#category').append(`<option value="${data.subcategory.category._id}" selected>${data.subcategory.category.name}</option>`);
+                    }
+                }
+            })
+            .catch(error => console.error('Error fetching subcategory:', error));
+    }
+});
+
   </script>
 </body>
 </html>

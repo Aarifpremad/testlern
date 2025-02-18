@@ -43,6 +43,7 @@ router.post(
 
 router.get('/categories', categoryController.getCategories);
 router.get('/category/:id', categoryController.getCategoy); 
+router.get('/subcategory/:id', categoryController.getsubCategoy); 
 router.post('/update-category/:id',
     upload.fields([
         { name: 'cimages', maxCount: undefined  }, 

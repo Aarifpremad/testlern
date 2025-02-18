@@ -163,7 +163,6 @@
             fetch(`/admin/category/${categoryId}`)
                 .then(response => response.json())
                 .then(data => {
-                    console.log(data.category)
                     if (data.success) {
                         $('#name').val(data.category.name);
                         $('#position').val(data.category.position);
@@ -185,7 +184,7 @@
                             img.src = `/${imgPath.replace(/\\/g, '/')}`;
                             cpreview.appendChild(img);
                         });
-                    }
+                        }
 
                     // Banner Images Preview
                     if (data.category.banner_image && data.category.banner_image.length > 0) {
