@@ -1,7 +1,7 @@
 const express = require('express');
 const multer = require('multer');
 const path = require('path');
-const { createSubCategory  ,getSubCategories } = require('../admincontroller/subcategory.controller');
+const { createSubCategory  ,getSubCategories , getsubCategoy,updteSubCategory} = require('../admincontroller/subcategory.controller');
 const Category = require('../models/category.model');
 const SubCategory = require("../models/subcategory.model")
 const Unit = require("../models/unit.model");
@@ -36,6 +36,7 @@ const upload = multer({ storage });
 
 // Subcategory creation route with image upload
 router.post('/create-subcategory', upload.single('image'), createSubCategory);
+router.post('/update-subcategory/:id', upload.single('image'), updteSubCategory);
 
 // Fetch categories for selection
 router.get('/categoriesselect', async (req, res) => {
@@ -170,4 +171,8 @@ router.delete('/aboutDelivery/:id', async (req, res) => {
         res.status(500).json({ error: 'Failed to delete item' });
     }
 });
+
+
+router.get('/subcategory/:id', getsubCategoy); 
+
 module.exports = router;

@@ -38,6 +38,36 @@ exports.createSubCategory = async (req, res) => {
         res.status(500).json({ success: false, message: 'An error occurred while creating the subcategory.' });
     }
 };
+exports.updteSubCategory = async (req, res) => {
+    try {
+        const categoryId = req.params.id;
+        console.log("yaya",req.file.filename,req.body,categoryId)
+        
+        const { name, category, description, position, meta_title, meta_description, meta_keywords ,status } = req.body;
+        const updatedCategory = await SubCategory.findByIdAndUpdate(categoryId, {
+            name,
+            category,
+            description,
+            position,
+            image: req.file.filename, 
+            seo: {
+                meta_title,
+                meta_description,
+                meta_keywords
+            },
+            status
+        }, { new: true });
+
+        if (!updatedCategory) {
+            return res.status(404).json({ success: false, message: 'Category not found' });
+        }
+
+        res.json({ success: true, message: 'Category updated successfully', category: updatedCategory });
+    } catch (error) {
+        console.error('Error creating subcategory:', error);
+        res.status(500).json({ success: false, message: 'An error occurred while creating the subcategory.' });
+    }
+};
 
 
 // SubCategory Controller
@@ -103,4 +133,14 @@ exports.getSubCategories = async (req, res) => {
 };
 
 
+exports.getsubCategoy = async (req, res) => {
+    try {
+        const subcategory = await SubCategory.findById(req.params.id).populate('category');
+        if (!subcategory) return res.status(404).json({ success: false, message: 'Category not found' });
 
+        res.json({ success: true, subcategory });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ success: false, message: 'Server error' });
+    }
+};

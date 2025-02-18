@@ -84,6 +84,9 @@
         <div class="mb-3">
           <label for="image" class="form-label">Upload Image</label>
           <input type="file" class="form-control" id="image" name="image" accept="image/*" required>
+          <div id="previous-image" class="mt-2">
+            <span>Current Image: </span><span id="image-name"></span>
+          </div>
         </div>
         <button type="submit" class="btn btn-primary">Create SubCategory</button>
       </form>
@@ -113,7 +116,7 @@
           .then(response => response.json())
           .then(data => {
             Swal.fire(data.success ? 'Success!' : 'Error!', data.message || 'Something went wrong.', data.success ? 'success' : 'error')
-              .then(() => { if (data.success) window.location.href = '/subcategorylist'; });
+              .then(() => { if (data.success) window.location.href = '/admin/subcategorylist'; });
           })
           .catch(() => Swal.fire('Error!', 'Submission failed.', 'error'));
       });
@@ -139,10 +142,13 @@
                     $('#heading').val(data.subcategory.heading);
                     $('#content').val(data.subcategory.content);
                     $('#label').val(data.subcategory.label);
-                    $('#create-category-form').attr('action', `/admin/update-category/${subcategoryId}`);
+
+                    if (data.subcategory.image) {
+                       $('#image-name').text(data.subcategory.image);
+                     }
+                    $('#create-subcategory-form').attr('action', `/admin/update-subcategory/${subcategoryId}`);
 
                     // Parent Category - Set the parent category as selected
-                    console.log(data.subcategory.category)
                     if (data.subcategory.category) {
                         $('#category').append(`<option value="${data.subcategory.category._id}" selected>${data.subcategory.category.name}</option>`);
                     }

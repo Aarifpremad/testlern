@@ -142,18 +142,7 @@ exports.getCategoy = async (req, res) => {
         res.status(500).json({ success: false, message: 'Server error' });
     }
 };
-exports.getsubCategoy = async (req, res) => {
-    try {
-        const subcategory = await SubCategory.findById(req.params.id).populate('category');
-        console.log(subcategory)
-        if (!subcategory) return res.status(404).json({ success: false, message: 'Category not found' });
 
-        res.json({ success: true, subcategory });
-    } catch (error) {
-        console.log(error);
-        res.status(500).json({ success: false, message: 'Server error' });
-    }
-};
 
 exports.updtecategory = async (req, res) => {
     try {
@@ -194,33 +183,4 @@ exports.updtecategory = async (req, res) => {
     }
 };
 
-
-exports.updateSubCategory = async (req, res) => {
-    try {
-        const categoryId = req.params.id;
-        const { name, status, category, description, seo_meta_title, seo_meta_keywords, seo_meta_description, image } = req.body;
-
-        // Update the category in the database
-        const updatedCategory = await SubCategory.findByIdAndUpdate(categoryId, {
-            name,
-            status,
-            category,
-            description,
-            seo: {
-                meta_title: seo_meta_title,
-                meta_keywords: seo_meta_keywords,
-                meta_description: seo_meta_description
-            },
-            image: req.file ? req.file.filename : image // Handle image upload if a new one is added
-        }, { new: true });
-
-        if (!updatedCategory) {
-            return res.status(404).json({ success: false, message: 'Category not found' });
-        }
-
-        res.json({ success: true, message: 'Category updated successfully', category: updatedCategory });
-    } catch (error) {
-        console.log(error);
-        res.status(500).json({ success: false, message: 'Server error' });
-    }
-};
+;
