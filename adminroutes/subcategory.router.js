@@ -19,6 +19,7 @@ const SpecsSize = require("../models/specssize.model");
 const Banner = require("../models/banner.model")
 const AboutDelivery = require("../models/about.develivaery")
 const Page = require('../models/page.model');
+const Model = require('../models/model');
 
 const router = express.Router();
 
@@ -174,5 +175,80 @@ router.delete('/aboutDelivery/:id', async (req, res) => {
 
 
 router.get('/subcategory/:id', getsubCategoy); 
+
+
+
+router.delete('/subcategories/delete/:subcategoryId', async (req, res) => {
+    const { subcategoryId } = req.params;
+
+    try {
+        const subcategory = await SubCategory.findByIdAndDelete(subcategoryId);
+        if (!subcategory) {
+            return res.status(404).json({ message: 'subCategory not found' });
+        }
+        res.json({ message: 'subCategory deleted successfully' });
+    } catch (error) {
+        console.error('Error deleting category:', error);
+        res.status(500).json({ message: 'Failed to delete category' });
+    }
+});
+
+
+const mongoose = require('mongoose');
+
+router.get('/subcategories/products/:subcategoryId', async (req, res) => {
+    const { subcategoryId } = req.params;
+    const { limit, page, search } = req.query;
+    const skip = (parseInt(page) - 1) * parseInt(limit);
+
+    try {
+        const query = {
+            subCategories: { $in: [new mongoose.Types.ObjectId(subcategoryId)] },
+        };
+
+        if (search) {
+            query.$text = { $search: search }; // Apply text search if needed
+        }
+
+        // Fetch the products with pagination
+        const products = await Model.Product.find(query)
+            .skip(skip)
+            .limit(parseInt(limit))
+            .exec();
+
+        // Get total record count for pagination
+        const totalRecords = await Model.Product.countDocuments(query);
+
+        // If a search is applied, adjust the count of filtered records
+        const filteredRecords = search ? 
+            await Model.Product.countDocuments({ ...query, $text: { $search: search } }) :
+            totalRecords;
+
+        res.json({
+            products,
+            recordsTotal: totalRecords, // Total records in the database
+            recordsFiltered: filteredRecords, // Filtered records based on query
+        });
+    } catch (error) {
+        console.error('Error fetching products:', error);
+        res.status(500).json({ message: 'Failed to fetch products' });
+    }
+});
+
+
+
+router.post('/subcategories/toggle-status/:id', async (req, res) => {
+try {
+    const subcate = await SubCategory.findById(req.params.id);
+    subcate.status = subcate.status === true ? false : true;
+    await subcate.save();
+    res.json({ message: `Category status updated to ${subcate.status}` , subcat :subcate });
+} catch (error) {
+    console.log(error)
+    res.status(500).json({ message: error.message });
+}
+});
+
+
 
 module.exports = router;

@@ -58,7 +58,7 @@ router.post('/update-category/:id',
     
         try {
             // Soft delete by updating status (set 'deleted' status or any other flag)
-            const category = await Model.Category.findByIdAndUpdate(categoryId, { status: 'deleted' }, { new: true });
+            const category = await Model.Category.findByIdAndDelete(categoryId);
     
             if (!category) {
                 return res.status(404).json({ message: 'Category not found' });

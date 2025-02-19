@@ -33,15 +33,15 @@ const subCategorySchema = new mongoose.Schema(
         seo: {
             meta_title: {
                 type: String,
-                required: true
+                // required: true
             },
             meta_description: {
                 type: String,
-                required: true
+                // required: true
             },
             meta_keywords: {
                 type: String,
-                required: true
+                // required: true
             }
         }
     },

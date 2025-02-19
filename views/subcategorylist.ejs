@@ -122,7 +122,7 @@
                         render: function (data) {
                             return `
                                 <button class="btn btn-info btn-sm me-2" onclick="editSubCategory('${data}')">Edit</button>
-                                <a class="btn btn-danger btn-sm" href="/admin/categories/view/${data}" class="btn btn-info btn-sm">View</a>
+                                <a class="btn btn-danger btn-sm" href="/admin/subcategories/view/${data}" class="btn btn-info btn-sm">View</a>
                             `;
                         }
                     },
@@ -148,12 +148,6 @@
             window.location.href = `/admin/subcategory?id=${id}`;
         }
 
-        // Delete subcategory function
-        function deleteSubCategory(id) {
-            if (confirm('Are you sure you want to delete this subcategory?')) {
-                alert('Delete subcategory with ID: ' + id);
-            }
-        }
     </script>
 </body>
 </html>

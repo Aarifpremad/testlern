@@ -103,7 +103,9 @@
                     {
                         data: 'status',
                         render: function (data) {
-                            return data ? 'Active' : 'Inactive';
+                            const status = data ? 'Active' : 'Inactive';
+                            const badgeClass = data ? 'success' : 'danger';
+                            return `<span class="badge bg-${badgeClass}">${status}</span>`;
                         },
                     },
                     { data: 'productCount' },
@@ -112,7 +114,7 @@
                         render: function (data) {
                             return `
                                 <button class="btn btn-info btn-sm me-2" onclick="editCategory('${data}')">Edit</button>
-                                <a href="/admin/categories/view/${data}" class="btn btn-info btn-sm">View</a>
+                                <a href="/admin/categories/view/${data}" class="btn btn-danger btn-sm" >View</a>
                             `;
                         },
                     },
