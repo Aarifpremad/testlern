@@ -1,50 +1,66 @@
-let express = require("express");
-const bodyParser = require('body-parser');
-const cors = require("cors")
-let app = express()
-let config = require("./config")
-const path = require('path');
+const express = require("express");
+const https = require("https");
+const fs = require("fs");
+const bodyParser = require("body-parser");
+const cors = require("cors");
+const path = require("path");
 const session = require("express-session");
 
-let port = config.port || 5003
+const app = express();
+const config = require("./config");
+const port = config.port || 5003;
 
+// SSL Certificate Paths
+const sslOptions = {
+    key: fs.readFileSync("/var/www/httpd-cert/aksasoftware.com_2024-10-13-11-36_59.key"),
+    cert: fs.readFileSync("/var/www/httpd-cert/aksasoftware.com_2024-10-13-11-36_59.crt"),
+};
+
+// Session Middleware
 app.use(
     session({
-      secret: "your_secret_key", // Replace with a strong secret key
-      resave: false, // Save session only if it is modified
-      saveUninitialized: false, // Don't save uninitialized sessions
-      cookie: { secure: false, maxAge: 1000 * 60 * 60 }, // Adjust cookie options as needed
+        secret: "your_secret_key",
+        resave: false,
+        saveUninitialized: false,
+        cookie: { secure: true, maxAge: 1000 * 60 * 60 },
     })
-  );
+);
 
+// View Engine Setup
+app.set("view engine", "ejs");
+app.set("views", path.join(__dirname, "views"));
 
+// Static Files
+app.use(express.static("public"));
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
-app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'views'));
-
-app.use(express.static('public'));
+// Middleware
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json()); // For application/json
+app.use(bodyParser.json());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-app.use(express.json());  // JSON body parsing
-app.use(express.urlencoded({ extended: true }));  // Form-data parsing
+// CORS
+app.use(
+    cors({
+        origin: "*",
+        methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+        allowedHeaders: ["Content-Type", "Authorization"],
+    })
+);
 
-app.get("/",(req,res)=>{
-    res.render("login",{title :"login page"})
-})
+// Routes
+app.get("/", (req, res) => {
+    res.render("login", { title: "Login Page" });
+});
 
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
-app.use(cors());
+const router = require("./adminroutes");
+app.use(router);
 
+const apirouter = require("./apiroutes");
+app.use(apirouter);
 
-let router = require("./adminroutes")
-app.use(router)
-
-let apirouter = require("./apiroutes")
-app.use(apirouter)
-
-
-
-app.listen(port,()=>{
-    console.log("server started for port:",port)
-})
+// Create HTTPS Server
+https.createServer(sslOptions, app).listen(port, () => {
+    console.log(`HTTPS Server started on port ${port}`);
+});
