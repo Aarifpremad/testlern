@@ -116,7 +116,7 @@
                         render: function (data) {
                             return `
                                 <button class="btn btn-info btn-sm" onclick="editProduct('${data}')">Edit</button>
-                                <button class="btn btn-danger btn-sm" onclick="deleteProduct('${data}')">Delete</button>
+                                <button class="btn btn-danger btn-sm" onclick="deleteProduct('${data}')">View</button>
                             `;
                         },
                     },
@@ -134,7 +134,8 @@
     
         // Edit product function
         function editProduct(id) {
-            alert('Edit product with ID: ' + id);
+            console.log(id)
+            window.location.href = `/admin/product?id=${id}`;
         }
     
         // Delete product function

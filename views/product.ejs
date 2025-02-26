@@ -460,7 +460,7 @@ const cimagesInput = document.getElementById('images');
           });
           this.reset();
           $('#preview-images').empty();
-          window.location.href = '/productlist';
+          window.location.href = '/admin/productlist';
         } else {
           Swal.fire({
             icon: 'error',
@@ -479,6 +479,115 @@ const cimagesInput = document.getElementById('images');
       });
   });
 });
+  </script>
+
+  <script>
+     $(document).ready(function () {
+    const urlParams = new URLSearchParams(window.location.search);
+    const productId = urlParams.get('id');
+    console.log(productId);
+
+    if (productId) {
+        fetch(`/admin/products/${productId}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Populate form fields with fetched product data
+                    $('#name').val(data.product.name);
+                    $('#brand').val(data.product.brand).trigger('change');
+                    $('#skuCode').val(data.product.sku);
+                    $('#urlKey').val(data.product.urlKey);
+                    $('#visibility').val(data.product.isVisible.toString()).trigger('change');
+                    $('#sizef').val(data.product.size).trigger('change');
+                    $('#productLabel').val(data.product.productLabel);
+                    $('#producttype').val(data.product.producttype);
+                    $('#categories').val(data.product.categories.map(category => category._id)).trigger('change');
+                    console.log(data.product.subCategories , data.product.linkedProducts)
+                    // $('#subCategories').val(data.product.subCategories.map(subCategory => subCategory._id)).trigger('change');
+                    $('#relatedProducts').val(data.product.linkedProducts).trigger('change');
+                    $('#group').val(data.product.group).trigger('change');
+                    $('#unit').val(data.product.unit).trigger('change');
+                    $('#serialNo').val(data.product.productSerialNo);
+                    $('input[name="price[price]"]').val(data.product.price.price);
+                    $('input[name="price[ourPrice]"]').val(data.product.price.ourPrice);
+                    $('input[name="price[ourCutPrice]"]').val(data.product.price.ourCutPrice);
+                    $('input[name="price[ourFullCutPrice]"]').val(data.product.price.ourFullCutPrice);
+                    $('#description').val(data.product.description);
+                    $('#seo_meta_title').val(data.product.metaDescription.metaTitle);
+                    $('#seo_meta_description').val(data.product.metaDescription.metaDescription);
+                    $('#seo_meta_keywords').val(data.product.metaDescription.metaKeywords.join(', '));
+                    $('input[name="tdescription"]').val(data.product.tilesPerfection.description);
+                    
+                    // Tiles Perfection Fields
+                    $('#finish').val(data.product.tilesPerfection.appearance).trigger('change');
+                    $('#glaze').val(data.product.tilesPerfection.glaze).trigger('change');
+                    $('#Rectified').val(data.product.tilesPerfection.rectified).trigger('change');
+                    $('#color').val(data.product.tilesPerfection.color).trigger('change');
+                    $('#type').val(data.product.tilesPerfection.type).trigger('change');
+                    $('#print').val(data.product.tilesPerfection.print).trigger('change');
+                    $('#usage').val(data.product.tilesPerfection.usage).trigger('change');
+                    $('#sizeMM').val(data.product.tilesPerfection.sizeMM).trigger('change');
+                    $('input[name="quantityPerSquareMeter"]').val(data.product.tilesPerfection.quantityPerSquareMeter);
+                    $('input[name="boxQuantity"]').val(data.product.tilesPerfection.boxQuantity);
+                    $('input[name="wastage"]').val(data.product.tilesPerfection.wastage);
+                    
+                    // **Handling Multi-Select Fields (Material, Thickness, Recommended Room)**
+                    let materialValues = data.product.tilesPerfection.material.split(', ');
+                    let thicknessValues = data.product.tilesPerfection.thickness.split(', ');
+                    let recommendedRoomValues = data.product.tilesPerfection.recommendedRoom.split(', ');
+                    let appearancevalue = data.product.tilesPerfection.appearance.split(', ');
+                    let colorvalue = data.product.tilesPerfection.color.split(', ');
+                    let typevalue = data.product.tilesPerfection.type.split(', ');
+                    let printvalue = data.product.tilesPerfection.print.split(', ');
+                    let usagevalue = data.product.tilesPerfection.usage.split(', ');
+
+                    function populateSelectField(selector, values) {
+                        values.forEach(value => {
+                            if ($(selector + " option[value='" + value + "']").length === 0) {
+                                $(selector).append(new Option(value, value));
+                            }
+                        });
+                        $(selector).val(values).trigger('change');
+                    }
+
+                   
+
+                    populateSelectField('#material', materialValues);
+                    populateSelectField('#thickness', thicknessValues);
+                    populateSelectField('#recommendedRoom', recommendedRoomValues);
+                    populateSelectField('#finish', appearancevalue);
+                    populateSelectField('#color', colorvalue );
+                    populateSelectField('#type', typevalue );
+                    populateSelectField('#usage', usagevalue );
+                    populateSelectField('#print', printvalue );
+
+                    function catsubp(selector, values) {
+                      values.forEach(value => {
+                        console.log(value, "values");
+                        if ($(selector + " option[value='" + value._id + "']").length === 0) {
+                          console.log(value.name,"value.name")
+                          $(selector).append(new Option(value.name, value._id));
+                        }
+                      });
+                      $(selector).val(values.map(value => value._id)).trigger('change');
+                    }
+                    catsubp('#subCategories', data.product.subCategories);
+                    catsubp('#categories', data.product.categories);
+                    catsubp('#relatedProducts', data.product.subCategories);
+
+                    // Display existing images
+                    data.product.images.forEach(image => {
+                      const img = document.createElement('img');
+                      img.src = `/uploads/${image}`;
+                      cpreviewContainer.appendChild(img);
+                    });
+
+                }
+            })
+            .catch(error => console.error('Error fetching product:', error));
+    }
+});
+
   </script>
 </body>
 </html>

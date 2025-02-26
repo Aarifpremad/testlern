@@ -154,6 +154,92 @@ router.post('/create-product', upload.array('images'), async (req, res) => {
     }
 });
 
+router.get('/products/:id', async (req, res) => {
+    try {
+        console.log("yes ythis 160")
+
+        const product = await Product.findById(req.params.id).populate('categories', 'name').populate('subCategories','name' ).populate('linkedProducts','name')
+        if (!product) {
+            return res.status(404).json({ success: false, message: 'Product not found.' });
+        }
+        res.json({ success: true, product });
+    } catch (error) {
+        console.error('Error fetching product:', error);
+        res.status(500).json({ success: false, message: 'Error fetching product.' });
+    }
+});
+
+router.post('/update-product/:id', upload.array('images'), async (req, res) => {
+    try {
+        console.log("yes ythis 172")
+        const { body, files } = req;
+        const productId = req.params.id;
+
+        const imageFilenames = files.map(file => file.filename);
+        const linkedProducts = body.linkedProducts && body.linkedProducts.relatedProducts 
+            ? body.linkedProducts.relatedProducts 
+            : [];
+        const tilesPerfection = {
+            description: body.tdescription,
+            appearance: Array.isArray(body.finish) ? body.finish.join(', ') : body.finish,
+            material: Array.isArray(body.material) ? body.material.join(', ') : body.material,
+            glaze: body.glaze,
+            rectified: body.Rectified,
+            color: Array.isArray(body.color) ? body.color.join(', ') : body.color,
+            thickness: Array.isArray(body.thickness) ? body.thickness.join(', ') : body.thickness,
+            recommendedRoom: Array.isArray(body.recommendedRoom) ? body.recommendedRoom.join(', ') : body.recommendedRoom,
+            quantityPerSquareMeter: body.quantityPerSquareMeter,
+            type: Array.isArray(body.type) ? body.type.join(', ') : body.type,
+            print: Array.isArray(body.print) ? body.print.join(', ') : body.print,
+            usage: Array.isArray(body.usage) ? body.usage.join(', ') : body.usage,
+            sizeMM: body.sizeMM,
+            boxQuantity: body.boxQuantity,
+            wastage: body.wastage,
+        };
+
+        const productData = {
+            name: body.name,
+            brand: body.brand,
+            sku: body.skuCode,
+            urlKey: body.urlKey,
+            size: body.size,
+            group: body.group,
+            productSerialNo: body.serialNo,
+            unit: body.unit,
+            description: body.description,
+            metaDescription: {
+                metaTitle: body.metaDescription.metaTitle,
+                metaKeywords: body.metaDescription.metaKeywords.split(',').map(k => k.trim()),
+                metaDescription: body.metaDescription.metaDescription,
+            },
+            price: {
+                price: body.price.price,
+                ourPrice: body.price.ourPrice,
+                ourCutPrice: body.price.ourCutPrice,
+                ourFullCutPrice: body.price.ourFullCutPrice,
+            },
+            tilesPerfection,
+            images: imageFilenames,
+            categories: body.categories ? body.categories : [],
+            subCategories: body.subCategories ? body.subCategories : [],
+            linkedProducts,
+        };
+
+        const updatedProduct = await Product.findByIdAndUpdate(productId, productData, { new: true });
+
+        if (!updatedProduct) {
+            return res.status(404).json({ success: false, message: 'Product not found.' });
+        }
+
+        res.json({ success: true, product: updatedProduct, message: 'Product updated successfully.' });
+    } catch (error) {
+        console.error('Error updating product:', error);
+        res.status(500).json({ success: false, message: 'Error updating product.', error });
+    }
+});
+
+
+
 
   
 

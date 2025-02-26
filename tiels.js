@@ -11,10 +11,10 @@ const config = require("./config");
 const port = config.port || 5003;
 
 // SSL Certificate Paths
-const sslOptions = {
-    key: fs.readFileSync("/var/www/httpd-cert/aksasoftware.com_2024-10-13-11-36_59.key"),
-    cert: fs.readFileSync("/var/www/httpd-cert/aksasoftware.com_2024-10-13-11-36_59.crt"),
-};
+// const sslOptions = {
+//     key: fs.readFileSync("/var/www/httpd-cert/aksasoftware.com_2024-10-13-11-36_59.key"),
+//     cert: fs.readFileSync("/var/www/httpd-cert/aksasoftware.com_2024-10-13-11-36_59.crt"),
+// };
 
 // Session Middleware
 app.use(
@@ -61,6 +61,6 @@ const apirouter = require("./apiroutes");
 app.use(apirouter);
 
 // Create HTTPS Server
-https.createServer(sslOptions, app).listen(port, () => {
-    console.log(`HTTPS Server started on port ${port}`);
-});
+app.listen(port,()=>{
+    console.log("server started for port:",port)
+})
