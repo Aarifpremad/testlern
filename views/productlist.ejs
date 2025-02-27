@@ -116,8 +116,8 @@
                         render: function (data) {
                             return `
                                 <button class="btn btn-info btn-sm" onclick="editProduct('${data}')">Edit</button>
-                                <button class="btn btn-danger btn-sm" onclick="deleteProduct('${data}')">View</button>
-                            `;
+                                <a class="btn btn-danger btn-sm" href="/admin/product/view/${data}" class="btn btn-info btn-sm">View</a>
+                                `; 
                         },
                     },
                 ],

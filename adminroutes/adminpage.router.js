@@ -182,6 +182,31 @@ router.get('/admin/subcategories/view/:subcategoryId', async (req, res) => {
     }
 });
 
+router.get('/admin/product/view/:productId', async (req, res) => {
+    const { productId } = req.params;
+
+    try {
+        // Fetch the category from the database using the categoryId
+        const product = await Model.Product.findById(productId).populate('categories', 'name').populate('subCategories','name' ).populate('linkedProducts','name');
+
+        if (!product) {
+            return res.status(404).json({ message: 'product not found' });
+        }
+
+        // Render the categoryview.ejs with the category data
+        // console.log(subcategory.image)
+        res.render('productview', {
+            product, // This will make the category data accessible in the template
+            pageTitle: 'product Details',
+            image : "/"
+        });
+        console.log(product)
+    } catch (error) {
+        console.error('Error fetching category details:', error);
+        res.status(500).json({ message: 'Failed to load category details' });
+    }
+});
+
 
 router.route("/admin/allorders").get((req, res) => {
     res.render("order", { title: "header Management", pages: [] });
