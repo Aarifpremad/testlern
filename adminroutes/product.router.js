@@ -7,6 +7,7 @@ const SubCategory = require('../models/subcategory.model');
 // Modules
 const fs = require('fs');
 const path = require('path');
+const Order = require('../models/order.model');
 
 // Setup uploads directory
 const uploadDir = path.join(__dirname, '../uploads');
@@ -156,7 +157,6 @@ router.post('/create-product', upload.array('images'), async (req, res) => {
 
 router.get('/products/:id', async (req, res) => {
     try {
-        console.log("yes ythis 160")
 
         const product = await Product.findById(req.params.id).populate('categories', 'name').populate('subCategories','name' ).populate('linkedProducts','name')
         if (!product) {
@@ -238,14 +238,44 @@ router.post('/update-product/:id', upload.array('images'), async (req, res) => {
     }
 });
 
+router.get('/product/orders/:productId', async (req, res) => {
+    try {
+        const { draw = 1, start = 0, length = 10, search = '' } = req.query;
+        const { productId } = req.params;
+        const page = Math.ceil(start / length) + 1; // 1-based page number
+        const limit = parseInt(length);
 
+        const query = {
+            'products.product': productId,
+            $or: [
+                { 'products.name': new RegExp(search, 'i') },
+                { 'orderNumber': new RegExp(search, 'i') }
+            ]
+        };
 
+        const orders = await Order.find(query)
+            .skip((page - 1) * limit)
+            .sort({ createdAt: -1 })
+            .limit(limit)
+            .populate('products.product', 'name')
+            .lean();
 
-  
+        const totalRecords = await Order.countDocuments({ 'products.product': productId });
+        const totalFilteredRecords = await Order.countDocuments(query);
 
+        // if (!orders.length) {
+        //     return res.status(404).json({ success: false, message: 'No orders found for this product.' });
+        // }
 
-
-
-
-
+        res.json({
+            draw: parseInt(draw), // Draw ID from request
+            recordsTotal: totalRecords, // Total number of records
+            recordsFiltered: totalFilteredRecords, // Total number of filtered records
+            data: orders, // Actual data for the table
+        });
+    } catch (error) {
+        console.error('Error fetching orders:', error);
+        res.status(500).json({ success: false, message: 'Error fetching orders.' });
+    }
+});
 module.exports = router;

@@ -113,26 +113,41 @@
         }
 
         /* For active category (when status is true) */
-.btn-status.active {
-    background-color: #28a745; /* Green color */
-    color: white;
-}
+        .btn-status.active {
+            background-color: #28a745; /* Green color */
+            color: white;
+        }
 
-/* For inactive category (when status is false) */
-.btn-status.inactive {
-    background-color: #dc3545; /* Red color */
-    color: white;
-}
+        /* For inactive category (when status is false) */
+        .btn-status.inactive {
+            background-color: #dc3545; /* Red color */
+            color: white;
+        }
 
-/* Optional: Style the button */
-.btn-status {
-    padding: 8px 16px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-}
+        /* Optional: Style the button */
+        .btn-status {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
 
+        .tiles-perfection-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .tiles-perfection-table th, .tiles-perfection-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        .tiles-perfection-table th {
+            background-color: #f2f2f2;
+        }
     </style>
 </head>
 <body>
@@ -157,43 +172,90 @@
                         <p>Description: <%= product.description %></p>
                     </div>
                 </div>
-                <div class="category-info">
-                    <h3>Tiles Perfection</h3>
-                    <p>Appearance: <%= product.tilesPerfection.appearance %></p>
-                    <p>Material: <%= product.tilesPerfection.material %></p>
-                    <p>Glaze: <%= product.tilesPerfection.glaze %></p>
-                    <p>Rectified: <%= product.tilesPerfection.rectified %></p>
-                    <p>Color: <%= product.tilesPerfection.color %></p>
-                    <p>Thickness: <%= product.tilesPerfection.thickness %></p>
-                    <p>Recommended Room: <%= product.tilesPerfection.recommendedRoom %></p>
-                    <p>Quantity Per Square Meter: <%= product.tilesPerfection.quantityPerSquareMeter %></p>
-                    <p>Type: <%= product.tilesPerfection.type %></p>
-                    <p>Print: <%= product.tilesPerfection.print %></p>
-                    <p>Usage: <%= product.tilesPerfection.usage %></p>
-                    <p>Size MM: <%= product.tilesPerfection.sizeMM %></p>
-                    <p>Box Quantity: <%= product.tilesPerfection.boxQuantity %></p>
-                    <p>Wastage: <%= product.tilesPerfection.wastage %></p>
-                </div>
+                
                 <button class="btn-status <%= product.status ? 'active' : 'inactive' %>" onclick="toggleproductStatus('<%= product._id %>')">
                     <%= product.status ? 'Deactivate Product' : 'Activate Product' %>
                 </button>
                 <button class="btn-status inactive" onclick="deleteproduct('<%= product._id %>')">Delete Product</button>
-                <button class="btn btn-primary" onclick="viewProductList('<%= product._id %>')">Product List</button>
+                <button class="btn btn-primary" onclick="vieworderList('<%= product._id %>')"  style="background-color: #b31ca6;">Orders</button>
+                <button class="btn btn-primary" onclick="tilesperfection()">Tiles Perfection</button>
             </div>
             <div id="product-list" style="display:none;">
                 <h3>Products in this product</h3>
                 <table id="product-table" class="display">
                     <thead>
                         <tr>
-                            <th>SKU</th>
-                            <th>Product Name</th>
+                            <th>Order ID</th>
+                            <th>Grand Total</th>
+                            <th>Date</th>
                             <th>Status</th>
-                            <th>Sales Price</th>
-                            <th>Price</th>
-                            <th>Quantity</th>
+                            <th>Bill To</th>
+                            <th>Ship To</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody></tbody>
+                </table>
+            </div>
+            <div class="tiles-perfection-info" style="display:none;">
+                <h3>Tiles Perfection</h3>
+                <table class="tiles-perfection-table">
+                    <tr>
+                        <th>Appearance</th>
+                        <td><%= product.tilesPerfection.appearance %></td>
+                    </tr>
+                    <tr>
+                        <th>Material</th>
+                        <td><%= product.tilesPerfection.material %></td>
+                    </tr>
+                    <tr>
+                        <th>Glaze</th>
+                        <td><%= product.tilesPerfection.glaze %></td>
+                    </tr>
+                    <tr>
+                        <th>Rectified</th>
+                        <td><%= product.tilesPerfection.rectified %></td>
+                    </tr>
+                    <tr>
+                        <th>Color</th>
+                        <td><%= product.tilesPerfection.color %></td>
+                    </tr>
+                    <tr>
+                        <th>Thickness</th>
+                        <td><%= product.tilesPerfection.thickness %></td>
+                    </tr>
+                    <tr>
+                        <th>Recommended Room</th>
+                        <td><%= product.tilesPerfection.recommendedRoom %></td>
+                    </tr>
+                    <tr>
+                        <th>Quantity Per Square Meter</th>
+                        <td><%= product.tilesPerfection.quantityPerSquareMeter %></td>
+                    </tr>
+                    <tr>
+                        <th>Type</th>
+                        <td><%= product.tilesPerfection.type %></td>
+                    </tr>
+                    <tr>
+                        <th>Print</th>
+                        <td><%= product.tilesPerfection.print %></td>
+                    </tr>
+                    <tr>
+                        <th>Usage</th>
+                        <td><%= product.tilesPerfection.usage %></td>
+                    </tr>
+                    <tr>
+                        <th>Size MM</th>
+                        <td><%= product.tilesPerfection.sizeMM %></td>
+                    </tr>
+                    <tr>
+                        <th>Box Quantity</th>
+                        <td><%= product.tilesPerfection.boxQuantity %></td>
+                    </tr>
+                    <tr>
+                        <th>Wastage</th>
+                        <td><%= product.tilesPerfection.wastage %></td>
+                    </tr>
                 </table>
             </div>
         </div>
@@ -262,55 +324,83 @@
                 }
             });
         }
-        function viewProductList(productId) {
+        function vieworderList(productId) {
             $('#product-list').toggle();
             initializeProductTable(productId);
         }
-        function initializeProductTable(productId) {
-    if ($.fn.DataTable.isDataTable('#product-table')) {
-        $('#product-table').DataTable().destroy(); // Destroy if already initialized
+        function tilesperfection(productId) {
+            let tilesInfo = document.querySelector('.tiles-perfection-info');
+        let ordertable = document.getElementById('product-list');
+           ordertable.style.display = "none";
+    if (tilesInfo.style.display === "none" || tilesInfo.style.display === "") {
+        tilesInfo.style.display = "block";
+    } else {
+        tilesInfo.style.display = "none";
     }
+        }
+        function initializeProductTable(productId) {
+            let tilesInfo = document.querySelector('.tiles-perfection-info');
+            tilesInfo.style.display = "none";
 
-    $('#product-table').DataTable({
-        serverSide: true,
-        processing: true,
-        ajax: function (data, callback, settings) {
-            const params = {
-                limit: data.length,
-                page: (data.start / data.length) + 1,
-                search: data.search.value
-            };
-            fetch(`/admin/product/products/${productId}?` + new URLSearchParams(params))
-                .then(response => response.json())
-                .then(result => {
-                    callback({
-                        draw: data.draw,
-                        recordsTotal: result.recordsTotal,
-                        recordsFiltered: result.recordsFiltered,
-                        data: result.products
-                    });
-                })
-                .catch(error => {
-                    console.error('Error fetching products:', error);
-                });
-        },
-        columns: [
-            { data: 'sku' },
-            { data: 'name' },
-            { 
-                data: 'status', 
-                render: function (data) {
-                    return data ? `<span class="badge bg-success">Active</span>` : `<span class="badge bg-danger">Inactive</span>`;
+            if ($.fn.DataTable.isDataTable('#product-table')) {
+                $('#product-table').DataTable().destroy(); // Destroy if already initialized
+            }
+
+            $('#product-table').DataTable({
+                serverSide: true,
+                processing: true,
+                ajax: function (data, callback, settings) {
+                    const params = {
+                        limit: data.length,
+                        page: (data.start / data.length) + 1,
+                        search: data.search.value
+                    };
+                    fetch(`/admin/product/orders/${productId}?` + new URLSearchParams(params))
+                        .then(response => response.json())
+                        .then(result => {
+                            callback({
+                                draw: data.draw,
+                                recordsTotal: result.recordsTotal,
+                                recordsFiltered: result.recordsFiltered,
+                                data: result.products
+                            });
+                        })
+                        .catch(error => {
+                            console.error('Error fetching products:', error);
+                        });
                 },
-            },
-            { data: 'price.ourPrice' },
-            { data: 'price.price' },
-            { data: 'stock' },
-        ],
-      
-    });
-}
+                columns: [
+                    { data: 'orderno' },
+                    { data: 'grand_total', render: (data) => `₹${data.toFixed(2)}` },
+                    { data: 'order_date', render: (data) => new Date(data).toLocaleDateString() },
+                    { 
+                             data: 'order_status',
+                             render: function (data) {
+                               let statusColors = {
+                                   'Placed': '#007bff',   
+                                   'Confirmed': '#17a2b8',
+                                   'Shipped': '#ffc107',  
+                                   'Delivered': '#28a745',
+                                   'Cancelled': '#dc3545' 
+                               };
 
+                                let bgColor = statusColors[data] || '#6c757d'; // Default to gray if status is unknown
+                                                    
+                                return `<span style="background-color: ${bgColor}; color: white; padding: 5px 10px; border-radius: 5px;">${data}</span>`;
+                            }
+                    },
+                    { data: 'user.username' },
+                    { data: 'telephone' },
+                    {
+                        data: '_id',
+                        render: (data) => `
+                            <a href="/admin/orders/${data}" class="btn btn-sm btn-primary">View</a>
+                            <a href="/admin/orders/track/${data}" class="btn btn-sm btn-secondary ms-2">Track</a>
+                        `
+                    }
+                ]
+            });
+        }
     </script>
 </body>
 </html>
