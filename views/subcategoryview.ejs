@@ -152,7 +152,7 @@
                     <div class="category-info">
                         <h2>Subcategory Name: <%= subcategory.name %></h2>
                         <p>Position: <%= subcategory.position %></p>
-                        <p>Description: <%= subcategory.description %></p>
+                        <p>Description: <%- subcategory.description %></p>
                     </div>
                 </div>
                 <button class="btn-status <%= subcategory.status ? 'active' : 'inactive' %>" onclick="toggleSubcategoryStatus('<%= subcategory._id %>')">
