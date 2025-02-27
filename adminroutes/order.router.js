@@ -94,7 +94,6 @@ router.put('/orders/:id/status', async (req, res) => {
 });
 
 router.post('/create-shipment', async (req, res) => {
-    console.log(req.body,"body")
     let orderid = req.body.orderId
     let findorder = await Order.findById(orderid)
 

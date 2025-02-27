@@ -563,9 +563,7 @@ const cimagesInput = document.getElementById('images');
 
                     function catsubp(selector, values) {
                       values.forEach(value => {
-                        console.log(value, "values");
                         if ($(selector + " option[value='" + value._id + "']").length === 0) {
-                          console.log(value.name,"value.name")
                           $(selector).append(new Option(value.name, value._id));
                         }
                       });

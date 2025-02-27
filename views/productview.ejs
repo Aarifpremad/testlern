@@ -181,7 +181,7 @@
                 <button class="btn btn-primary" onclick="tilesperfection()">Tiles Perfection</button>
             </div>
             <div id="product-list" style="display:none;">
-                <h3>Products in this product</h3>
+                <h3>Oders of this products (combine orders)</h3>
                 <table id="product-table" class="display">
                     <thead>
                         <tr>
@@ -349,6 +349,10 @@
             $('#product-table').DataTable({
                 serverSide: true,
                 processing: true,
+                initComplete: function () {
+            $('.dataTables_filter input').attr('placeholder', 'Order ID');
+        },
+
                 ajax: function (data, callback, settings) {
                     const params = {
                         limit: data.length,
@@ -362,7 +366,7 @@
                                 draw: data.draw,
                                 recordsTotal: result.recordsTotal,
                                 recordsFiltered: result.recordsFiltered,
-                                data: result.products
+                                data: result.data
                             });
                         })
                         .catch(error => {
@@ -389,13 +393,17 @@
                                 return `<span style="background-color: ${bgColor}; color: white; padding: 5px 10px; border-radius: 5px;">${data}</span>`;
                             }
                     },
-                    { data: 'user.username' },
+                    { data: 'user',
+                    render: function(data) {
+                    return data && data.username ? data.username : 'Guest';
+                    }
+                     },
                     { data: 'telephone' },
                     {
                         data: '_id',
                         render: (data) => `
-                            <a href="/admin/orders/${data}" class="btn btn-sm btn-primary">View</a>
-                            <a href="/admin/orders/track/${data}" class="btn btn-sm btn-secondary ms-2">Track</a>
+                            <a href="/admin/orders/${data}" class="btn btn-sm btn-primary">Order View</a>
+                            <a href="/admin/orders/track/${data}" class="btn btn-sm btn-secondary ms-2">Order Track</a>
                         `
                     }
                 ]

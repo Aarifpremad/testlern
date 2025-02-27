@@ -245,27 +245,23 @@ router.get('/product/orders/:productId', async (req, res) => {
         const page = Math.ceil(start / length) + 1; // 1-based page number
         const limit = parseInt(length);
 
-        const query = {
-            'products.product': productId,
-            $or: [
-                { 'products.name': new RegExp(search, 'i') },
-                { 'orderNumber': new RegExp(search, 'i') }
-            ]
-        };
+
+
+    const query = {
+        'items.product_id': productId,
+        'orderno': new RegExp(search, 'i')
+    };
 
         const orders = await Order.find(query)
             .skip((page - 1) * limit)
             .sort({ createdAt: -1 })
             .limit(limit)
-            .populate('products.product', 'name')
+            .populate('items.product_id', 'name')
+            .populate('user', 'username')
             .lean();
 
-        const totalRecords = await Order.countDocuments({ 'products.product': productId });
+        const totalRecords = await Order.countDocuments({ 'items.product_id': productId });
         const totalFilteredRecords = await Order.countDocuments(query);
-
-        // if (!orders.length) {
-        //     return res.status(404).json({ success: false, message: 'No orders found for this product.' });
-        // }
 
         res.json({
             draw: parseInt(draw), // Draw ID from request

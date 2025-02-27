@@ -27,7 +27,6 @@ module.exports = {
         var user = await Model.SuperAdmin.findOne({
           email:email
         });
-          console.log(user,"user")
         if (!user){
           return res
           .status(400)

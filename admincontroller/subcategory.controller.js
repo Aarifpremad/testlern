@@ -41,7 +41,6 @@ exports.createSubCategory = async (req, res) => {
 exports.updteSubCategory = async (req, res) => {
     try {
         const categoryId = req.params.id;
-        console.log("yaya",req.file.filename,req.body,categoryId)
         
         const { name, category, description, position, meta_title, meta_description, meta_keywords ,status } = req.body;
         const updatedCategory = await SubCategory.findByIdAndUpdate(categoryId, {

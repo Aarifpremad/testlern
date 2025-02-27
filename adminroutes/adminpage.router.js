@@ -141,7 +141,6 @@ router.get('/admin/categories/view/:categoryId', async (req, res) => {
         }
 
         // Render the categoryview.ejs with the category data
-        console.log(category.category_image[0])
         res.render('categoryview', {
             category, // This will make the category data accessible in the template
             pageTitle: 'Category Details',
@@ -165,17 +164,12 @@ router.get('/admin/subcategories/view/:subcategoryId', async (req, res) => {
         }
 
         // Render the categoryview.ejs with the category data
-        console.log(subcategory.image)
         res.render('subcategoryview', {
             subcategory, // This will make the category data accessible in the template
             pageTitle: 'SubCategory Details',
             image : "/"+subcategory.image
         });
-        console.log({
-            subcategory, // This will make the category data accessible in the template
-            pageTitle: 'SubCategory Details',
-            image : "/"+subcategory.image
-        })
+
     } catch (error) {
         console.error('Error fetching category details:', error);
         res.status(500).json({ message: 'Failed to load category details' });
@@ -200,7 +194,6 @@ router.get('/admin/product/view/:productId', async (req, res) => {
             pageTitle: 'product Details',
             image : "/"
         });
-        console.log(product)
     } catch (error) {
         console.error('Error fetching category details:', error);
         res.status(500).json({ message: 'Failed to load category details' });
