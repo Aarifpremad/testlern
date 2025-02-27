@@ -45,13 +45,17 @@ app.get("/admin",(req,res)=>{
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use(
   cors({
-      origin: "*",
-      methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-      allowedHeaders: ["Content-Type", "Authorization"],
+    origin: "*",
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization", ], // ✅ Add "country_id"
   })
 );
-            
 
+
+app.use((req, res, next) => {
+  console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
+  next();
+});
 
 let router = require("./adminroutes")
 app.use(router)
@@ -82,6 +86,9 @@ app.use((req, res, next) => {
 // })
 
 // Create HTTPS Server
+app.use((req)=>{
+  console.log(req.url)
+})
 https.createServer(sslOptions, app).listen(port, () => {
   console.log(`HTTPS Server started on port ${port}`);
 });

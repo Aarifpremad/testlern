@@ -20,8 +20,8 @@ module.exports = {
                 Model.Header.find({}).populate("pageId"),
                 Model.Popup.find({}),
                 Model.Offer.find({}),
-                Model.Product.find({}).limit(10),
-                Model.Product.find({}).limit(10)
+                Model.Product.find({}).sort({ createdAt: -1 }).skip(40).limit(10),
+                Model.Product.find({}).sort({ createdAt: -1 }).skip(10).limit(10)
             ]);
     
             // Function to add isFavourite field in products

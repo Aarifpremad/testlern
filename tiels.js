@@ -54,6 +54,10 @@ app.get("/", (req, res) => {
     res.render("login", { title: "Login Page" });
 });
 
+app.use((req, res, next) => {
+    console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
+    next();
+});
 const router = require("./adminroutes");
 app.use(router);
 
@@ -61,6 +65,7 @@ const apirouter = require("./apiroutes");
 app.use(apirouter);
 
 // Create HTTPS Server
+
 app.listen(port,()=>{
     console.log("server started for port:",port)
 })

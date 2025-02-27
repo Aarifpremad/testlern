@@ -11,4 +11,6 @@ let  productcontroller = require("../apicontroller/productcontroller")
 
 router.get("/getproducts", productcontroller.getproduct);
 
+router.get("/getproduct/:id", productcontroller.getProductById);
+
 module.exports = router;
