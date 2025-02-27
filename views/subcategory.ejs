@@ -16,12 +16,17 @@
       margin-left: 260px;
       margin-top: 80px;
       padding: 20px;
-      width: calc(100% - 260px);
+      width: 100%;
       min-height: 100vh;
       background: white;
       border-radius: 8px;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     }
+    @media (max-width: 768px) {
+            .content-container {
+                margin-left:auto
+            }
+        }
     h1 {
       font-size: 1.75rem;
       margin-bottom: 20px;

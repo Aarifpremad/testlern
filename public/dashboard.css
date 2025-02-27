@@ -224,6 +224,16 @@ header nav ul li a:hover {
     border-radius: 8px;
     background: #f9f9f9;
     text-align: center;
+    white-space: normal;
+    word-wrap: break-word;   
+    overflow-wrap: break-word; 
+    word-break: break-word;   
+}
+
+@media (max-width: 768px) {
+    .user-card {
+        width: 100%;
+    }
 }
 
 .user-image {

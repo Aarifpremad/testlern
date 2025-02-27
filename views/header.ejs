@@ -9,19 +9,25 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
 </head>
 <style>
-    .main-container { display: flex; }
+   .main-container { display: flex; }
    
-    .content-container {
-         margin-left: 260px; 
-         margin-top: 70px; 
-          padding: 20px;
-          width: calc(100% - 260px);
-         height: 100vh;
-        }
-    .table-container { margin-top: 20px; }
-    table.dataTable, table.dataTable th, table.dataTable td { border: 1px solid #dee2e6 !important; }
-    table.dataTable th { background-color: #f8f9fa; }
-    table.dataTable tbody tr:hover { background-color: #f1f3f5; }
+   .content-container {
+        margin-left: 260px; 
+        margin-top: 70px; 
+         padding: 20px;
+         width: 100%;
+        height: 100vh;
+       }
+       @media (max-width: 768px) {
+           .content-container {
+               margin-left:auto
+           }
+       }
+   .table-container { margin-top: 20px;   overflow-x: auto;
+       width: 100%;}
+   table.dataTable, table.dataTable th, table.dataTable td { border: 1px solid #dee2e6 !important; }
+   table.dataTable th { background-color: #f8f9fa; }
+   table.dataTable tbody tr:hover { background-color: #f1f3f5; }
 </style>
 <body>
     <%- include('partials/header') %>
