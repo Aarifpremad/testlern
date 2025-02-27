@@ -142,12 +142,37 @@
         <div class="content-container">
             <div class="category-details-container">
                 <div class="category-header">
-                    <img src="<%= image %>" alt="product Image">
+                    <% if (product.images && product.images.length > 0) { %>
+                        <div class="product-images">
+                            <% product.images.forEach(image => { %>
+                                <img src="/uploads/<%= image %>" alt="Product Image" class="product-image">
+                            <% }); %>
+                        </div>
+                    <% } else { %>
+                        <p>No images available</p>
+                    <% } %>
                     <div class="category-info">
                         <h2>Product Name: <%= product.name %></h2>
                         <p>Position: <%= product.position %></p>
                         <p>Description: <%= product.description %></p>
                     </div>
+                </div>
+                <div class="category-info">
+                    <h3>Tiles Perfection</h3>
+                    <p>Appearance: <%= product.tilesPerfection.appearance %></p>
+                    <p>Material: <%= product.tilesPerfection.material %></p>
+                    <p>Glaze: <%= product.tilesPerfection.glaze %></p>
+                    <p>Rectified: <%= product.tilesPerfection.rectified %></p>
+                    <p>Color: <%= product.tilesPerfection.color %></p>
+                    <p>Thickness: <%= product.tilesPerfection.thickness %></p>
+                    <p>Recommended Room: <%= product.tilesPerfection.recommendedRoom %></p>
+                    <p>Quantity Per Square Meter: <%= product.tilesPerfection.quantityPerSquareMeter %></p>
+                    <p>Type: <%= product.tilesPerfection.type %></p>
+                    <p>Print: <%= product.tilesPerfection.print %></p>
+                    <p>Usage: <%= product.tilesPerfection.usage %></p>
+                    <p>Size MM: <%= product.tilesPerfection.sizeMM %></p>
+                    <p>Box Quantity: <%= product.tilesPerfection.boxQuantity %></p>
+                    <p>Wastage: <%= product.tilesPerfection.wastage %></p>
                 </div>
                 <button class="btn-status <%= product.status ? 'active' : 'inactive' %>" onclick="toggleproductStatus('<%= product._id %>')">
                     <%= product.status ? 'Deactivate Product' : 'Activate Product' %>
