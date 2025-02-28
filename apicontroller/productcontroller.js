@@ -68,8 +68,8 @@ module.exports = {
 
     getProductById: async (req, res) => {
         try {
-            const { id } = req.params;
-            const product = await Model.Product.findById(id)
+            const { slug } = req.params;
+            const product = await Model.Product.findOne({slug:slug})
                 .populate('categories')
                 .populate('subCategories');
 

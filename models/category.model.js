@@ -1,12 +1,9 @@
 const mongoose = require('mongoose');
-// const autoIncrement = require('mongoose-auto-increment');
+const slugify = require('slugify'); // Install slugify using: npm install slugify
 
-// Initialize mongoose-auto-increment
-// autoIncrement.initialize(mongoose.connection);
-
-// Define the Category Schema
 const categorySchema = new mongoose.Schema({
     name: { type: String, required: true, unique: true },
+    slug: { type: String, unique: true }, // Slug field
     position: { type: Number, default: 0 },
     discount_line: { type: String, default: '' },
     status: { type: Boolean, default: true },
@@ -14,8 +11,8 @@ const categorySchema = new mongoose.Schema({
     description: { type: String, default: '' },
     label: { type: String, default: '' },
     banner: { type: String, default: '' },
-    category_image: { type: [String], default: [] },  // Array of image paths
-    banner_image: { type: [String], default: [] },   // Array of banner image paths
+    category_image: { type: [String], default: [] },
+    banner_image: { type: [String], default: [] },
     seo: {
         meta_title: { type: String, default: '' },
         meta_description: { type: String, default: '' },
@@ -23,17 +20,16 @@ const categorySchema = new mongoose.Schema({
     },
     heading: { type: String, default: '' },
     content: { type: String, default: '' },
-    id: { type: Number, default: 0 },  // Auto increment ID
+    id: { type: Number, default: 0 },
 }, { timestamps: true });
 
-// Apply the auto-increment plugin
-// categorySchema.plugin(autoIncrement.plugin, {
-//     model: 'Category',
-//     field: 'id',
-//     startAt: 1,
-//     incrementBy: 1
-// });
+// Generate slug before saving
+categorySchema.pre('save', function (next) {
+    if (this.isModified('name')) {
+        this.slug = slugify(this.name, { lower: true, strict: true });
+    }
+    next();
+});
 
-// Create and export the model
 const Category = mongoose.model('Category', categorySchema);
 module.exports = Category;
