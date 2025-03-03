@@ -11,10 +11,10 @@ let  productcontroller = require("../apicontroller/productcontroller")
 
 // router.get("/getproducts", productcontroller.getproduct);
 
-router.get("/getproductdetils/:name", productcontroller.getProductById);
+router.post("/getproductdetils/:name", productcontroller.getProductById);
 
 // get product by categroy & subcategory 
-router.get("/getproducts/:name", productcontroller.getproductnew);
+router.post("/getproducts/:name", productcontroller.getproductnew);
 
 
 

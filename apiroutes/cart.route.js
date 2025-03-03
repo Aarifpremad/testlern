@@ -8,7 +8,7 @@ let authenticate = require("../service/auth").authenticateUser
 
 router.post('/cart/add',authenticate, cartController.addToCart);
 
-router.get('/cart', authenticate,cartController.getCart);
+router.post('/cart', authenticate,cartController.getCart);
 
 router.post('/cart/update',authenticate, cartController.updateCart);
 

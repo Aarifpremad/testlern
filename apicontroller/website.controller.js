@@ -66,8 +66,10 @@ module.exports = {
             Service.response(true, "get pages", header));
     },
     page : async function (req, res, next) {
-        let {page} = req.query
-        let pagedata =await Model.Page.find({pg_title :page});
+        let {page} = req.params
+        let pagedata =await Model.Page.find({pg_url_key :page});
+        let pagedat11a =await Model.Page.find({}).select("pg_url_key");
+        console.log(page , pagedat11a)
 
         return res.status(200).json(
             Service.response(true, "get pages", pagedata));

@@ -5,8 +5,8 @@ let authenticate = require("../service/auth").authenticateUser
 let  categorycontrollr = require("../apicontroller/category.controller")
 
 
-router.get("/categories",  categorycontrollr.getcategroy);
-router.get("/subcategories",  categorycontrollr.getsubcategroy);
-router.get("/subcategories/:categoryslug",  categorycontrollr.getsubcategroybycate);
+router.post("/categories",  categorycontrollr.getcategroy);
+router.post("/subcategories",  categorycontrollr.getsubcategroy);
+router.post("/subcategories/:categoryslug",  categorycontrollr.getsubcategroybycate);
 
 module.exports = router;

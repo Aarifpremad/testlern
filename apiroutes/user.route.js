@@ -9,7 +9,7 @@ let authenticate = require("../service/auth").authenticateUser
 router.post('/register', userController.register);
 router.post('/login', userController.login);
 
-router.get("/profile",authenticate, function (req, res, next) {
+router.post("/profile",authenticate, function (req, res, next) {
     return userController.profile(req, res, next);
   });
 

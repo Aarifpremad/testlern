@@ -4,9 +4,9 @@ const webcontroller = require('../apicontroller/website.controller');
 const Model = require('../models/model');
 
 
-router.get("/home",webcontroller.home);
-router.get("/realimage",webcontroller.realimages);
-router.get("/pages",webcontroller.page);
-router.get("/header",webcontroller.header);
+router.post("/home",webcontroller.home);
+router.post("/realimage",webcontroller.realimages);
+router.post("/pages/:page",webcontroller.page);
+router.post("/header",webcontroller.header);
 
 module.exports = router;
