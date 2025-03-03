@@ -7,6 +7,6 @@ let  categorycontrollr = require("../apicontroller/category.controller")
 
 router.get("/categories",  categorycontrollr.getcategroy);
 router.get("/subcategories",  categorycontrollr.getsubcategroy);
-router.get("/subcategories/:categoryId",  categorycontrollr.getsubcategroybycate);
+router.get("/subcategories/:categoryslug",  categorycontrollr.getsubcategroybycate);
 
 module.exports = router;

@@ -8,8 +8,7 @@ module.exports = {
 
     getcategroy: async (req, res) => {
         try {
-            // const categories = await Model.Category.find();
-            const categories = await Category.aggregate([
+            const categories = await Model.Category.aggregate([
                 {
                     $lookup: {
                         from: "subcategories", // This should match your MongoDB collection name
@@ -37,34 +36,34 @@ module.exports = {
             .json(Service.response(true, "successfully get category" , categories));
         } catch (error) {
             console.error(error);
-            return res.status(200).json(Service.response(false, localization.ServerError, null));
+            return res.status(500).json(Service.response(false, localization.ServerError, null));
         }
     },
 
     getsubcategroy: async (req, res) => {
         try {
-            const categories = await Model.Subcategory.find();
+            const categories = await Model.Subcategory.find({}, 'name status slug position seo');
             return res
             .status(200)
-            .json(Service.response(true, "successfully get category" , categories));
+            .json(Service.response(true, "successfully get subcategory" , categories));
         } catch (error) {
             console.error(error);
-            return res.status(200).json(Service.response(false, localization.ServerError, null));
+            return res.status(500).json(Service.response(false, localization.ServerError, null));
         }
     },
 
     getsubcategroybycate : async (req, res) => {
         try {
-            const { slug } = req.params; // URL se categoryId extract karein
-            
-            const subcategories = await Model.Subcategory.find({ slug: slug });
+            const { categoryslug } = req.params;
+            let findcategory = await Model.Category.findOne({ slug: categoryslug });
+            const subcategories = await Model.Subcategory.find({ category: findcategory._id });
 
             return res
             .status(200)
             .json(Service.response(true, "subcategory BY Category" , subcategories));
         } catch (error) {
             console.error("Error fetching subcategories:", error);
-            res.status(500).json({ success: false, message: "Server Error" });
+            return res.status(500).json(Service.response(false, localization.ServerError, null));
         }
     },
 

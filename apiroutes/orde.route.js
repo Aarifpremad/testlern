@@ -9,7 +9,9 @@ const authenticateUserforproduct = require("../service/auth").authenticateUserfo
 const validateFields = (data, requiredFields, prefix = "") => {
     let missingFields = [];
     requiredFields.forEach(field => {
-        if (!data[field] || data[field] === "") {
+        console.log(field,"data[field]")
+        console.log(data?.[field],"data[field]")
+        if (!data?.[field] || data?.[field] === "") {
             missingFields.push(prefix + field);
         }
     });
@@ -41,7 +43,7 @@ router.post('/placeorder', async (req, res) => {
         ], "deliveryAddress."));
 
         // Validate items array
-        if (!orderDetails.items || !Array.isArray(orderDetails.items) || orderDetails.items.length === 0) {
+        if (!orderDetails?.items || !Array.isArray(orderDetails.items) || orderDetails.items.length === 0) {
             missingFields.push("orderDetails.items");
         } else {
             orderDetails.items.forEach((item, index) => {
@@ -76,7 +78,7 @@ router.post('/placeorder', async (req, res) => {
             grand_total: orderDetails.grand_total,
             payment_mode: orderDetails.payment_mode,
             payment_status: "pending",
-            order_status: "placed",
+            order_status: "Placed",
             items: orderDetails.items.map(item => ({
                 product_id: new mongoose.Types.ObjectId(item.product_id),
                 product_price: item.product_price,

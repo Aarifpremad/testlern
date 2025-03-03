@@ -9,8 +9,13 @@ let  productcontroller = require("../apicontroller/productcontroller")
 
 
 
-router.get("/getproducts", productcontroller.getproduct);
+// router.get("/getproducts", productcontroller.getproduct);
 
-router.get("/getproduct/:id", productcontroller.getProductById);
+router.get("/getproductdetils/:name", productcontroller.getProductById);
+
+// get product by categroy & subcategory 
+router.get("/getproducts/:name", productcontroller.getproductnew);
+
+
 
 module.exports = router;
