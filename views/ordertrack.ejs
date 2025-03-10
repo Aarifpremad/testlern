@@ -101,9 +101,14 @@
                                 <option value="Cancelled">Cancel Order</option>
                             <% } else if (order.order_status === "Confirmed") { %>
                                 <option value="Shipped">Mark as Shipped</option>
+                                <option value="Cancelled">Cancel Order</option>
                             <% } else if (order.order_status === "Shipped") { %>
                                 <option value="Delivered">Mark as Delivered</option>
-                            <% } %>
+                                <option value="Cancelled">Cancel Order</option>
+                            <% } else if (order.order_status === "Delivered") { %>
+                                <option value="Cancelled">Cancel Order</option>
+                            <% }
+                            %>
                         </select>
                         
                         <label for="message" class="form-label mt-2">Message (Optional):</label>
@@ -157,6 +162,10 @@
                 // Show success modal
                 document.getElementById('modal-message').textContent = data.message;
                 new bootstrap.Modal(document.getElementById('successModal')).show();
+
+                setTimeout(() => {
+                    location.reload();
+                }, 2000);
             } else {
                 // Show error message
                 alert(data.message || 'Failed to update status');

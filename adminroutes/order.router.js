@@ -64,8 +64,8 @@ router.get('/shipment/:orderId', async (req, res) => {
 const validTransitions = {
     'Placed': ['Confirmed', 'Cancelled'],
     'Confirmed': ['Shipped', 'Cancelled'],
-    'Shipped': ['Delivered'],
-    'Delivered': [],
+    'Shipped': ['Delivered' , 'Cancelled'],
+    'Delivered': ['Cancelled'],
     'Cancelled': []
 };
 
