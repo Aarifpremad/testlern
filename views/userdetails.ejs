@@ -164,7 +164,7 @@
                     <button class="btn-freeze" onclick="toggleFreeze('<%= user.id %>')">
                         <%= user.isdeleted == true ? 'User Deleted' : 'Soft Delete user' %>
                     </button>
-                    <button class="btn-status" onclick="toggleorderHistory()">
+                    <button class="btn-status" onclick="toggleorderHistory('<%= user.id %>')">
                         Order History
                     </button>
                 </div>
@@ -175,12 +175,13 @@
                     <table id="order-table" class="display">
                         <thead>
                             <tr>
-                                <th>Type</th>
-                                <th>Amount</th>
-                                <th>Current Balance</th>
+                                <th>Order ID</th>
+                                <th>Grand Total</th>
+                                <th>Date</th>
                                 <th>Status</th>
-                                <th>Note</th>
-                                <th>Created At</th>
+                                <th>Bill To</th>
+                                <th>Ship To</th>
+                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -257,18 +258,18 @@
             });
         }
 
-        function toggleorderHistory() {
+        function toggleorderHistory(userId) {
             const historySection = document.getElementById("order-history");
             historySection.style.display = historySection.style.display === "none" ? "block" : "none";
 
             if (historySection.style.display === "block") {
                 if (!$.fn.DataTable.isDataTable('#order-table')) {
-                    initializeorderTable(); // Initialize DataTable if not already initialized
+                    initializeorderTable(userId); // Initialize DataTable if not already initialized
                 }
             }
         }
 
-        function initializeorderTable() {
+        function initializeorderTable(userId) {
             $('#order-table').DataTable({
                 serverSide: true, // Enable server-side processing
                 processing: true, // Show a processing indicator
@@ -285,6 +286,7 @@
                     fetch(`/admin/users/orders/${userId}?` + new URLSearchParams(params))
                         .then(response => response.json())
                         .then(result => {
+                            console.log(result.orders)
                             callback({
                                 draw: data.draw,
                                 recordsTotal: result.totalRecords,
@@ -297,12 +299,34 @@
                         });
                 },
                 columns: [
-                    { data: 'type' },
-                    { data: 'amount' },
-                    { data: 'currentbalance' },
-                    { data: 'status' },
-                    { data: 'details.description' },
-                    { data: 'createdAt', render: (data) => new Date(data).toLocaleString() }
+                    { data: 'orderno' },
+                    { data: 'grand_total', render: (data) => `₹${data.toFixed(2)}` },
+                    { data: 'order_date', render: (data) => new Date(data).toLocaleDateString() },
+                    { 
+                             data: 'order_status',
+                             render: function (data) {
+                               let statusColors = {
+                                   'Placed': '#007bff',   
+                                   'Confirmed': '#17a2b8',
+                                   'Shipped': '#ffc107',  
+                                   'Delivered': '#28a745',
+                                   'Cancelled': '#dc3545' 
+                               };
+
+                                let bgColor = statusColors[data] || '#6c757d'; // Default to gray if status is unknown
+                                                    
+                                return `<span style="background-color: ${bgColor}; color: white; padding: 5px 10px; border-radius: 5px;">${data}</span>`;
+                            }
+                    },
+                    { data: 'billing' },
+                    { data: 'delivery' },
+                    {
+                        data: '_id',
+                        render: (data) => `
+                            <a href="/admin/orders/${data}" class="btn btn-sm btn-primary">View</a>
+                            <a href="/admin/orders/track/${data}" class="btn btn-sm btn-secondary ms-2">Track</a>
+                        `
+                    }
                 ],
                 dom: 'B<"top"lfr>t<"bottom"p><"clear">',
                 buttons: ['excelHtml5', 'pdfHtml5'],

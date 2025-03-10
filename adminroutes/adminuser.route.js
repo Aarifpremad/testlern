@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../models/user.model');
+const Order = require('../models/order.model');
 
 // ✅ Get users (for DataTable)
 router.get('/userslist', async (req, res) => {
@@ -79,7 +80,6 @@ router.put('/users/toggle-freeze/:id', async (req, res) => {
 router.get('/users/orders/:id', async (req, res) => {
     try {
         const { limit, page, search, orderColumn, orderDir } = req.query;
-
         const query = {};
         if (search) {
             query.$or = [
@@ -87,8 +87,8 @@ router.get('/users/orders/:id', async (req, res) => {
                 { status: { $regex: search, $options: 'i' } }
             ];
         }
-
-        const orders = await Order.find({ userId: req.params.id, ...query })
+        const orders = await Order.find({ user: req.params.id, ...query })
+            // .populate('user', 'username')
             .skip((page - 1) * limit)
             .limit(Number(limit))
             .sort({ [orderColumn]: orderDir });
@@ -100,6 +100,7 @@ router.get('/users/orders/:id', async (req, res) => {
             filteredRecords: totalRecords
         });
     } catch (error) {
+        console.log(error);
         res.status(500).json({ message: error.message });
     }
 });

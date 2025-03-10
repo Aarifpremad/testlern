@@ -84,7 +84,9 @@ router.post('/placeorder', async (req, res) => {
                 product_price: item.product_price,
                 product_quantity: item.product_quantity,
                 total_amount: item.total_amount
-            }))
+            })),
+            billing : billingAddress.telephone,
+            delivery : deliveryAddress.telephone
         });
 
         const savedOrder = await newOrder.save();
@@ -140,6 +142,9 @@ router.post('/placeorder', async (req, res) => {
         res.status(500).json({ success: false, message: "Internal Server Error" });
     }
 });
+
+
+
 
 module.exports = router;
 

@@ -30,7 +30,16 @@ const orderSchema = new mongoose.Schema({
         product_price: Number,
         product_quantity: Number,
         total_amount: Number
-    }]
+    }],
+
+    billing :{
+        type:String,
+        default:""
+    },
+    delivery :{
+        type:String,
+        default:""
+    },
 }, { timestamps: true });
 
 module.exports = mongoose.model('Order', orderSchema);
