@@ -56,7 +56,8 @@ module.exports = {
         req.session.admin = {
           id: rez._id,
           name: rez.name,
-          email : rez.email
+          email : rez.email,
+          token : newToken,
         };
         if (!rez)
           return res

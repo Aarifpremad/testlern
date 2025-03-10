@@ -7,17 +7,26 @@ const path = require('path');
 const https = require("https");
 const fs = require("fs");
 const session = require("express-session");
+const MongoStore = require('connect-mongo');
 
 let port = config.port || 5003
 
 app.use(
-    session({
-      secret: "your_secret_key", // Replace with a strong secret key
-      resave: false, // Save session only if it is modified
-      saveUninitialized: false, // Don't save uninitialized sessions
-      cookie: { secure: false, maxAge: 1000 * 60 * 60 }, // Adjust cookie options as needed
-    })
-  );
+  session({
+    secret: process.env.PROJECT_NAME || 'your-secret-key', // Secret key
+    resave: false,
+    saveUninitialized: false,
+    store: MongoStore.create({
+      mongoUrl:  process.env.DB, // Apna DB URL dalein
+      collectionName: "sessions",
+    }),
+    cookie: {
+      secure: true, // Agar HTTPS use nahi kar rahe to false rakhein
+      httpOnly: true, // Browser ko JS se access na karne de
+      maxAge: 1000 * 60 * 60 * 6, // 6 ghante tak session valid rahega
+    },
+  })
+);
 
 
   const sslOptions = {
@@ -34,7 +43,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json()); // For application/json
 
 app.get("/",(req,res)=>{
-
   res.send("this are website")
 })
 
@@ -56,6 +64,74 @@ app.use((req, res, next) => {
   console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
   next();
 });
+
+app.use((req, res, next) => {
+  const  protectedRoutes = [
+"/admin/login",
+"/admin/dashboard",
+"/admin/userlist",
+"/admin/profile",
+"/admin/category",
+"/admin/subcategory",
+"/admin/subcategorylist",
+"/admin/categorylist",
+"/admin/product",
+"/admin/specifications/color",
+"/admin/specifications/size",
+"/admin/specifications/finish",
+"/admin/specifications/material",
+"/admin/specifications/thickness",
+"/admin/specifications/room",
+"/admin/specifications/type",
+"/admin/specifications/print",
+"/admin/specifications/usage",
+"/admin/productgroups",
+"/admin/brands",
+"/admin/units",
+"/admin/productlist",
+"/admin/page",
+"/admin/bannersadd",
+"/admin/header",
+"/admin/aboutdeliveries",
+"/admin/offersforuser",
+"/admin/slidbars",
+"/admin/imagesforuser",
+"/admin/websitepopup",
+"/admin/coupens",
+"/admin/users",
+// /admin/users (duplicate, one might be user details)
+"/admin/categories/view/:categoryId",
+"/admin/subcategories/view/:subcategoryId",
+"/admin/product/view/:productId",
+"/admin/allorders",
+"/admin/user-details/:id",
+"/admin/orders/:id",
+"/admin/orders/track/:id",
+];
+
+if (protectedRoutes.some(route => route == req.path)) {
+  if (!req.session || !req.session.admin) {
+      return res.redirect("/"); 
+  } else {
+      try {
+          const decodedToken = jwt.verify(req.session.admin.token, process.env.JWT_SECRET);
+          // const expiryTime = new Date(decodedToken.exp * 1000);
+          // const remainingTime = (decodedToken.exp * 1000) - Date.now();
+
+          // console.log("Token is valid. Expiry Time:", expiryTime.toLocaleString());
+          // console.log("Token will expire in:", remainingTime / 1000, "seconds");
+
+      } catch (err) {
+          console.error("Token expired or invalid:", err.message);
+          return res.redirect("/"); 
+      }
+  }
+}
+next();
+
+});
+
+
 
 let router = require("./adminroutes")
 app.use(router)
