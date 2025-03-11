@@ -128,8 +128,10 @@
 
                 $.post('/admin/specstype', { type: specsType }, function () {
                     $('#addSpecsTypeModal').modal('hide');
-                    table.ajax.reload(); // Refresh the table
-                    $('#specsType').val(''); // Clear the input field
+                    // table.ajax.reload(); // Refresh the table
+                    // $('#specsType').val(''); // Clear the input field
+                    location.reload(); // Reload the page
+
                 });
             });
 

@@ -128,8 +128,9 @@
 
                 $.post('/admin/specsusage', { usage: specsUsage }, function () {
                     $('#addSpecsUsageModal').modal('hide');
-                    table.ajax.reload(); // Refresh the table
-                    $('#specsUsage').val(''); // Clear the input field
+                    // table.ajax.reload(); // Refresh the table
+                    // $('#specsUsage').val(''); // Clear the input field
+                    location.reload(); // Reload the page
                 });
             });
 

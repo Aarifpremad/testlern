@@ -169,7 +169,8 @@
 
                 $.post('/admin/brand', { name: brandName, status: brandStatus }, function () {
                     $('#addBrandModal').modal('hide');
-                    table.ajax.reload();
+                    // table.ajax.reload();
+                    location.reload(); // Reload the page
                 });
             });
 

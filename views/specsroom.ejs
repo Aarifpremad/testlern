@@ -126,8 +126,9 @@
 
                 $.post('/admin/specsroom', { room: specsRoom }, function () {
                     $('#addSpecsRoomModal').modal('hide');
-                    table.ajax.reload(); // Refresh the table
-                    $('#specsRoom').val(''); // Clear the input field
+                    // table.ajax.reload(); // Refresh the table
+                    // $('#specsRoom').val(''); // Clear the input field
+                    location.reload(); // Reload the page
                 });
             });
 

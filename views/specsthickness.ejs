@@ -128,8 +128,10 @@
 
                 $.post('/admin/specsthickness', { thickness: specsThickness }, function () {
                     $('#addSpecsThicknessModal').modal('hide');
-                    table.ajax.reload(); // Refresh the table
-                    $('#specsThickness').val(''); // Clear the input field
+                    // table.ajax.reload(); // Refresh the table
+                    // $('#specsThickness').val(''); // Clear the input field
+                    location.reload(); // Reload the page
+
                 });
             });
 

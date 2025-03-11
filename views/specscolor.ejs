@@ -129,8 +129,9 @@
 
                 $.post('/admin/colors', { name: colorName }, function () {
                     $('#addColorModal').modal('hide');
-                    table.ajax.reload(); // Refresh the table
-                    $('#colorName').val(''); // Clear the input field
+                    // table.ajax.reload(); // Refresh the table
+                    // $('#colorName').val(''); // Clear the input field
+                    location.reload(); // Reload the page
                 });
             });
 

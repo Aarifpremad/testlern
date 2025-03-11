@@ -150,7 +150,9 @@
 
                 $.post('/admin/unit', { name: unitName }, function () {
                     $('#addUnitModal').modal('hide');
-                    table.ajax.reload();
+                    // table.ajax.reload();
+                    location.reload(); // Reload the page
+
                 });
             });
 

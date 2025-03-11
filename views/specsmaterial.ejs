@@ -128,8 +128,10 @@
 
                 $.post('/admin/specsmaterial', { name: specsMaterialName }, function () {
                     $('#addSpecsMaterialModal').modal('hide');
-                    table.ajax.reload(); // Refresh the table
-                    $('#specsMaterialName').val(''); // Clear the input field
+                    // table.ajax.reload(); // Refresh the table
+                    // $('#specsMaterialName').val(''); // Clear the input field
+                    location.reload(); // Reload the page
+
                 });
             });
 
