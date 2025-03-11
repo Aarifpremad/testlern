@@ -227,7 +227,11 @@
                         statusButton.classList.toggle('active', data.cate.status);
                         statusButton.classList.toggle('inactive', !data.cate.status);
                         statusButton.textContent = data.cate.status ? 'Deactivate Category' : 'Activate Category';
-                     })
+                        
+                        setTimeout(() => {
+                            window.location = '/admin/categorylist'; // Redirect to the subcategories list page
+                        }, 2000);
+                    })
                     .catch(error => {
                         Swal.fire('Error!', 'Failed to change status.', 'error');
                         console.error('Error toggling status:', error);

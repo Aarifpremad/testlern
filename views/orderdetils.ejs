@@ -252,13 +252,13 @@
                     <button class="collapsible">Payment And Shipping</button>
                     <div class="content">
                             <div>
-                                <h5>Payment method :   <% OrderDetils.payment_mode %></h5>
+                                <h5>Payment method :   <%= OrderDetils.payment_mode %></h5>
                                 <p>Currency : N/A</p>
                             </div>
                             <div>
                                 <h5>Shippingdetils</h5>
-                                <p>titel : N/A</p>
-                                <p>number : N/A</p>
+                                <p>Title : <%= shipment?.carrier_title %></p>
+                                <p>Number : <%= shipment?.carrier_number  %></p>
                             </div>
                     </div>
                     <!-- Address Section with Collapsible -->
@@ -584,8 +584,12 @@ $('#invoice-btn').on('click', function() {
                             if (response.success) {
                                 Swal.fire('Success', 'Shipment Created Successfully', 'success');
                                 $('#shipment-container').append(`<p>Shipment Created: ${result.value.title} - ${result.value.number}</p>`);
+
+                                setTimeout(function() {
+                                    location.reload();
+                                }, 1000);
                             } else {
-                                Swal.fire('Error', 'Failed to create shipment', 'error');
+                                Swal.fire('Error',response.message , 'error');
                             }
                         },
                         error: function() {

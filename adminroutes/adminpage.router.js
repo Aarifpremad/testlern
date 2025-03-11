@@ -224,8 +224,10 @@ router.get('/admin/orders/:id', async (req, res) => {
                             .exec()
         const Address = await Model.OrderAddress.find({orderid:req.params.id});
         const orderproduct = OrderDetils.items
-        
-        res.render('orderdetils', {OrderDetils , Address,orderproduct});
+
+        const shipment = await Model.Shipment.findOne({order_no:OrderDetils.orderno});
+        console.log(shipment)
+        res.render('orderdetils', {OrderDetils , Address,orderproduct , shipment});
     } catch (error) {
         console.log(error)
         res.status(500).send('Error loading user details');

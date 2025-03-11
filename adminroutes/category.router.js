@@ -127,4 +127,39 @@ router.post('/categories/toggle-status/:id', async (req, res) => {
     }
 });
 
+router.post('/product/toggle-status/:id', async (req, res) => {
+    try {
+        console.log(req.params.id)
+        const product = await Model.Product.findById(req.params.id);
+        product.status = product.status === true ? false : true;
+        await product.save();
+        let status = product.status ? "Active" : "Deactive";
+        res.json({ message: `product status updated to ${status}` , product });
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({ message: error.message });
+    }
+});
+
+
+router.delete('/product/delete/:id', async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        // Soft delete by updating status (set 'deleted' status or any other flag)
+        const product = await Model.Product.findByIdAndDelete(id);
+
+        if (!product) {
+            return res.status(404).json({ message: 'product not found' });
+        }
+
+        res.json({ message: 'product deleted successfully' });
+    } catch (error) {
+        console.error('Error deleting product:', error);
+        res.status(500).json({ message: 'Failed to delete product' });
+    }
+});
+
+
+
 module.exports = router;

@@ -296,6 +296,10 @@
                         statusButton.classList.toggle('active', data.product.status);
                         statusButton.classList.toggle('inactive', !data.product.status);
                         statusButton.textContent = data.product.status ? 'Deactivate Product' : 'Activate Product';
+
+                        setTimeout(() => {
+                            window.location = '/admin/productlist'; 
+                        }, 2000);
                      })
                     .catch(error => {
                         Swal.fire('Error!', 'Failed to change status.', 'error');
@@ -321,7 +325,9 @@
                     .then(response => response.json())
                     .then(data => {
                         Swal.fire('Deleted!', data.message, 'success');
-                        window.location = '/admin/productlist'; 
+                        setTimeout(() => {
+                            window.location = '/admin/productlist'; 
+                        }, 2000);
                     })
                     .catch(error => {
                         Swal.fire('Error!', 'Failed to delete product.', 'error');

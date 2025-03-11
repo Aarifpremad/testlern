@@ -58,18 +58,22 @@ router.put('/users/toggle-status/:id', async (req, res) => {
         const user = await User.findById(req.params.id);
         user.isactive = user.isactive === true ? false : true;
         await user.save();
-        res.json({ message: `User status updated to ${user.status}`, user });
+        console.log(user);
+        let status = user.isactive ? 'Active' : 'Deactivate Account';
+        res.json({ message: `User status updated to ${status}`, user });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
 });
 
 // Toggle user wallet freeze
-router.put('/users/toggle-freeze/:id', async (req, res) => {
+router.put('/users/toggle-delete/:id', async (req, res) => {
     try {
         const user = await User.findById(req.params.id);
-        user.walletFrozen = !user.walletFrozen;
+        user.isactive = false;
+        user.isdeleted = true;
         await user.save();
+        
         res.json({ message: `User wallet ${user.walletFrozen ? 'frozen' : 'unfrozen'}`, user });
     } catch (error) {
         res.status(500).json({ message: error.message });

@@ -182,6 +182,7 @@
                         $('#label').val(data.category.label);
                         $('#create-category-form').attr('action', `/admin/update-category/${categoryId}`);
 
+                        $('#create-category-form button[type="submit"]').text('Update Category');
                         if (data.category.category_image && data.category.category_image.length > 0) {
                         const cpreview = document.getElementById('cpreview');
                         cpreview.innerHTML = "";

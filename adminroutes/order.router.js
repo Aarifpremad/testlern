@@ -96,8 +96,10 @@ router.put('/orders/:id/status', async (req, res) => {
 router.post('/create-shipment', async (req, res) => {
     let orderid = req.body.orderId
     let findorder = await Order.findById(orderid)
-
-
+    console.log(findorder)
+    if (findorder.order_status !== 'Confirmed') {
+        return res.status(200).json({ success: false, message: 'Order must be confirmed before creating a shipment' });
+    }
 
     let createshipment = new Shipment({
         order_no : findorder.orderno,

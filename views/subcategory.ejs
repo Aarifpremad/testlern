@@ -141,12 +141,14 @@
                     $('#position').val(data.subcategory.position);
                     $('#description').val(data.subcategory.description);
                     $('#status').val(data.subcategory.status.toString());
-                    $('#seo_meta_title').val(data.subcategory.seo.meta_title);
-                    $('#seo_meta_keywords').val(data.subcategory.seo.meta_keywords);
-                    $('#seo_meta_description').val(data.subcategory.seo.meta_description);
-                    $('#heading').val(data.subcategory.heading);
-                    $('#content').val(data.subcategory.content);
-                    $('#label').val(data.subcategory.label);
+                    $('#seo_meta_title').val(data.subcategory.seo?.meta_title);
+                    $('#seo_meta_keywords').val(data.subcategory.seo?.meta_keywords);
+                    $('#seo_meta_description').val(data.subcategory.seo?.meta_description);
+                    $('#heading').val(data.subcategory?.heading);
+                    $('#content').val(data.subcategory?.content);
+                    $('#label').val(data.subcategory?.label);
+
+                  $('#create-subcategory-form button[type="submit"]').text('Update SubCategory');
 
                     if (data.subcategory.image) {
                        $('#image-name').text(data.subcategory.image);

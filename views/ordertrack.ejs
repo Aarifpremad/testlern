@@ -77,7 +77,11 @@
             <div class="tracking-container mt-4">
                 <h2 class="text-center">Track Order</h2>
                 <p><strong>Order ID:</strong> <%= order.orderno %></p>
-                <p><strong>Current Status:</strong> <%= order.order_status %></p>
+                <p><strong>Current Status:</strong> 
+                    <span class="badge" style="background-color: goldenrod ;">
+                        <%= order.order_status %>
+                    </span>
+                </p>
                 <div class="tracking-steps">
                     <div class="step <%= order.order_status === 'Placed' || order.order_status === 'Confirmed' || order.order_status === 'Shipped' || order.order_status === 'Delivered' ? 'active-step' : '' %>">1</div>
                     <div class="step <%= order.order_status === 'Confirmed' || order.order_status === 'Shipped' || order.order_status === 'Delivered' ? 'active-step' : '' %>">2</div>
@@ -164,8 +168,12 @@
                 new bootstrap.Modal(document.getElementById('successModal')).show();
 
                 setTimeout(() => {
-                    location.reload();
+                    // location.reload();
+                    // setTimeout(() => {
+                    window.location.href = '/admin/allorders';
+                // }, 2000);
                 }, 2000);
+
             } else {
                 // Show error message
                 alert(data.message || 'Failed to update status');

@@ -152,7 +152,7 @@
                         <h2>UserName: <%= user.firstname %></h2>
                         <p>Mobile No: <%= user.mobileno %></p>
                         <p>Email: <%= user.email %></p>
-                        <p>Status: <%= user.status %></p>
+                        <p>Status: <%= user.isactive ? 'Active' : 'Deactivate Account' %></p>
                     </div>
                 </div>
 
@@ -220,7 +220,11 @@
                     .then(data => {
                         Swal.fire('Success!', data.message, 'success');
                         const statusButton = document.querySelector('.btn-status');
-                        statusButton.textContent = data.user.status === 'Active' ? 'Deactivate Account' : 'Activate Account';
+                        statusButton.textContent = data.user.isactive === 'Active' ? 'Deactivate Account' : 'Activate Account';
+
+                        setTimeout(() => {
+                            window.location.href = '/admin/users';
+                        }, 2000);
                     })
                     .catch(error => {
                         Swal.fire('Error!', 'Failed to change status.', 'error');
@@ -241,7 +245,7 @@
                 confirmButtonText: 'Yes, change it!'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    fetch(`/admin/users/toggle-freeze/${userId}`, {
+                    fetch(`/admin/users/toggle-delete/${userId}`, {
                         method: 'PUT'
                     })
                     .then(response => response.json())
@@ -249,6 +253,11 @@
                         Swal.fire('Success!', data.message, 'success');
                         const freezeButton = document.querySelector('.btn-freeze');
                         freezeButton.textContent = data.user.isdeleted ? 'User Deleted' : "Soft Delete user";
+
+                        setTimeout(() => {
+                            window.location.href = '/admin/users';
+                        }, 2000);
+
                     })
                     .catch(error => {
                         Swal.fire('Error!', 'Failed to toggle wallet freeze.', 'error');
