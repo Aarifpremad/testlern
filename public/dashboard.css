@@ -95,6 +95,8 @@ header nav ul li a:hover {
 
 .sidebar ul li a.active {
     background-color: #FEF611;
+    background: linear-gradient(135deg, #304731, #6b8e23, #c5b358);
+
     color: #000000 !important;
     font-weight: 600;
 }
